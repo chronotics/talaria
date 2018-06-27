@@ -25,12 +25,6 @@ public class Application {
 		ApplicationContext context = SpringApplication
 				.run(Application.class,args);
 		
-//		String[] allBeanNames = context.getBeanDefinitionNames();
-//		logger.info("BeanNames : ");
-//		for(String beanName : allBeanNames) {
-//			logger.info(beanName);
-//		}
-
 	}
 	
 }
