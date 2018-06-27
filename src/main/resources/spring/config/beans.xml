@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jdbc 
+        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+	
+<!-- 	<bean id="talariaProperty" class="org.chronotics.talaria.TalariaProperties">
+ 		<property name="springStompServerProperties" ref="springStompServerProperties" />
+		<property name="thriftServerProperty" ref="thriftServerProperty" />
+	</bean>
+
+	<util:properties id="propThrift" location="classpath:spring/properties/thriftserver.properties" />	
+	<bean id="thriftServerProperty" primary="true" class="org.chronotics.talaria.thrift.ThriftServerProperties">
+		<property name="ip" value="#{propThrift['thrift.ip']}" />
+		<property name="port" value="#{propThrift['thrift.port']}" />
+		<property name="securePort" value="#{propThrift['thrift.securePort']}" />
+		<property name="secureKeyStore" value="#{propThrift['thrift.secureKeyStore']}" />
+		<property name="secureKeyPass" value="#{propThrift['thrift.secureKeyPass']}" />
+		<property name="secureServer" value="#{propThrift['thrift.secureServer']}" />
+	</bean>
+
+ 	<util:properties id="propStompServer" location="classpath:spring/properties/springstompserver.properties" />
+	<bean id="springStompServerProperties" class="org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties">
+		<property name="port" value="#{propStompServer['stompserver.port']}" />
+		<property name="sessionTimeout" value="#{propStompServer['stompserver.sessionTimeout']}" />
+		<property name="destinationTopic" value="#{propStompServer['stompserver.destinationTopic']}" />
+		<property name="destinationPrefix" value="#{propStompServer['stompserver.destinationPrefix']}" />
+		<property name="endPoint" value="#{propStompServer['stompserver.endPoint']}" />
+		<property name="targetDestination" value="#{propStompServer['stompserver.targetDestination']}" />
+	</bean> -->
+
+</beans>
