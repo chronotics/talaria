@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
@@ -19,7 +20,25 @@ public class ThriftServer {
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(ThriftServer.class);
-	
+
+	public static int delay_to_start = 10; // ms
+	public static int delay_to_stop = 10; // ms
+	public static int timeout_to_start = 2000; // ms
+	public static int timeout_to_stop = 2000; // ms
+
+	public static enum SERVERTYPE {
+		SIMPLE("simple"),
+		THREADPOOL("threadpool");
+
+		private String type;
+
+		SERVERTYPE(String _type) {
+			type = _type;
+		}
+
+		public String toString() { return type; }
+	}
+
 	private ThriftServerProperties properties;
 	private TServer server = null;
 	
@@ -27,7 +46,8 @@ public class ThriftServer {
 		return properties;
 	}
 	
-	public void setProperties(ThriftServerProperties _properties) {
+	public void setProperties(
+			ThriftServerProperties _properties) {
 		properties = _properties;
 	}
 	
@@ -48,6 +68,17 @@ public class ThriftServer {
 		
 		this.properties.set(_properties);
 
+		SERVERTYPE type;
+		if(_properties.getServerType().equals(SERVERTYPE.SIMPLE.toString())) {
+			type = SERVERTYPE.SIMPLE;
+		} else if(_properties.getServerType().equals(SERVERTYPE.THREADPOOL.toString())) {
+			type = SERVERTYPE.THREADPOOL;
+		} else {
+			logger.error(_properties.getServerType());
+			logger.error("Unknown Thrift server type");
+			return;
+		}
+
 		try {			
 			TransferService.Processor<TransferService.Iface> processor = 
 					new TransferService.Processor<TransferService.Iface>(_service);
@@ -55,24 +86,27 @@ public class ThriftServer {
 			Runnable server = new Runnable() {
 				public void run() {
 					try {
-						createServer(processor);
-					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (TTransportException e) {
-						// TODO Auto-generated catch block
+						createServer(processor, type);
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			};      	      
 			new Thread(server).start();
-			
+
+			int t = 0;
 			while(!this.isRunning()) {
 				try {
-					Thread.sleep(10);
+					Thread.sleep(delay_to_start);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				t += delay_to_start;
+				if(t > timeout_to_start) {
+					this.server.stop();
+					logger.error("Timeout occurred when thrift server starts");
+					break;
 				}
 			}
 		} catch (Exception e) {
@@ -83,13 +117,20 @@ public class ThriftServer {
 	public void stop() {
 		if(server.isServing()) {
 			server.stop();
+			int t = 0;
 			while(this.isRunning()) {
 				try {
-					Thread.sleep(10);
+					Thread.sleep(delay_to_stop);
+					logger.info("waiting for the stop of Thrift server...");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				t += delay_to_stop;
+				if(t > timeout_to_stop) {
+				    logger.error("Timeout occurred when thrift server stops");
+				    break;
+                }
 			}
 			logger.info("Thrift server is stopped ... ");
 		} else {
@@ -99,24 +140,33 @@ public class ThriftServer {
 	
 	public boolean isRunning() {
 		if(server == null) {
+			logger.info("Thrift server is null");
 			return false;
 		}
 		return server.isServing() ? true : false;
 	}
     
 	public void createServer(
-			TransferService.Processor<TransferService.Iface> processor) 
-					throws UnknownHostException, TTransportException {
+			TransferService.Processor<TransferService.Iface> processor,
+			SERVERTYPE _type)
+			throws Exception {
 		
 		InetAddress listenAddress = InetAddress.getByName(properties.getIp());
 		TServerTransport serverTransport = new TServerSocket(
 				new InetSocketAddress(listenAddress, Integer.parseInt(properties.getPort())));
-//		// Simple server
-//		server = new TSimpleServer(
-//						new Args(serverTransport).processor(processor));
-		// Use this for a multithreaded server
-		server = new TThreadPoolServer(
-						new TThreadPoolServer.Args(serverTransport).processor(processor));
+
+		if(_type == SERVERTYPE.SIMPLE) {
+			// Simple server
+			server = new TSimpleServer(
+					new TServer.Args(serverTransport).processor(processor));
+		} else if(_type == SERVERTYPE.THREADPOOL) {
+			// Use this for a multithreaded server
+			server = new TThreadPoolServer(
+					new TThreadPoolServer.Args(serverTransport).processor(processor));
+		} else {
+			logger.error("Unknown Thrift server type");
+			throw new Exception("Unknown Thrift server type");
+		}
 		
 		logger.info("Thrift server is started ... ");
 		server.serve();

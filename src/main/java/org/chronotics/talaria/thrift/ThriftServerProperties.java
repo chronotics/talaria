@@ -28,6 +28,7 @@ public class ThriftServerProperties {
 	public void set(ThriftServerProperties _properties) {
 		this.set(_properties.getIp(),
 				_properties.getPort(),
+				_properties.getServerType(),
 				_properties.getSecurePort(),
 				_properties.getSecureKeyStore(),
 				_properties.getSecureKeyPass(),
@@ -37,21 +38,24 @@ public class ThriftServerProperties {
 	private void set(
 			String ip,
 			String port,
+			String serverType,
 			String securePort,
 			String secureKeyStore,
 			String secureKeyPass,
 			String secureServer) {
-		this.ip = ip;
-		this.port = port;
-		this.securePort = securePort;
-		this.secureKeyStore = secureKeyStore;
-		this.secureKeyPass = secureKeyPass;
-		this.secureServer = secureServer;
+	    this.setIp(ip);
+	    this.setPort(port);
+	    this.setServerType(serverType);
+	    this.setSecurePort(securePort);
+	    this.setSecureKeyStore(secureKeyStore);
+	    this.setSecureKeyPass(secureKeyPass);
+	    this.setSecureServer(secureServer);
 	}
 	
 	public boolean isNull() {
 		if(ip == null && 
 				port == null &&
+                serverType == null &&
 				securePort == null &&
 				secureKeyStore ==null &&
 				secureKeyPass == null &&
@@ -83,7 +87,14 @@ public class ThriftServerProperties {
 	public void setPort(String _port) {
 		port = _port;
 	}
-	
+
+	@Valid
+    @NotNull
+    @Value("${thrift.serverType}")
+    private String serverType;
+	public String getServerType() { return serverType; }
+	public void setServerType(String _serverType) { serverType = _serverType; }
+
 	@Valid
 	@NotNull	
 	@Value("${thrift.securePort}")
