@@ -32,7 +32,7 @@ public class ThriftClientTest {
 	
 	@Test 
 	public void getProperties() {
-		assertEquals(properties.getIp(),"192.168.0.41");
+		assertEquals(properties.getIp(),"localhost");
 		assertEquals(properties.getPort(),"9091");
 	}
 
