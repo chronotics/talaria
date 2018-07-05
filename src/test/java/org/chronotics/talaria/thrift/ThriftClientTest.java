@@ -1,17 +1,12 @@
 package org.chronotics.talaria.thrift;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.thrift.TException;
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.SimplePrintExecutor;
+import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.TransferService;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,59 +15,89 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftClientProperties.class})
 public class ThriftClientTest {
-	
-	private static final Logger logger = 
+
+	private static final Logger logger =
 			LoggerFactory.getLogger(ThriftClientTest.class);
-	
+
 	@Autowired
-	private ThriftClientProperties properties;
-	
-	@Test 
+	private ThriftClientProperties clientProperties;
+
+	private static ThriftServer thriftServer = null;
+
+	@BeforeClass
+	public static void setup() {
+		ThriftServerProperties serverProperties =
+                new ThriftServerProperties();
+		serverProperties.setIp("localhost");
+		serverProperties.setPort("9091");
+		serverProperties.setServerType("simple");
+		TaskExecutor<Object> executorToWrite =
+                new SimplePrintExecutor<Object>(
+                        TaskExecutor.PROPAGATION_RULE.STEP_BY_STEP_ORIGINAL_ARG,
+                        null);
+        ThriftServiceExecutor thriftServiceExecutor =
+                new ThriftServiceExecutor(null, executorToWrite);
+		ThriftService thriftServiceHandler =
+                new ThriftServiceWithMessageQueue(thriftServiceExecutor);
+		thriftServer = new ThriftServer();
+		thriftServer.start(thriftServiceHandler,serverProperties);
+	}
+
+	@AfterClass
+	public static void teardown() {
+		thriftServer.stop();
+	}
+
+
+	@Test
 	public void getProperties() {
-		assertEquals(properties.getIp(),"localhost");
-		assertEquals(properties.getPort(),"9091");
+		assertEquals("localhost", clientProperties.getIp());
+		assertEquals("9091", clientProperties.getPort());
 	}
 
 	@Test
 	public void startStopThriftClient() {
 		ThriftClient client = new ThriftClient();
-		client.start(properties);
-		
+		client.start(clientProperties);
+
 		TransferService.Client service = client.getService();
 		logger.info("hello client");
-//		try {
-//			String ret = service.readString("thrift");
-//			assertEquals(null, ret);
-//		} catch (TException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
+		// create the message queue
 		try {
-			service.writeId("thrift");
-			logger.info("Id \"thrift\" is inserted");
+			boolean ret = service.writeId("thrift");
+			if(ret) {
+                logger.info("Id \"thrift\" is inserted");
+            } else {
+			    logger.info("Id \"thrift\" is not inserted");
+            }
 		} catch (TException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			logger.info(e.toString());
 		}
-//		try {
-//			String ret = service.readString("vibration");
-//			assertEquals(null, ret);
-//		} catch (TException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		List<String> tempList = 
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<String> tempList =
 				new ArrayList<String>();
-		
+
 		int count = 100;
 		for(int i=0; i<count; i++) {
 			try {
-				String ret = service.writeString("thrift", String.valueOf(i));
+				String ret =
+                        service.writeString("thrift", String.valueOf(i));
 				tempList.add(String.valueOf(i));
 			} catch (TException e) {
 				// TODO Auto-generated catch block
@@ -80,12 +105,13 @@ public class ThriftClientTest {
 				logger.info(e.toString());
 			}
 		}
-		
+
+		logger.info("thrift write is done");
+
 		for(int i=0; i<count; i++) {
 			try {
 				String value = null;
 				value = service.readString("thrift");
-				System.out.println(value);
 				if(value != null) {
 					tempList.remove(value);
 				} else {
@@ -97,8 +123,9 @@ public class ThriftClientTest {
 				logger.info(e.toString());
 			}
 		}
-		
-		System.out.println(tempList.size());
+
+		logger.info("thrift read is done");
+		logger.info(String.valueOf(tempList.size()));
 		assertEquals(0,tempList.size());
 	}
 }
