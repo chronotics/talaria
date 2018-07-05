@@ -17,17 +17,18 @@ public class ThriftServerTest {
 	
 	@Test 
 	public void getSeverProperties() {
-		assertEquals(properties.getIp(),"192.168.0.41");
-		assertEquals(properties.getPort(),"9091");
+		System.out.println(properties.getIp());
+		assertEquals("localhost", properties.getIp());
+		assertEquals("9091", properties.getPort());
 	}
 	
-	@Test 
+	@Test
 	public void getSecureProperties() {
-		assertEquals(properties.getSecurePort(),"9092");
-		assertEquals(properties.getSecureKeyStore(),"~/.keystore");
-		assertEquals(properties.getSecureKeyPass(),"thrift");
+		assertEquals("9092", properties.getSecurePort());
+		assertEquals("~/.keystore", properties.getSecureKeyStore());
+		assertEquals("thrift", properties.getSecureKeyPass());
 	}
-	
+
 	@Test
 	public void startStopThriftServer() {
 		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);

@@ -54,7 +54,7 @@ public class MessageTransferThroughThriftServer {
 		
 //		MessageTransferThroughThriftServer temp = new MessageTransferThroughThriftServer();
 		ThriftServerProperties thriftServerProperties = new ThriftServerProperties();
-		thriftServerProperties.setIp("192.168.0.41");
+		thriftServerProperties.setIp("192.168.0.13");
 		thriftServerProperties.setPort("9091");
 		thriftServerProperties.setSecureServer("false");
 		
