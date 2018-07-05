@@ -30,6 +30,9 @@ public class ThriftServiceExecutor {
 		}
 		
 		public Object executeToRead(Object _arg) {
+			if(executorToRead == null) {
+				return null;
+			}
 			try {
 				Future<Object> future = executorToRead.execute(_arg);
 				return future.get();
@@ -41,6 +44,9 @@ public class ThriftServiceExecutor {
 		}
 		
 		public Object executeToWrite(Object _arg) {
+			if(executorToWrite == null) {
+				return null;
+			}
 			try {
 				Future<Object> future = executorToWrite.execute(_arg);
 				return future.get();

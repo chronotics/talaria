@@ -109,7 +109,7 @@ public abstract class TaskExecutor<T> implements Callable<T> {
 	protected T value;
 	
 	@SuppressWarnings("unused")
-	private TaskExecutor() {}
+	protected TaskExecutor() {}
 	
 	protected TaskExecutor(PROPAGATION_RULE _propagationRule, TaskExecutor<T> _nextExecutor) {
 		addNextExecutor(_propagationRule, _nextExecutor);

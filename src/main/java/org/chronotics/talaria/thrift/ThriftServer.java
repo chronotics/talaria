@@ -69,9 +69,9 @@ public class ThriftServer {
 		this.properties.set(_properties);
 
 		SERVERTYPE type;
-		if(_properties.getServerType().equals(SERVERTYPE.SIMPLE.toString())) {
+		if(_properties.getServerType() == SERVERTYPE.SIMPLE.toString()) {
 			type = SERVERTYPE.SIMPLE;
-		} else if(_properties.getServerType().equals(SERVERTYPE.THREADPOOL.toString())) {
+		} else if(_properties.getServerType() == SERVERTYPE.THREADPOOL.toString()) {
 			type = SERVERTYPE.THREADPOOL;
 		} else {
 			logger.error(_properties.getServerType());
