@@ -90,7 +90,7 @@ public class ThriftServerProperties {
 
 	@Valid
     @NotNull
-    @Value("${thrift.serverType")
+    @Value("${thrift.serverType}")
     private String serverType;
 	public String getServerType() { return serverType; }
 	public void setServerType(String _serverType) { serverType = _serverType; }
