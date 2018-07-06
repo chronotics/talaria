@@ -19,7 +19,11 @@ public class ThriftClient {
 	private TransferService.Client service = null;
 	private TTransport transport = null;
 
-	public ThriftClient() {}
+	private ThriftClient() {}
+
+	public ThriftClient(ThriftClientProperties _properties) {
+		properties = _properties;
+	}
 
 	public ThriftClientProperties getProperties() {
 		return properties;
@@ -33,21 +37,8 @@ public class ThriftClient {
 		return service;
 	}
 	
-	public void start(ThriftClientProperties _properties) {
-		if(this.properties == null) {
-			this.properties = new ThriftClientProperties();
-		}
-		
-		if(properties.getIp() == _properties.getIp() &&  
-				Integer.parseInt(properties.getPort()) 
-				== Integer.parseInt(_properties.getPort())) {
-			logger.error("The same ip address and port are already used");
-			return;
-		}
-		
-		this.properties.set(_properties);
-		
-		this.createClinet(_properties);
+	public void start() {
+		this.createClinet();
 	}
 	
 	public void stop() {
@@ -58,18 +49,32 @@ public class ThriftClient {
 		}
 	}
 	
-	private void createClinet(ThriftClientProperties _properties) {
+	private void createClinet() {
+		assert(this.properties != null);
+		if(this.properties == null) {
+			logger.error("ThriftClientProperties is null");
+			return;
+		}
+
+//		if(properties.getIp() == _properties.getIp() &&
+//				Integer.parseInt(properties.getPort())
+//				== Integer.parseInt(_properties.getPort())) {
+//			logger.error("The same ip address and port are already used");
+//			return;
+//		}
+//
+//		this.properties.set(_properties);
 		if(transport == null) {
 			transport = new TSocket(
-							_properties.getIp(),
-							Integer.valueOf(_properties.getPort()));
+							properties.getIp(),
+							Integer.valueOf(properties.getPort()));
 		} else {
 			logger.info("transport is already created");
 		}
 		
 		logger.info("ip:port is {}:{}",
-				_properties.getIp(),
-				_properties.getPort());
+				properties.getIp(),
+				properties.getPort());
 		
 		if(!transport.isOpen()) {
 			try {

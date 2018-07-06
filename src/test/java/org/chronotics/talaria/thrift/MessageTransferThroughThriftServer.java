@@ -24,11 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class MessageTransferThroughThriftServer {
 	@Autowired
 	private ThriftServerProperties thriftServerProperties;
-	
-	public ThriftServerProperties getProperties() { return thriftServerProperties; }
 
-//	private static ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
-	private static ThriftServer thriftServer = new ThriftServer();
+	private static ThriftServer thriftServer = null;
 	
 	private static List<String> keyList = null;
 	private static int keySize = 100;
@@ -41,10 +38,6 @@ public class MessageTransferThroughThriftServer {
 			"";
 	private long delay = 5000;
 	
-	public synchronized void startServer() {
-		
-	}
-	
 	@BeforeClass
 	public static void setup() {
 		keyList = new ArrayList<String>();
@@ -52,21 +45,16 @@ public class MessageTransferThroughThriftServer {
 			keyList.add("id"+String.valueOf(i));
 		}
 		
-//		MessageTransferThroughThriftServer temp = new MessageTransferThroughThriftServer();
 		ThriftServerProperties thriftServerProperties = new ThriftServerProperties();
 		thriftServerProperties.setIp("192.168.0.13");
 		thriftServerProperties.setPort("9091");
 		thriftServerProperties.setSecureServer("false");
 		
 		System.out.println(thriftServerProperties.toString());
-////		if(thriftServer.isRunning()) {
-////			return;
-////		}
-//		thriftServer.start(thriftServiceHandler,properties);
-		
+
 		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
-		thriftServer = new ThriftServer();
-		thriftServer.start(thriftServiceHandler,thriftServerProperties);
+		thriftServer = new ThriftServer(thriftServiceHandler, thriftServerProperties);
+		thriftServer.start();
 		
 	}
 	

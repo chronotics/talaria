@@ -32,11 +32,7 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		if(properties == null) {
 			return;
 		}
-//		if(properties.isNull()) {
-//			logger.error("TalariaProperties is null");
-//			return;
-//		}
-		
+
 		// thrift server properties
 		ThriftServerProperties thriftServerProperties = 
 				properties.getThriftServerProperties();
@@ -53,7 +49,7 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		
 		// start thrift server
 		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
-		thriftServer = new ThriftServer();
-		thriftServer.start(thriftServiceHandler,thriftServerProperties);
+		thriftServer = new ThriftServer(thriftServiceHandler, thriftServerProperties);
+		thriftServer.start();
 	}
 }

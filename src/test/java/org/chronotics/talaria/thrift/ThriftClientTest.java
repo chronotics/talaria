@@ -47,8 +47,8 @@ public class ThriftClientTest {
                 new ThriftServiceExecutor(null, executorToWrite);
 		ThriftService thriftServiceHandler =
                 new ThriftServiceWithMessageQueue(thriftServiceExecutor);
-		thriftServer = new ThriftServer();
-		thriftServer.start(thriftServiceHandler,serverProperties);
+		thriftServer = new ThriftServer(thriftServiceHandler, serverProperties);
+		thriftServer.start();
 	}
 
 	@AfterClass
@@ -65,8 +65,8 @@ public class ThriftClientTest {
 
 	@Test
 	public void startStopThriftClient() {
-		ThriftClient client = new ThriftClient();
-		client.start(clientProperties);
+		ThriftClient client = new ThriftClient(clientProperties);
+		client.start();
 
 		TransferService.Client service = client.getService();
 		logger.info("hello client");

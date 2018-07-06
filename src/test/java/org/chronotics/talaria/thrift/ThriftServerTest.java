@@ -1,13 +1,13 @@
 package org.chronotics.talaria.thrift;
 
-import static org.junit.Assert.assertEquals;
-
 import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftServerProperties.class})
@@ -32,13 +32,18 @@ public class ThriftServerTest {
 	@Test
 	public void startStopThriftServer() {
 		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
-		ThriftServer thriftServer = new ThriftServer();
-		thriftServer.start(thriftServiceHandler,properties);
+		ThriftServer thriftServer =
+				new ThriftServer(
+						thriftServiceHandler, properties);
+		thriftServer.start();
 		assertEquals(true,thriftServer.isRunning());
+
 		thriftServer.stop();
 		assertEquals(false,thriftServer.isRunning());
-		thriftServer.start(thriftServiceHandler,properties);
-		assertEquals(false,thriftServer.isRunning());
+
+		thriftServer.start();
+		assertEquals(true,thriftServer.isRunning());
+
 		thriftServer.stop();
 		assertEquals(false,thriftServer.isRunning());
 	}

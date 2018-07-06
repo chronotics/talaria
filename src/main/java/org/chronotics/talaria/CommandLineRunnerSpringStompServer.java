@@ -14,41 +14,41 @@ public class CommandLineRunnerSpringStompServer implements CommandLineRunner {
 
 	@Autowired
 	private ApplicationContext context;
-	
+
 	@Override
 	public void run(String... arg0) throws Exception {
-		
-		TalariaProperties properties = 
+
+		TalariaProperties properties =
 				(TalariaProperties)context.getBean("talariaProperties");
-		
+
 		assert(properties != null);
 		if(properties == null) {
 			return;
 		}
-		
+
 		// Websocket server properties
-		SpringStompServerProperties stompProperties = 
+		SpringStompServerProperties stompProperties =
 				properties.getSpringStompServerProperties();
 		assert(stompProperties != null);
 		if(stompProperties == null) {
 			return;
 		}
-		
+
 		String targetDestination = stompProperties.getTargetDestination();
-		
+
 		// start websocket server
-		TaskExecutor<SimpMessagingTemplate> executorWebsocketTask = 
+		TaskExecutor<SimpMessagingTemplate> executorWebsocketTask =
 				new MessageQueueToWebsocketServer(
-						TaskExecutor.PROPAGATION_RULE.SIMULTANEOUSLY, 
+						TaskExecutor.PROPAGATION_RULE.SIMULTANEOUSLY,
 						null);
-		
+
 		executorWebsocketTask.putProperty(
 				MessageQueueToWebsocketServer.targetDestination,
 				targetDestination);
-		
+
 		// Read MessageQueue and send data to Websocket Server
-		ScheduledUpdates<SimpMessagingTemplate> scheduledUpdates = 
-				context.getBean(ScheduledUpdates.class);		
+		ScheduledUpdates<SimpMessagingTemplate> scheduledUpdates =
+				context.getBean(ScheduledUpdates.class);
 		scheduledUpdates.setAttribute(properties.getMqMapKey(),executorWebsocketTask);
 	}
 }
