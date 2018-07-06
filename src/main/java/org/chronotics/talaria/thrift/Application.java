@@ -20,12 +20,7 @@ public class Application {
 //		TalariaProperties properties = 
 //				(TalariaProperties)context.getBean("talariaProperties");
 //		String queueMapKey = properties.getQueueMapKey();
-//		ThriftServerProperties thriftServerProperties = properties.getThriftServerProperties();
-//		if(thriftServerProperties == null) {
-//			System.out.println("check DI injection of ThriftServerProperties");
-//			return;
-//		}
-		
+
 		ThriftServerProperties thriftServerProperties = 
 				(ThriftServerProperties)context.getBean("thriftServerProperties");
 		if(thriftServerProperties == null) {
@@ -33,17 +28,9 @@ public class Application {
 			return;
 		}
 
-//		// start thrift server
-//		ThriftService thriftServiceHandler = 
-//				new ThriftServiceWithMessageQueue(null);
-//		thriftServer = new ThriftServer();
-//		thriftServer.start(thriftServiceHandler,thriftServerProperties);
-		// thrift server properties
-
-		
 		// start thrift server
 		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
-		thriftServer = new ThriftServer();
-		thriftServer.start(thriftServiceHandler,thriftServerProperties);
+		thriftServer = new ThriftServer(thriftServiceHandler, thriftServerProperties);
+		thriftServer.start();
 	}
 }

@@ -2,7 +2,6 @@ package org.chronotics.talaria.thrift;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
@@ -39,9 +38,19 @@ public class ThriftServer {
 		public String toString() { return type; }
 	}
 
+	private TransferService.Processor<TransferService.Iface> processor;
 	private ThriftServerProperties properties;
 	private TServer server = null;
-	
+
+	private ThriftServer() {}
+
+	public ThriftServer(
+		TransferService.Iface _service,
+		ThriftServerProperties _properties) {
+		this.properties = _properties;
+		processor = new TransferService.Processor<TransferService.Iface>(_service);
+	}
+
 	public ThriftServerProperties getProperties() {
 		return properties;
 	}
@@ -51,67 +60,44 @@ public class ThriftServer {
 		properties = _properties;
 	}
 	
-	public void start(
-			TransferService.Iface _service, 
-			ThriftServerProperties _properties) {
-		
-		if(this.properties == null) {
-			this.properties = new ThriftServerProperties();
-		}
-		
-		if(properties.getIp() == _properties.getIp() &&  
-				Integer.parseInt(properties.getPort()) 
-				== Integer.parseInt(_properties.getPort())) {
-			logger.error("The same ip address and port are already used");
-			return;
-		}
-		
-		this.properties.set(_properties);
+	public void start() {
+        Runnable serverService = new Runnable() {
+        	@Override
+            public void run() {
+                try {
+                    SERVERTYPE type;
+                    if(properties.getServerType().equals(SERVERTYPE.SIMPLE.toString())) {
+                        type = SERVERTYPE.SIMPLE;
+                    } else if(properties.getServerType().equals(SERVERTYPE.THREADPOOL.toString())) {
+                        type = SERVERTYPE.THREADPOOL;
+                    } else {
+                        logger.error(properties.getServerType());
+                        logger.error("Unknown Thrift server type");
+                        return;
+                    }
+                    createServer(processor, type);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(serverService).start();
 
-		SERVERTYPE type;
-		if(_properties.getServerType() == SERVERTYPE.SIMPLE.toString()) {
-			type = SERVERTYPE.SIMPLE;
-		} else if(_properties.getServerType() == SERVERTYPE.THREADPOOL.toString()) {
-			type = SERVERTYPE.THREADPOOL;
-		} else {
-			logger.error(_properties.getServerType());
-			logger.error("Unknown Thrift server type");
-			return;
-		}
-
-		try {			
-			TransferService.Processor<TransferService.Iface> processor = 
-					new TransferService.Processor<TransferService.Iface>(_service);
-			
-			Runnable server = new Runnable() {
-				public void run() {
-					try {
-						createServer(processor, type);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			};      	      
-			new Thread(server).start();
-
-			int t = 0;
-			while(!this.isRunning()) {
-				try {
-					Thread.sleep(delay_to_start);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				t += delay_to_start;
-				if(t > timeout_to_start) {
-					this.server.stop();
-					logger.error("Timeout occurred when thrift server starts");
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        int t = 0;
+        while(!this.isRunning()) {
+            try {
+                Thread.sleep(delay_to_start);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            t += delay_to_start;
+            if(t > timeout_to_start) {
+                this.server.stop();
+                logger.error("Timeout occurred when thrift server starts");
+                break;
+            }
+        }
 	}
 	
 	public void stop() {
@@ -140,13 +126,13 @@ public class ThriftServer {
 	
 	public boolean isRunning() {
 		if(server == null) {
-			logger.info("Thrift server is null");
+			logger.info("Thrift server is null. This can be seen few times when the process starts or ends");
 			return false;
 		}
 		return server.isServing() ? true : false;
 	}
     
-	public void createServer(
+	private void createServer(
 			TransferService.Processor<TransferService.Iface> processor,
 			SERVERTYPE _type)
 			throws Exception {
@@ -167,7 +153,7 @@ public class ThriftServer {
 			logger.error("Unknown Thrift server type");
 			throw new Exception("Unknown Thrift server type");
 		}
-		
+
 		logger.info("Thrift server is started ... ");
 		server.serve();
 	}
