@@ -184,4 +184,8 @@ public class MessageQueue<E> extends Observable {
 	public <E> E[] toArray(E[] a) {
 		return queue.toArray(a);
 	}
+
+	public void clear() {
+		queue.clear();
+	}
 }

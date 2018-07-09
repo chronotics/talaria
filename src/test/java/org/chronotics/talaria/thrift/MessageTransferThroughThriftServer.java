@@ -5,11 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.Message;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,13 +24,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftServerProperties.class})
 public class MessageTransferThroughThriftServer {
-	@Autowired
-	private ThriftServerProperties thriftServerProperties;
+//	@Autowired
+//	private ThriftServerProperties thriftServerProperties;
 
 	private static ThriftServer thriftServer = null;
 	
 	private static List<String> keyList = null;
 	private static int keySize = 100;
+	private static int insertionSize = 50;
 	private static String message = "{\n" + 
 			"  \"timestamp\" : 1528804317,\n" + 
 			"  \"sender_id\": \"sender\",\n" + 
@@ -36,7 +39,7 @@ public class MessageTransferThroughThriftServer {
 			"  \"command\": \"execute training\"\n" + 
 			"}\n" + 
 			"";
-	private long delay = 5000;
+	private long delay = 1000;
 	
 	@BeforeClass
 	public static void setup() {
@@ -46,8 +49,9 @@ public class MessageTransferThroughThriftServer {
 		}
 		
 		ThriftServerProperties thriftServerProperties = new ThriftServerProperties();
-		thriftServerProperties.setIp("192.168.0.13");
+		thriftServerProperties.setIp("localhost");
 		thriftServerProperties.setPort("9091");
+		thriftServerProperties.setServerType("simple");
 		thriftServerProperties.setSecureServer("false");
 		
 		System.out.println(thriftServerProperties.toString());
@@ -55,7 +59,6 @@ public class MessageTransferThroughThriftServer {
 		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
 		thriftServer = new ThriftServer(thriftServiceHandler, thriftServerProperties);
 		thriftServer.start();
-		
 	}
 	
 	@AfterClass
@@ -81,8 +84,8 @@ public class MessageTransferThroughThriftServer {
 					(MessageQueue<String>) 
 					mqMap.get(keyList.get(i));
 			assertTrue(mq!=null);
+			assertEquals(0 ,mqMap.get(keyList.get(i)).size());
 		}
-		
 	}
 	
 	@Test
@@ -114,7 +117,7 @@ public class MessageTransferThroughThriftServer {
 		
 		int count = 0;
 		while(true) {
-			if(count >= 50) {
+			if(count >= insertionSize) {
 				break;
 			}
 			for(int i=0; i<keySize; i++) {
@@ -130,68 +133,53 @@ public class MessageTransferThroughThriftServer {
 				
 				mq.add(message);
 			}
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			count++;
-		}
-		
-		try {
-			Thread.sleep(delay);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		for(int i=0; i<keySize; i++) {
 			MessageQueue<String> mq = 
 					(MessageQueue<String>) 
 					mqMap.get(keyList.get(i));
-			assertEquals(0, mq.size());
+			assertEquals(insertionSize, mq.size());
 		}
 	}
 	
 	@Test
 	public void checkMessage() {
-//		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-//		for(int i=0; i<keySize; i++) {
-//			MessageQueue<String> mq = 
-//					(MessageQueue<String>) 
-//					mqMap.get(keyList.get(i));
-//			if(mq==null) {
-//				mq = new MessageQueue<String>(
-//							String.class,
-//							MessageQueue.default_maxQueueSize,
-//							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-//				mqMap.put(keyList.get(i), mq);
-//			}
-//		}
-//		for(int i=0; i<keySize; i++) {
-//			MessageQueue<String> mq = 
-//					(MessageQueue<String>) 
-//					mqMap.get(keyList.get(i));
-//			mq.add(String.valueOf(i) 
-//					+ ", " 
-//					+ new Timestamp(System.currentTimeMillis()).toString());
-//		}
-//		
-//		try {
-//			Thread.sleep(delay);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		assertTrue(true);
-//		
-//		for(int i=0; i<keySize; i++) {
-//			MessageQueue<String> mq = 
-//					(MessageQueue<String>) 
-//					mqMap.get(keyList.get(i));
-//			assertEquals(0, mq.size());
-//		}
+		MessageQueueMap mqMap = MessageQueueMap.getInstance();
+		for(int i=0; i<keySize; i++) {
+			MessageQueue<String> mq =
+					(MessageQueue<String>)
+					mqMap.get(keyList.get(i));
+			if(mq==null) {
+				mq = new MessageQueue<String>(
+							String.class,
+							MessageQueue.default_maxQueueSize,
+							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+				mqMap.put(keyList.get(i), mq);
+			} else {
+				mq.clear();
+			}
+		}
+		Map<Integer, String> tempMap = new HashMap<Integer, String>();
+		for(int i=0; i<keySize; i++) {
+			MessageQueue<String> mq =
+					(MessageQueue<String>)
+					mqMap.get(keyList.get(i));
+			String message = (String.valueOf(i)
+							+ ", "
+							+ new Timestamp(System.currentTimeMillis()).toString());
+			mq.add(message);
+			tempMap.put(i, message);
+		}
+
+		for(int i=0; i<keySize; i++) {
+			MessageQueue<String> mq =
+					(MessageQueue<String>)
+					mqMap.get(keyList.get(i));
+			assertEquals(1, mq.size());
+			String message = mq.peek();
+			assertEquals(tempMap.get(i), message);
+		}
 	}
 }

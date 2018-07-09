@@ -1,6 +1,5 @@
-package org.chronotics.talaria.common.taskexecutor;
+package org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -14,16 +13,19 @@ import org.chronotics.talaria.thrift.gen.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ThriftServiceWithMessageQueue implements ThriftService {
+public class ThriftServiceWithMessageQueue extends ThriftService {
 
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
 	
-	private ThriftServiceExecutor executor = null;
+//	private ThriftServiceExecutor executor = null;
 
 	public ThriftServiceWithMessageQueue(
 			ThriftServiceExecutor _executor) {
-		executor = _executor;
+//		executor = _executor;
+		if(_executor != null) {
+			super.setExecutor(_executor);
+		}
 	}
 
 	@Override
@@ -42,8 +44,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		mq.add(_v);//MessageToJson.convert(_v));
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -60,8 +62,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -78,8 +80,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -96,8 +98,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -114,8 +116,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -132,8 +134,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -151,8 +153,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		
 		Object rt = null;
-		if(executor != null) {
-			rt = executor.executeToWrite(_v);
+		if(getExecutor() != null) {
+			rt = getExecutor().executeToWrite(_v);
 		}
 		return (rt != null) ? rt.toString() : null;
 	}
@@ -175,8 +177,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 //			throw new TException("Queue is empty");
 			return null;
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
@@ -198,8 +200,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
@@ -221,8 +223,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
@@ -243,8 +245,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
@@ -265,8 +267,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
@@ -287,8 +289,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
@@ -309,8 +311,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(executor != null) {
-				executor.executeToRead(value);
+			if(getExecutor() != null) {
+				getExecutor().executeToRead(value);
 			}
 			return value;
 		}
