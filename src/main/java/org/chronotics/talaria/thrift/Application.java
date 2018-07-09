@@ -1,6 +1,6 @@
 package org.chronotics.talaria.thrift;
 
-import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

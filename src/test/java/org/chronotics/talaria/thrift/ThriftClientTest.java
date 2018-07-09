@@ -3,7 +3,7 @@ package org.chronotics.talaria.thrift;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.TaskExecutor;
 import org.chronotics.talaria.common.taskexecutor.SimplePrintExecutor;
-import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.TransferService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
