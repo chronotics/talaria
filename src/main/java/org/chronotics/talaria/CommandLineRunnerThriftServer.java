@@ -1,6 +1,6 @@
 package org.chronotics.talaria;
 
-import org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.ThriftServer;
 import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.thrift.ThriftService;

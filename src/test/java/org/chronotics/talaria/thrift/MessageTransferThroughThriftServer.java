@@ -11,21 +11,18 @@ import java.util.Map;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.Message;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftServerProperties.class})
 public class MessageTransferThroughThriftServer {
-//	@Autowired
-//	private ThriftServerProperties thriftServerProperties;
 
 	private static ThriftServer thriftServer = null;
 	
