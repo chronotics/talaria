@@ -38,7 +38,7 @@ public class ThriftClientProperties {
 
 	@Valid
 	@NotNull	
-	@Value("${thrift.ip}")
+	@Value("${thrift.server.ip}")
 	private String ip;
 	public String getIp() {
 		return ip;
@@ -49,7 +49,7 @@ public class ThriftClientProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${thrift.port}")
+	@Value("${thrift.server.port}")
 	private String port;
 	public String getPort() {
 		return port;

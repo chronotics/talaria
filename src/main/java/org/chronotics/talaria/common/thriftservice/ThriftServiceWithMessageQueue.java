@@ -1,8 +1,4 @@
-package org.chronotics.talaria.common.org.chronotics.talaria.common.thriftservice;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
+package org.chronotics.talaria.common.thriftservice;
 
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
@@ -12,6 +8,10 @@ import org.chronotics.talaria.thrift.ThriftServiceExecutor;
 import org.chronotics.talaria.thrift.gen.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class ThriftServiceWithMessageQueue extends ThriftService {
 
