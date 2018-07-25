@@ -23,7 +23,7 @@ public class MessageQueue<E> extends Observable {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
 	
-	public static int default_maxQueueSize = 1000;
+	public static int default_maxQueueSize = 10000;
 	public enum OVERFLOW_STRATEGY {
 		NO_INSERTION,
 		DELETE_FIRST;
