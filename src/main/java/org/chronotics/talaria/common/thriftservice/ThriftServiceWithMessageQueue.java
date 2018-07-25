@@ -18,11 +18,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
 	
-//	private ThriftServiceExecutor executor = null;
-
 	public ThriftServiceWithMessageQueue(
 			ThriftServiceExecutor _executor) {
-//		executor = _executor;
 		if(_executor != null) {
 			super.setExecutor(_executor);
 		}
@@ -41,7 +38,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 			mqMap.put(id, mq);
 		}
-		mq.add(_v);//MessageToJson.convert(_v));
+		mq.add(_v);
 		
 		Object rt = null;
 		if(getExecutor() != null) {
@@ -142,8 +139,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 
 	@Override
 	public String writeString(String _id, String _v) throws TException {
-		// TODO Auto-generated method stub
-		MessageQueue<String> mq = 
+		MessageQueue<String> mq =
 				(MessageQueue<String>) 
 				MessageQueueMap.getInstance()
 				.get(_id);
@@ -167,14 +163,12 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		if( mq == null) {
 			logger.info("There is no matching queue with id");
-//			throw new TException("There is no matching queue with id");
 			return null;
 		}
 
 		Message value = mq.poll();
 		if(value == null) {
 			logger.info("Queue is empty");
-//			throw new TException("Queue is empty");
 			return null;
 		} else {
 			if(getExecutor() != null) {
