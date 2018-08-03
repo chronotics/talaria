@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class MessageQueue<E> extends Observable {
 	
-	public static String notifyingMessageRemove = "element is removed";
+	public static String notifyingMessageRemove = "rm";
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
