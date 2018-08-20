@@ -79,4 +79,8 @@ public class ThriftClientMap {
 	public Set<Entry<String, ThriftClient>> entrySet() {
 		return clientMap.entrySet();
 	}
+
+	public ThriftClient removeKey(String _key) {
+		return clientMap.remove(_key);
+	}
 }
