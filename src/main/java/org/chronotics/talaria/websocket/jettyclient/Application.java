@@ -9,7 +9,7 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 public class Application {
 
 	public static void main(String[] args) {
-		String destUri = "ws://localhost:8080/text";
+		String destUri = "ws://localhost:9000/test";
         if (args.length > 0)
         {
             destUri = args[0];
