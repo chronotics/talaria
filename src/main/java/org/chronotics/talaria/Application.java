@@ -11,7 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {
 		"org.chronotics.talaria",
 		"org.chronotics.talaria.common",
-		"org.chronotics.talaria.websocket.springstompserver", 
+		"org.chronotics.talaria.websocket.jsr356",
+//		"org.chronotics.talaria.websocket.springstompserver",
 		"org.chronotics.talaria.thrift"})
 public class Application {
 	

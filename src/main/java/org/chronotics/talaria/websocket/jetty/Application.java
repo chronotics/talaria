@@ -17,7 +17,7 @@ public class Application {
                 new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         handler.setContextPath("/");
-        handler.addServlet(JettyServlet.class, "/test");
+//        handler.addServlet(JettyServlet.class, "/hello");
 
         jettyServer.addHandler(handler);
 
@@ -53,6 +53,7 @@ public class Application {
 //            Thread.sleep(2000);
 //            // wait for closed socket connection.
 ////            socket.awaitClose(5,TimeUnit.SECONDS);
+//            System.out.println("connected");
 //        }
 //        catch (Throwable t)
 //        {
