@@ -21,9 +21,13 @@ public class JettySocket extends AbstractWebsocketListener {
 
         if(session!=null && session.isOpen()) {
             try {
+//                session.getRemote().sendString("pong");
 //                session.getRemote().sendString("hello");
                 if(s.equals("ping")) {
                     session.getRemote().sendString("pong");
+                    logger.info("pong was sent to clinet");
+                } else {
+                    logger.info(s);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -33,7 +37,9 @@ public class JettySocket extends AbstractWebsocketListener {
 
     @Override
     public void onWebSocketClose(int i, String s) {
+        this.session.close();
         this.session = null;
+        logger.info("JettySocket is closed");
     }
 
     @Override
@@ -44,6 +50,6 @@ public class JettySocket extends AbstractWebsocketListener {
 
     @Override
     public void onWebSocketError(Throwable throwable) {
-
+        logger.error(throwable.toString());
     }
 }
