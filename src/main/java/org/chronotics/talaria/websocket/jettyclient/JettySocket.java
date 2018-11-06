@@ -30,6 +30,7 @@ public class JettySocket {
 
     public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException
     {
+        this.session.close();
         return this.closeLatch.await(duration,unit);
     }
 
@@ -37,6 +38,7 @@ public class JettySocket {
     public void onClose(int statusCode, String reason)
     {
         System.out.printf("Connection closed: %d - %s%n",statusCode,reason);
+        this.session.close();
         this.session = null;
         this.closeLatch.countDown(); // trigger latch
     }
@@ -49,13 +51,13 @@ public class JettySocket {
         try
         {
             Future<Void> fut;
-            fut = session.getRemote().sendStringByFuture("sglee");
+            fut = session.getRemote().sendStringByFuture("ping");
             fut.get(2,TimeUnit.SECONDS); // wait for send to complete.
 
 //            fut = session.getRemote().sendStringByFuture("Thanks for the conversation.");
 //            fut.get(2,TimeUnit.SECONDS); // wait for send to complete.
 
-            session.close(StatusCode.NORMAL,"I'm done");
+//            session.close(StatusCode.NORMAL,"I'm done");
         }
         catch (Throwable t)
         {
@@ -64,8 +66,22 @@ public class JettySocket {
     }
 
     @OnWebSocketMessage
-    public void onMessage(String msg)
-    {
+    public void onMessage(String msg) {
         System.out.printf("Got msg: %s%n",msg);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try
+        {
+            Future<Void> fut;
+            fut = session.getRemote().sendStringByFuture("ping");
+            fut.get(2,TimeUnit.SECONDS); // wait for send to complete.
+        }
+        catch (Throwable t)
+        {
+            t.printStackTrace();
+        }
     }
 }
