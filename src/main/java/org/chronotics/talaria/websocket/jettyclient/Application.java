@@ -26,8 +26,6 @@ public class Application {
             client.connect(socket,echoUri,request);
             System.out.printf("Connecting to : %s%n",echoUri);
 
-            Thread.sleep(3000);
-
             // wait for closed socket connection.
             socket.awaitClose(5,TimeUnit.SECONDS);
         }

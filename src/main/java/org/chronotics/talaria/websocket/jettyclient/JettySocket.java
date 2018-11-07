@@ -5,11 +5,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is not finished yet, check again before the use
@@ -19,35 +20,70 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
  */
 @WebSocket(maxTextMessageSize = 64 * 1024)
 public class JettySocket {
-	private final CountDownLatch closeLatch;
+    private static final Logger logger =
+            LoggerFactory.getLogger(JettySocket.class);
+	private final CountDownLatch latch;
+
     @SuppressWarnings("unused")
     private Session session;
 
+    private boolean isCloseRequested = false;
+
+    public Session getSession() {
+        return session;
+    }
+
     public JettySocket()
     {
-        this.closeLatch = new CountDownLatch(1);
+        isCloseRequested = false;
+        this.latch = new CountDownLatch(1);
     }
 
     public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException
     {
-        this.session.close();
-        return this.closeLatch.await(duration,unit);
+//        logger.info("awaitClose...");
+//        this.session.close();
+//        logger.info("session is closed");
+
+        logger.info("awaitClose, duration is {}", duration);
+
+        return this.latch.await(duration,unit);
+    }
+
+    public void await() {
+        try {
+            logger.info("waiting for close...");
+            this.latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason)
     {
-        System.out.printf("Connection closed: %d - %s%n",statusCode,reason);
-        this.session.close();
-        this.session = null;
-        this.closeLatch.countDown(); // trigger latch
+        isCloseRequested = true;
+
+        logger.info("onClose...statusCode:{}, reason:{}",statusCode, reason);
+
+        try {
+            this.session.close();
+            this.session = null;
+        } catch (Exception e) {
+            logger.error("error in sesseion.close. error is {}");
+            e.printStackTrace();
+        }
+
+        logger.info("session.close()");
+
+        this.latch.countDown(); // trigger latch
     }
 
     @OnWebSocketConnect
     public void onConnect(Session session)
     {
-        System.out.printf("Got connect: %s%n",session);
         this.session = session;
+        logger.info("client is connected to {}", session.getRemoteAddress().getAddress().getHostAddress());
         try
         {
             Future<Void> fut;
@@ -68,20 +104,44 @@ public class JettySocket {
     @OnWebSocketMessage
     public void onMessage(String msg) {
         System.out.printf("Got msg: %s%n",msg);
+        if(session == null) {
+            logger.info("Session is null");
+            return;
+        }
+        if(isCloseRequested) {
+            logger.error("Closing... received message is {}, but cannot reply", msg);
+            return;
+        }
+
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+
+        sendMessage(msg);
+    }
+
+    public boolean sendMessage(String msg) {
+        if(session == null) {
+            logger.info("Session is null");
+            return false;
+        }
+        if(isCloseRequested) {
+            logger.error("Closing... received message is {}, but cannot reply", msg);
+            return false;
         }
         try
         {
             Future<Void> fut;
             fut = session.getRemote().sendStringByFuture("ping");
             fut.get(2,TimeUnit.SECONDS); // wait for send to complete.
+            return true;
         }
         catch (Throwable t)
         {
             t.printStackTrace();
+            return false;
         }
     }
 }

@@ -3,6 +3,7 @@ package org.chronotics.talaria.websocket.springstompserver;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TaskExecutor;
 import org.chronotics.talaria.common.taskexecutor.DummyMessageGenerator;
+import org.chronotics.talaria.common.taskexecutor.MessageQueueToStompServer;
 import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
 import org.chronotics.talaria.ScheduledUpdates;
 import org.chronotics.talaria.TalariaProperties;
@@ -42,7 +43,7 @@ public class Application {
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
 		TaskExecutor<SimpMessagingTemplate> executorWebsocketTask = 
-				new MessageQueueToWebsocketServer(
+				new MessageQueueToStompServer(
 						TaskExecutor.PROPAGATION_RULE.SIMULTANEOUSLY, null);
 		
 		executorWebsocketTask.putProperty(

@@ -26,6 +26,7 @@ public class JettySocket extends AbstractWebsocketListener {
                 if(s.equals("ping")) {
                     session.getRemote().sendString("pong");
                     logger.info("pong was sent to clinet");
+
                 } else {
                     logger.info(s);
                 }
@@ -45,7 +46,9 @@ public class JettySocket extends AbstractWebsocketListener {
     @Override
     public void onWebSocketConnect(Session session) {
         this.session = session;
-        logger.info("JettySocket is connected");
+        logger.info("==================================JettySocket is connected");
+        logger.info(session.getUpgradeRequest().getParameterMap().toString());
+        logger.info("\n\n\n\n\n\n\n\n\n\n");
     }
 
     @Override
