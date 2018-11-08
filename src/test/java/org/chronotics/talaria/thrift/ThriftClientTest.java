@@ -36,6 +36,8 @@ public class ThriftClientTest {
 
 	private static ThriftServer thriftServer = null;
 
+	private String messageQueueId = "thrift";
+
     private char[] v10k = new char[5000]; // char: 2byte X 5,000 = 10,000 byte
 	private char[] v100k = new char[50000]; // char: 2byte X 50,000 = 100,000 byte
 	private char[] v200k = new char[100000];
@@ -48,7 +50,8 @@ public class ThriftClientTest {
     private char[] v900k = new char[450000];
     private char[] v1000k = new char[500000];
 
-	private int countForAverage = 10;
+	private static int countForAverage = 10;
+	private static int count = 100;
 
 	@BeforeClass
 	public static void setup() {
@@ -98,7 +101,7 @@ public class ThriftClientTest {
 
 		// create the message queue
 		try {
-			boolean ret = service.writeId("thrift");
+			boolean ret = service.writeId(messageQueueId);
 			if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -110,59 +113,48 @@ public class ThriftClientTest {
 			logger.info(e.toString());
 		}
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        List<String> tempList =
+		List<String> tempList =
 				new ArrayList<String>();
 
-		int count = 100;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
 		for(int i=0; i<count; i++) {
 			try {
 				String ret =
-                        service.writeString("thrift", String.valueOf(i));
+                        service.writeString(messageQueueId, String.valueOf(i));
 				tempList.add(String.valueOf(i));
 			} catch (TException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				logger.info(e.toString());
 			}
+            assertEquals(i+1,mq.size());
 		}
-
 		logger.info("thrift write is done");
+
+		assertEquals(count, mq.size());
 
 		for(int i=0; i<count; i++) {
 			try {
 				String value = null;
-				value = service.readString("thrift");
+				value = service.readString(messageQueueId);
 				if(value != null) {
 					tempList.remove(value);
 				} else {
 					break;
 				}
+                assertEquals(count-(i+1),mq.size());
 			} catch (TException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				logger.info(e.toString());
 			}
 		}
-
 		logger.info("thrift read is done");
-		logger.info(String.valueOf(tempList.size()));
-		assertEquals(0,tempList.size());
+
+        assertEquals(0, mq.size());
 
 		client.stop();
-
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
         mq.clear();
-
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 	}
 
 	@Test
@@ -174,7 +166,7 @@ public class ThriftClientTest {
 
 		// create the message queue
 		try {
-			boolean ret = service.writeId("thrift");
+			boolean ret = service.writeId(messageQueueId);
 			if(ret) {
 				logger.info("Id \"thrift\" is inserted");
 			} else {
@@ -186,26 +178,21 @@ public class ThriftClientTest {
 			logger.info(e.toString());
 		}
 
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		String msg = new String(v100k);
 		System.out.println(msg.length()*2);
 
 		float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
 		for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -221,14 +208,8 @@ public class ThriftClientTest {
 
 		client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 	}
 
     @Test
@@ -240,7 +221,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -252,25 +233,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v200k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -285,14 +261,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -304,7 +274,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -316,25 +286,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v300k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -349,14 +314,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -368,7 +327,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -380,25 +339,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v400k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -413,14 +367,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -432,7 +380,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -444,25 +392,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v500k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -477,14 +420,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -496,7 +433,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -508,25 +445,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v600k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -541,14 +473,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -560,7 +486,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -572,25 +498,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v700k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -605,14 +526,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -624,7 +539,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -636,25 +551,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v800k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -669,14 +579,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -688,7 +592,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -700,25 +604,20 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v900k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -733,14 +632,8 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -752,7 +645,7 @@ public class ThriftClientTest {
 
         // create the message queue
         try {
-            boolean ret = service.writeId("thrift");
+            boolean ret = service.writeId(messageQueueId);
             if(ret) {
                 logger.info("Id \"thrift\" is inserted");
             } else {
@@ -764,25 +657,21 @@ public class ThriftClientTest {
             logger.info(e.toString());
         }
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String msg = new String(v1000k);
 
         float avrElapsedTime = 0;
+        MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
+        mq.clear();
         for(int c=0; c<countForAverage; c++) {
             long startingTime = System.currentTimeMillis();
-            int count = 1000;
             for (int i = 0; i < count; i++) {
                 try {
-                    service.writeString("thrift", msg);
+                    service.writeString(messageQueueId, msg);
                 } catch (TException e) {
                     e.printStackTrace();
                     logger.info(e.toString());
                 }
+                assertEquals(i+1+c*count,mq.size());
             }
             long endingTime = System.currentTimeMillis();
             long elapsedTime = endingTime - startingTime;
@@ -797,13 +686,7 @@ public class ThriftClientTest {
 
         client.stop();
 
-        MessageQueue mq = MessageQueueMap.getInstance().get("thrift");
+        assertEquals(count*countForAverage, mq.size());
         mq.clear();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

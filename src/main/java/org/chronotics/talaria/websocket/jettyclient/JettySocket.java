@@ -33,24 +33,19 @@ public class JettySocket {
         return session;
     }
 
-    public JettySocket()
-    {
+    public JettySocket() {
         isCloseRequested = false;
         this.latch = new CountDownLatch(1);
     }
 
-    public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException
-    {
-//        logger.info("awaitClose...");
-//        this.session.close();
-//        logger.info("session is closed");
-
+    public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
+        // wait during duration
         logger.info("awaitClose, duration is {}", duration);
-
         return this.latch.await(duration,unit);
     }
 
     public void await() {
+        // wait until latch down
         try {
             logger.info("waiting for close...");
             this.latch.await();

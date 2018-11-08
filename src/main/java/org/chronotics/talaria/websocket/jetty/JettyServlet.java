@@ -11,6 +11,6 @@ public class JettyServlet extends AbstractWebsocketServlet {
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(getIdleTimeout());
-        factory.register(listnerClass);//JettySocket.class);
+        factory.register(listnerClass);
     }
 }

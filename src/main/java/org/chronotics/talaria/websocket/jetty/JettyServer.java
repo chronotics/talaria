@@ -14,6 +14,31 @@ public class JettyServer {
             LoggerFactory.getLogger(JettyServer.class);
 
     private Server server = null;
+    private int port = 8080;
+
+    JettyServer(int _port) {
+        setPort(_port);
+        init();
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void init() {
+        if(server == null) {
+            server = new Server(port);
+        }
+
+        ServletContextHandler context =
+                new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        server.setHandler(context);
+    }
 
     public void setup() {
         server = new Server();
