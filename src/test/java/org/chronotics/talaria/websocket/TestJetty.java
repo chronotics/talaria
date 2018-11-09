@@ -45,7 +45,7 @@ public class TestJetty {
     private static int startUpTimeOfServer = 1000; //ms
     private static int stopTimeoutOfServer = 1000; // ms
 
-    private static JettyServer server = new JettyServer(port);
+    private static JettyServer server = null;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -137,6 +137,8 @@ public class TestJetty {
 
     @Test
     public void startStopServer() {
+        assertNotNull(server);
+
         assertTrue(server.isStarting() || server.isStarted());
 
         if(server.isStarted()) {
@@ -166,9 +168,10 @@ public class TestJetty {
 
     @Test
     public void runMultipleClients() throws InterruptedException {
+        assertNotNull(server);
+
         Thread.sleep(startUpTimeOfServer);
 
-        assertTrue(server != null);
         assertTrue(server.isStarting() || server.isStarted());
 
         TestClient client1 = new TestClient(topicUrl1);
