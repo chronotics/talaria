@@ -46,18 +46,6 @@ public class TestJetty {
     private static int stopTimeoutOfServer = 1000; // ms
 
     private static JettyServer server = new JettyServer(port);
-    // state of server or client
-//        switch(this._state) {
-//        case -1:
-//            return "FAILED";
-//        case 0:
-//            return "STOPPED";
-//        case 1:
-//            return "STARTING";
-//        case 2:
-//            return "STARTED";
-//        case 3:
-//            return "STOPPING";
 
     @BeforeClass
     public synchronized static void setup() {
