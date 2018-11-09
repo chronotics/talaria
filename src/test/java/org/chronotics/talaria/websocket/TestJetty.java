@@ -68,8 +68,7 @@ public class TestJetty {
                             "/",
                             "topic",
                             ListenerEmpty.class,
-                            "/topic/",
-                            10000);
+                            "/topic/");
                 }
 
                 if(server.isStopped()) {

@@ -5,9 +5,8 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 public class JettyServlet extends AbstractWebsocketServlet {
     private Class listnerClass = null;
 
-    public JettyServlet(Class _class, long _idleTimeOut) {
+    public JettyServlet(Class _class) {
         listnerClass = _class;
-        setIdleTimeout(_idleTimeOut);
     }
 
     @Override

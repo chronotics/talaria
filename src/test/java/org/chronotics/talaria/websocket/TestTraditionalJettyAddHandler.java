@@ -76,7 +76,7 @@ public class TestTraditionalJettyAddHandler {
                     gContext.setContextPath("/topic");
                     ServletHolder wsHolder = new ServletHolder(
                             "ListenerEmpty",
-                            new JettyServlet(ListenerEmpty.class, 10000));
+                            new JettyServlet(ListenerEmpty.class));
                     gContext.addServlet(wsHolder, "/");
 
                     HandlerList handlerList = new HandlerList();
@@ -185,7 +185,7 @@ public class TestTraditionalJettyAddHandler {
         newContext.setContextPath("/wrong");
         ServletHolder newHolder = new ServletHolder(
                 "newListener",
-                new JettyServlet(ListenerEmpty.class, 10000));
+                new JettyServlet(ListenerEmpty.class));
         newContext.addServlet(newHolder, "/");
 
         Handler []handlerArray = gServer.getHandlers();

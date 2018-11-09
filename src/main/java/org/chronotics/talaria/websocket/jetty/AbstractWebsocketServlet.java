@@ -11,13 +11,13 @@ public abstract class AbstractWebsocketServlet extends WebSocketServlet {
 
     // set a 10 second timeout
     // ms
-    private long idleTimeout = 10000;
+    private static long idleTimeout = 10000;
 
     /**
      * ms
      * @return
      */
-    public long getIdleTimeout() {
+    public static long getIdleTimeout() {
         return idleTimeout;
     }
 
@@ -25,7 +25,7 @@ public abstract class AbstractWebsocketServlet extends WebSocketServlet {
      * ms
      * @param idleTimeout
      */
-    public void setIdleTimeout(long idleTimeout) {
-        this.idleTimeout = idleTimeout;
+    public static void setIdleTimeout(long idleTimeout) {
+        idleTimeout = idleTimeout;
     }
 }

@@ -75,7 +75,7 @@ public class TestTraditionalJetty {
 
                     ServletHolder wsHolder = new ServletHolder(
                             "ListenerEmpty",
-                            new JettyServlet(ListenerEmpty.class, 10000));
+                            new JettyServlet(ListenerEmpty.class));
                     gContext.addServlet(wsHolder, "/topic/");
 
                     gServer.setHandler(gContext);
@@ -538,7 +538,7 @@ public class TestTraditionalJetty {
 
         ServletHolder wsHolder = new ServletHolder(
                 "rootListener",
-                new JettyServlet(ListenerEmpty.class, 10000));
+                new JettyServlet(ListenerEmpty.class));
         gContext.addServlet(wsHolder, "/otherTopic/");
 
         TestClient client1 = new TestClient(otherTopicUrl1);
