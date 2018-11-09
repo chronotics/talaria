@@ -21,7 +21,9 @@ public class Application {
         context.setContextPath("/");
         server.setHandler(context);
 
-        ServletHolder wsHolder = new ServletHolder("echo", new JettyServlet(ListenerEmpty.class));
+        ServletHolder wsHolder = new ServletHolder(
+                "echo",
+                new JettyServlet(ListenerEmpty.class, 10000));
         context.addServlet(wsHolder, "/*");
 
 //        URL url = Thread.currentThread().getContextClassLoader().getResource("index.html");

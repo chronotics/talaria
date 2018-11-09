@@ -236,7 +236,8 @@ public class JettyServer {
             String _contextPath,
             String _listenerId,
             Class _listenerClass,
-            String _listenerPathSpec) {
+            String _listenerPathSpec,
+            long _listenerIdleTimeout) {
         if(!server.getState().equals("STOPPED")) {
             logger.error("You can not add ContextHandler during server's running");
             return false;
@@ -250,7 +251,9 @@ public class JettyServer {
             return false;
         }
         contextHandler.addServlet(
-                new ServletHolder(_listenerId, new JettyServlet(_listenerClass)),
+                new ServletHolder(
+                        _listenerId,
+                        new JettyServlet(_listenerClass, _listenerIdleTimeout)),
                 _listenerPathSpec);
 
         return true;
