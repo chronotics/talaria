@@ -2,6 +2,11 @@ package org.chronotics.talaria.websocket.jetty;
 
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 
+/**
+ * Since 2015
+ * Written by SGlee
+ */
+
 public abstract class AbstractWebsocketServlet extends WebSocketServlet {
 
     // set a 10 second timeout

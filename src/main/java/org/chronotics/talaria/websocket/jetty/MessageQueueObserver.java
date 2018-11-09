@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MessageQueueObserverSocket extends AbstractWebsocketListener implements Observer {
+public class MessageQueueObserver
+        extends AbstractWebsocketListener
+        implements Observer {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(MessageQueueObserverSocket.class);
+            LoggerFactory.getLogger(MessageQueueObserver.class);
 
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
@@ -31,8 +33,8 @@ public class MessageQueueObserverSocket extends AbstractWebsocketListener implem
 
     @Override
     public void onWebSocketConnect(Session session) {
-        this.session = session;
-        logger.info("MessageQueueObserverSocket is connected");
+        setSession(session);
+        logger.info("MessageQueueObserver is connected");
     }
 
     @Override

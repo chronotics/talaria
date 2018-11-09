@@ -1,10 +1,13 @@
 package org.chronotics.talaria.websocket;
 
-import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.chronotics.talaria.websocket.jetty.JettyServlet;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientExample;
 import org.chronotics.talaria.websocket.jetty.websocketlistener.ListenerEmpty;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.api.Session;
@@ -19,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +31,12 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TestJetty {
+public class TestTraditionalJettyAddHandler {
     private static final Logger logger =
-            LoggerFactory.getLogger(TestJetty.class);
+            LoggerFactory.getLogger(TestTraditionalJettyAddHandler.class);
+
+    private static Server gServer = null;
+    private static ServletContextHandler gContext = null;
 
     private static String otherTopicUrl1 = "ws://localhost:8080/otherTopic/?id=111";
     private static String otherTopicUrl2 = "ws://localhost:8080/otherTopic/?id=222";
@@ -36,16 +44,15 @@ public class TestJetty {
     private static String topicUrl1 = "ws://localhost:8080/topic/?id=111";
     private static String topicUrl2 = "ws://localhost:8080/topic/?id=222";
     private static String topicUrl3 = "ws://localhost:8080/topic/?id=333";
-    private static String wrongUrl1 = "ws://localhost:8080/wrong";
-    private static String wrongUrl2 = "ws://localhost:8080/wrong";
-    private static String wrongUrl3 = "ws://localhost:8080/wrong";
+    private static String wrongUrl1 = "ws://localhost:8080/wrong/?id=111";
+    private static String wrongUrl2 = "ws://localhost:8080/wrong/?id=222";
+    private static String wrongUrl3 = "ws://localhost:8080/wrong/?id=333";
     private static int port = 8080;
     private static int awaitTimeOfClient = 1000; // ms
-    private static int startUpTimeOfClient = 1500; // ms
+    private static int startUpTimeOfClient = 2000; // ms
     private static int startUpTimeOfServer = 1000; //ms
     private static int stopTimeoutOfServer = 1000; // ms
 
-    private static JettyServer server = new JettyServer(port);
     // state of server or client
 //        switch(this._state) {
 //        case -1:
@@ -73,18 +80,39 @@ public class TestJetty {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                if(server == null) {
-                    server = new JettyServer(port);
-                    server.setContextHandler("/", JettyServer.SESSIONS);
-                    server.addWebSocketListener(
-                            "/",
-                            "topic",
-                            ListenerEmpty.class,
-                            "/topic/");
+                if (gServer == null) {
+                    gServer = new Server(port);
+
+//                    ServletContextHandler gContext =
+                    gContext =
+                            new ServletContextHandler(ServletContextHandler.SESSIONS);
+                    gContext.setContextPath("/topic");
+                    ServletHolder wsHolder = new ServletHolder(
+                            "ListenerEmpty",
+                            new JettyServlet(ListenerEmpty.class));
+                    gContext.addServlet(wsHolder, "/");
+
+                    HandlerList handlerList = new HandlerList();
+                    handlerList.addHandler(gContext);
+
+                    gServer.setHandler(handlerList);
+
+//                    URL url = Thread.currentThread().getContextClassLoader().getResource("index.html");
+//                    Objects.requireNonNull(url, "unable to find index.html");
+//                    String urlBase = url.toExternalForm().replaceFirst("/[^/]*$", "/");
+//                    ServletHolder defHolder = new ServletHolder("default", new DefaultServlet());
+//                    defHolder.setInitParameter("resourceBase", urlBase);
+//                    defHolder.setInitParameter("dirAllowed", "true");
+//                    gContext.addServlet(defHolder,"/");
                 }
 
-                if(server.isStopped()) {
-                    server.start();
+                if (gServer.isStopped()) {
+                    try {
+                        gServer.start();
+                        gServer.join();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -94,8 +122,13 @@ public class TestJetty {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                if(!server.isStopped()) {
-                    server.stop();
+                if (!gServer.isStopped()) {
+                    try {
+                        gServer.setStopTimeout(stopTimeoutOfServer);
+                        gServer.stop();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -148,43 +181,47 @@ public class TestJetty {
     }
 
     @Test
-    public void startStopServer() {
-        assertTrue(server.isStarting() || server.isStarted());
-
-        if(server.isStarted()) {
-            stopServer();
-            try {
-                Thread.sleep(startUpTimeOfServer);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        assertTrue(server.isStopping() || server.isStopped());
-
-        startServer();
-
-        try {
-            Thread.sleep(startUpTimeOfServer);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        assertTrue(server.isStarting() || server.isStarted());
-
-        assertTrue(server.getServer().getURI().getHost().equals("127.0.0.1"));
-        assertEquals(port, server.getServer().getURI().getPort());
-    }
-
-    @Test
-    public void runMultipleClients() throws InterruptedException {
+    public void addHandler() throws InterruptedException {
         Thread.sleep(startUpTimeOfServer);
 
-        assertTrue(server != null);
-        assertTrue(server.isStarting() || server.isStarted());
+        assertTrue(gServer != null);
+        logger.info(gServer.getState());
+        assertTrue(gServer.isStarting() ||
+                gServer.isStarted());
+
+        stopServer();
+        Thread.sleep(startUpTimeOfServer);
+
+        ///////////////////////////////////////////////////////////////////////
+        ServletContextHandler newContext =
+                new ServletContextHandler(ServletContextHandler.SESSIONS);
+        newContext.setContextPath("/wrong");
+        ServletHolder newHolder = new ServletHolder(
+                "newListener",
+                new JettyServlet(ListenerEmpty.class));
+        newContext.addServlet(newHolder, "/");
+
+        Handler []handlerArray = gServer.getHandlers();
+        List<Handler> handlers = new ArrayList<>();
+        // If you want to multiple handlers,
+        // you have to use difference contextPath
+        for(Handler handler: handlerArray) {
+            handlers.add(handler);
+        }
+        handlers.add(newContext);
+        HandlerList handlerList =
+                new HandlerList(handlers.stream()
+                        .toArray(Handler[]::new));
+        gServer.setHandler(handlerList);
+        ///////////////////////////////////////////////////////////////////////
+
+        startServer();
+        while(!gServer.isStarted()) {
+            Thread.sleep(startUpTimeOfServer);
+        }
 
         TestClient client1 = new TestClient(topicUrl1);
-        TestClient client2 = new TestClient(topicUrl2);
+        TestClient client2 = new TestClient(wrongUrl2);
         TestClient client3 = new TestClient(topicUrl3);
         Thread thread1 = new Thread(client1);
         thread1.start();
@@ -221,6 +258,7 @@ public class TestJetty {
                 assertTrue(false);
             }
         }
+
         assertTrue(client1.getClient().isStarting() ||
                 client1.getClient().isStarted());
         assertTrue(client2.getClient().isStarting() ||

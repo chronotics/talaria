@@ -1,4 +1,4 @@
-package org.chronotics.talaria.websocket.jetty;
+package temp.ws;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
