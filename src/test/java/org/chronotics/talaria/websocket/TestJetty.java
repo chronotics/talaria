@@ -260,4 +260,9 @@ public class TestJetty {
         assertTrue(client3.getClient().isStopping() ||
                 client3.getClient().isStopped());
     }
+
+    @Test
+    public void addListener() {
+
+    }
 }
