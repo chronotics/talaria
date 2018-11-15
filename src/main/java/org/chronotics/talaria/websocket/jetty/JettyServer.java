@@ -5,13 +5,14 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class JettyServer {
     private static final Logger logger =
@@ -31,11 +32,14 @@ public class JettyServer {
     private int port = 8080;
     private int stopTimeout = 1000; // ms
     private Map<String,ServletContextHandler> contextHandlerMap = null;
+    private Set<Session> sessionSet = new HashSet<>();
 
     public JettyServer(int _port) {
         setPort(_port);
         createServer();
         contextHandlerMap = new ConcurrentHashMap<>();
+
+        ServletContextHandler handler;
     }
 
     public int getPort() {
@@ -252,10 +256,56 @@ public class JettyServer {
         contextHandler.addServlet(
                 new ServletHolder(
                         _listenerId,
-                        new JettyServlet(_listenerClass)),
+                        new JettyWebSocketServlet(this, _listenerClass)),
                 _listenerPathSpec);
-
         return true;
     }
 
+    public synchronized void addSession(Session _session) {
+        if(sessionSet.contains(_session)) {
+            assert(false);
+            logger.error("duplicated session");
+            return;
+        }
+        sessionSet.add(_session);
+    }
+
+    public synchronized boolean removeSession(Session _session) {
+        boolean ret = sessionSet.remove(_session);
+        if(!ret) {
+            logger.error("failed to remove session");
+        }
+        return ret;
+    }
+
+    public synchronized Set<Session> getSessionSet() {
+        return sessionSet;
+    }
+
+    public void sendMessageToClients(Object _value) {
+        for(Session session: sessionSet) {
+            Future<Void> future = sendMessage(session, _value);
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static Future<Void> sendMessage(Session _session, Object _value) {
+        Future<Void> future = null;
+        if(_value instanceof String) {
+            future = _session.getRemote().sendStringByFuture((String)_value);
+        } else if (_value instanceof byte[]) {
+            // chekc ByteBuffer.wrap
+//            ret = session.getRemote().sendBytesByFuture(ByteBuffer.wrap((byte[])value));
+        } else {
+            logger.error("Unsupported data type");
+            return null;
+        }
+        return future;
+    }
 }

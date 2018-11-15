@@ -1,14 +1,12 @@
 package org.chronotics.talaria.websocket;
 
+import org.chronotics.talaria.common.MessageQueue;
+import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
-import org.chronotics.talaria.websocket.jetty.JettyWebSocketServlet;
+import org.chronotics.talaria.websocket.jetty.JettyServer;
+import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToSessions;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
 import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -23,101 +21,42 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TestTraditionalJettyAddHandler {
+public class TestMessageQueueToSession {
+
     private static final Logger logger =
-            LoggerFactory.getLogger(TestTraditionalJettyAddHandler.class);
+            LoggerFactory.getLogger(TestMessageQueueToSession.class);
 
-    private static Server gServer = null;
-    private static ServletContextHandler gContext = null;
-
+    private static String contextPath = "/";
+    private static String topicId = "topic";
+    private static String topicPath = "/topic/";
+    private static String otherTopicId = "otherTopic";
+    private static String otherTopicPath = "/otherTopic/";
     private static String otherTopicUrl1 = "ws://localhost:8080/otherTopic/?id=111";
     private static String otherTopicUrl2 = "ws://localhost:8080/otherTopic/?id=222";
     private static String otherTopicUrl3 = "ws://localhost:8080/otherTopic/?id=333";
     private static String topicUrl1 = "ws://localhost:8080/topic/?id=111";
     private static String topicUrl2 = "ws://localhost:8080/topic/?id=222";
     private static String topicUrl3 = "ws://localhost:8080/topic/?id=333";
-    private static String wrongUrl1 = "ws://localhost:8080/wrong/?id=111";
-    private static String wrongUrl2 = "ws://localhost:8080/wrong/?id=222";
-    private static String wrongUrl3 = "ws://localhost:8080/wrong/?id=333";
     private static int port = 8080;
     private static int awaitTimeOfClient = 1000; // ms
-    private static int startUpTimeOfClient = 2000; // ms
+    private static int startUpTimeOfClient = 1500; // ms
     private static int startUpTimeOfServer = 1000; //ms
     private static int stopTimeoutOfServer = 1000; // ms
+    private static JettyServer server = null;
+    private static String mqId = "testQueue";
 
-    @BeforeClass
-    public synchronized static void setup() {
-        startServer();
-    }
-
-    @AfterClass
-    public synchronized static void teardown() {
-        stopServer();
-    }
-
-    private static void startServer() {
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                if (gServer == null) {
-                    gServer = new Server(port);
-
-//                    ServletContextHandler gContext =
-                    gContext =
-                            new ServletContextHandler(ServletContextHandler.SESSIONS);
-                    gContext.setContextPath("/topic");
-                    ServletHolder wsHolder = new ServletHolder(
-                            "EmptyListener",
-                            new JettyWebSocketServlet(null, EmptyListener.class));
-                    gContext.addServlet(wsHolder, "/");
-
-                    HandlerList handlerList = new HandlerList();
-                    handlerList.addHandler(gContext);
-
-                    gServer.setHandler(handlerList);
-
-//                    URL url = Thread.currentThread().getContextClassLoader().getResource("index.html");
-//                    Objects.requireNonNull(url, "unable to find index.html");
-//                    String urlBase = url.toExternalForm().replaceFirst("/[^/]*$", "/");
-//                    ServletHolder defHolder = new ServletHolder("default", new DefaultServlet());
-//                    defHolder.setInitParameter("resourceBase", urlBase);
-//                    defHolder.setInitParameter("dirAllowed", "true");
-//                    gContext.addServlet(defHolder,"/");
-                }
-
-                if (gServer.isStopped()) {
-                    try {
-                        gServer.start();
-                        gServer.join();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private static void stopServer() {
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                if (!gServer.isStopped()) {
-                    try {
-                        gServer.setStopTimeout(stopTimeoutOfServer);
-                        gServer.stop();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
+    private static List<String> msgList = null;
+    private static int msgListSize = 1000;
+    private static long insertionTime = 5000;
 
     class TestClient implements Runnable {
         private String url;
@@ -149,7 +88,10 @@ public class TestTraditionalJettyAddHandler {
                 logger.error("socket is null");
             }
             socket.stop();
+        }
 
+        public void close() {
+            stop();
             assertNotNull(client);
             if(client==null) {
                 logger.error("client is null");
@@ -187,48 +129,80 @@ public class TestTraditionalJettyAddHandler {
         }
     }
 
-    @Test
-    public void addHandler() throws InterruptedException {
-        Thread.sleep(startUpTimeOfServer);
-
-        assertTrue(gServer != null);
-        logger.info(gServer.getState());
-        assertTrue(gServer.isStarting() ||
-                gServer.isStarted());
-
-        stopServer();
-        Thread.sleep(startUpTimeOfServer);
-
-        ///////////////////////////////////////////////////////////////////////
-        ServletContextHandler newContext =
-                new ServletContextHandler(ServletContextHandler.SESSIONS);
-        newContext.setContextPath("/wrong");
-        ServletHolder newHolder = new ServletHolder(
-                "newListener",
-                new JettyWebSocketServlet(null, EmptyListener.class));
-        newContext.addServlet(newHolder, "/");
-
-        Handler []handlerArray = gServer.getHandlers();
-        List<Handler> handlers = new ArrayList<>();
-        // If you want to multiple handlers,
-        // you have to use difference contextPath
-        for(Handler handler: handlerArray) {
-            handlers.add(handler);
+    @BeforeClass
+    public synchronized static void setup() {
+        MessageQueueMap mqMap = MessageQueueMap.getInstance();
+        if(!mqMap.isEmpty()) {
+            mqMap.clear();
         }
-        handlers.add(newContext);
-        HandlerList handlerList =
-                new HandlerList(handlers.stream()
-                        .toArray(Handler[]::new));
-        gServer.setHandler(handlerList);
-        ///////////////////////////////////////////////////////////////////////
+        MessageQueue<String> mq =
+                new MessageQueue<>(
+                        String.class,
+                        msgListSize,
+//                                    MessageQueue.default_maxQueueSize,
+                        MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
+        mqMap.put(mqId, mq);
+        mq.setNotifyRemoval(true);
+
+        msgList = new ArrayList<>();
+        for(int i=0; i<msgListSize; i++) {
+            msgList.add(String.valueOf(i));
+        }
+        insertionTime = Math.max(insertionTime, msgListSize / 1000);
 
         startServer();
-        while(!gServer.isStarted()) {
-            Thread.sleep(startUpTimeOfServer);
-        }
+    }
 
+    @AfterClass
+    public synchronized static void teardown() {
+        stopServer();
+
+        MessageQueueMap mqMap = MessageQueueMap.getInstance();
+        mqMap.clear();
+    }
+
+    private static void startServer() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(server == null) {
+                    server = new JettyServer(port);
+                    server.setContextHandler("/", JettyServer.SESSIONS);
+                    server.addWebSocketListener(
+                            "/",
+                            "topic",
+                            EmptyListener.class,
+                            "/topic/");
+                }
+
+                if(server.isStopped()) {
+                    server.start();
+                }
+            }
+        });
+    }
+
+    private static void stopServer() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(!server.isStopped()) {
+                    server.stop();
+                }
+            }
+        });
+    }
+
+    @Test
+    public void sendMessageToMessageQueue() throws InterruptedException {
+        // waiting for server start
+        assertNotNull(server);
+        Thread.sleep(startUpTimeOfServer);
+        assertTrue(server.isStarting() || server.isStarted());
+
+        // create clients
         TestClient client1 = new TestClient(topicUrl1);
-        TestClient client2 = new TestClient(wrongUrl2);
+        TestClient client2 = new TestClient(topicUrl2);
         TestClient client3 = new TestClient(topicUrl3);
         Thread thread1 = new Thread(client1);
         thread1.start();
@@ -236,6 +210,10 @@ public class TestTraditionalJettyAddHandler {
         thread2.start();
         Thread thread3 = new Thread(client3);
         thread3.start();
+
+//        thread1.join();
+//        thread2.join();
+//        thread3.join();
 
         int count = 0;
         final int sleepTime = 10;
@@ -265,7 +243,6 @@ public class TestTraditionalJettyAddHandler {
                 assertTrue(false);
             }
         }
-
         assertTrue(client1.getClient().isStarting() ||
                 client1.getClient().isStarted());
         assertTrue(client2.getClient().isStarting() ||
@@ -303,9 +280,58 @@ public class TestTraditionalJettyAddHandler {
         assertTrue(client2.getSession().isOpen());
         assertTrue(client3.getSession().isOpen());
 
-        client1.stop();
-        client2.stop();
-        client3.stop();
+        // now clients are connected to a server
+
+        // get session from a server
+        Set<Session> sessions = server.getSessionSet();
+
+        MessageQueueToSessions<String> taskExecutor =
+                new MessageQueueToSessions<>();
+        taskExecutor.putProperty(MessageQueueToSessions.PROPERTY_MQID,mqId);
+        taskExecutor.putProperty(MessageQueueToSessions.PROPERTY_SESSION,sessions);
+
+        MessageQueue<String> mq =
+                (MessageQueue<String>) MessageQueueMap.getInstance().get(mqId);
+        mq.addObserver(taskExecutor.getMessageQueueObserver());
+
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                MessageQueueMap mqMap = MessageQueueMap.getInstance();
+                if(mqMap.isEmpty()) {
+                    MessageQueue<String> mq =
+                            new MessageQueue<>(
+                                    String.class,
+                                    msgListSize,
+//                                    MessageQueue.default_maxQueueSize,
+                                    MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
+                    mqMap.put(mqId, mq);
+                }
+                long startTime = System.currentTimeMillis();
+                MessageQueue<String> mq =
+                        (MessageQueue<String>) MessageQueueMap.getInstance().get(mqId);
+                for(String msg: msgList) {
+                    mq.addLast(msg);
+                }
+                long endTime = System.currentTimeMillis();
+                long elapsedTime = endTime - startTime;
+                logger.info("Elapsed time to add {} elements to Queue : {} ms", msgList.size(), elapsedTime);
+                assertTrue(elapsedTime < insertionTime);
+            }
+        });
+
+        Thread.sleep(insertionTime);
+
+        assertEquals(msgListSize,
+                ((ClientHandlerExample)(client1.getSocket())).getNumOfReceivedMessage());
+        assertEquals(msgListSize,
+                ((ClientHandlerExample)(client2.getSocket())).getNumOfReceivedMessage());
+        assertEquals(msgListSize,
+                ((ClientHandlerExample)(client3.getSocket())).getNumOfReceivedMessage());
+
+        client1.close();
+        client2.close();
+        client3.close();
 
         assertTrue(client1.getClient().isStopping() ||
                 client1.getClient().isStopped());
@@ -313,5 +339,8 @@ public class TestTraditionalJettyAddHandler {
                 client2.getClient().isStopped());
         assertTrue(client3.getClient().isStopping() ||
                 client3.getClient().isStopped());
+
+        assertEquals(0, mq.size());
     }
+
 }

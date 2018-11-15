@@ -128,7 +128,7 @@ public class MessageTransferThroughThriftServer {
 				message.set_sender_id(String.valueOf(i));
 				message.set_payload(_payload);
 				
-				mq.add(message);
+				mq.addLast(message);
 			}
 			count++;
 		}
@@ -166,7 +166,7 @@ public class MessageTransferThroughThriftServer {
 			String message = (String.valueOf(i)
 							+ ", "
 							+ new Timestamp(System.currentTimeMillis()).toString());
-			mq.add(message);
+			mq.addLast(message);
 			tempMap.put(i, message);
 		}
 
@@ -175,7 +175,7 @@ public class MessageTransferThroughThriftServer {
 					(MessageQueue<String>)
 					mqMap.get(keyList.get(i));
 			assertEquals(1, mq.size());
-			String message = mq.peek();
+			String message = mq.getFirst();
 			assertEquals(tempMap.get(i), message);
 		}
 	}

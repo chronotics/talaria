@@ -1,9 +1,11 @@
 package org.chronotics.talaria.common;
 
+import java.nio.BufferOverflowException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Observable;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,22 +20,25 @@ import org.slf4j.LoggerFactory;
 
 public class MessageQueue<E> extends Observable {
 	
-	public static String notifyingMessageRemove = "rm";
+	public static String REMOVALMESSAGE = "rm";
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
 	
-	public static int default_maxQueueSize = 10000;
+	public static int default_maxQueueSize = 100000;
 	public enum OVERFLOW_STRATEGY {
 		NO_INSERTION,
-		DELETE_FIRST;
+		DELETE_FIRST,
+		RUNTIME_EXCEPTION;
 	}
-	private ConcurrentLinkedQueue<E> queue = 
-			new ConcurrentLinkedQueue<E>();
+	private ConcurrentLinkedDeque<E> queue =
+			new ConcurrentLinkedDeque<E>();
+	private int queueSize = 0;
 	
-	private int maxQueueSize;
+	private int maxQueueSize = 0;
 	private OVERFLOW_STRATEGY overflowStrategy;
 	private Class<E> type;
+	private boolean notifyRemoval = false;
 
 	@SuppressWarnings("unused")
 	private MessageQueue(Class<E> cls) {
@@ -46,6 +51,7 @@ public class MessageQueue<E> extends Observable {
 		type = cls;
 		maxQueueSize = _maxQueueSize;
 		overflowStrategy = _overflowStrategy;
+		queueSize = 0;
 	}
 	
 	public Class<E> getElementClass() {
@@ -56,67 +62,89 @@ public class MessageQueue<E> extends Observable {
 		return maxQueueSize;
 	}
 
-	public boolean add(E _e) {
-		if(queue.size() >= maxQueueSize) {
+	private synchronized void increaseQueueSize() {
+		queueSize++;
+	}
+
+	private synchronized void decreaseQueueSize() {
+		queueSize--;
+	}
+
+	private synchronized int queueSize() {
+		return queueSize;
+	}
+
+	public synchronized void setNotifyRemoval(boolean _v) {
+		notifyRemoval = _v;
+	}
+
+	public void addLast(E _e) {
+		if(queueSize() >= maxQueueSize) {
 			switch (overflowStrategy) {
-			case NO_INSERTION:
-				logger.info("queue overflow, element is not inserted");
-				return false;
-			case DELETE_FIRST:
-				logger.info("queue overflow, first element is removed");
-				this.poll();
-			default:
-				logger.info("queue overflow, nothing is changed");
-				return false;
+                case NO_INSERTION:
+                    logger.info("MessageQueue is overflowed, element is not inserted");
+                    return;
+                case DELETE_FIRST:
+                    logger.info("MessageQueue is overflowed, first element is removed");
+                    this.removeFirst();
+                case RUNTIME_EXCEPTION:
+                    logger.info("MessageQueue is overflowed, nothing is changed");
+                    throw(new RuntimeException("MessageQueue is overflowed"));
+                default:
+                    logger.error("undefined strategy type");
+                    return;
 			}
 		}
-		
-		boolean rt = true;
-		try {
-			rt = queue.add(_e);
-		} catch(IllegalStateException e) {
-			logger.error(e.toString());;
-			return false;
-		}
-		if(rt) {
-			setChanged();
-			notifyObservers(_e);
-			return true;
-		} else {
-			return false;
-		}
+		// ConcurrentDeque -> synchronized is guaranteed
+		queue.addLast(_e);
+        increaseQueueSize();
+		synchronized (this) {
+        	if(countObservers()!=0) {
+				setChanged();
+				notifyObservers(_e);
+			}
+        }
 	}
-	
+
+	/**
+	 *
+	 * @param _c
+	 * @return
+	 */
 	public boolean addAll(Collection<? extends E> _c) {
-		if(queue.size() + _c.size() >= maxQueueSize) {
+		if(queueSize() + _c.size() >= maxQueueSize) {
 			switch (overflowStrategy) {
-			case NO_INSERTION:
-				logger.info("queue overflow, element is not inserted");
-				return false;
-			case DELETE_FIRST:
-				for(E e:_c) {
-					if(queue.size() >= maxQueueSize) {
-						logger.info("queue overflow, first element is removed");
-						this.poll();
-					}
-					this.add(e);
-				}
-				return true;
-			default:
-				return false;
+                case NO_INSERTION:
+                    logger.info("MessageQueue is overflowed, element is not inserted");
+                    return false;
+                case DELETE_FIRST:
+                    for(E e:_c) {
+                        if(queueSize() >= maxQueueSize) {
+                            logger.info("MessageQueue is overflowed, first element is removed");
+                            this.removeFirst();
+                        }
+                        this.addLast(e);
+                    }
+                    return true;
+				case RUNTIME_EXCEPTION:
+					logger.info("MessageQueue is overflowed, nothing is changed");
+					throw(new RuntimeException("MessageQueue is overflowed"));
+				default:
+					logger.error("undefined strategy type");
+					return false;
 			}
 		} 
 		
 		boolean rt = true;
-		try {
-			rt = queue.addAll(_c);
-		} catch(Exception e) {
-			logger.error(e.toString());;
-			return false;
-		}
+		rt = queue.addAll(_c);
 		if(rt) {
-			setChanged();
-			notifyObservers(_c);
+			synchronized (this) {
+				queueSize += _c.size();
+				if(countObservers()!=0) {
+					setChanged();
+					notifyObservers(_c);
+				}
+			}
 			return true;
 		} else {
 			return false;
@@ -131,50 +159,85 @@ public class MessageQueue<E> extends Observable {
 		return queue.iterator();
 	}
 	
-	public boolean offer(E e) {
-		if(queue.offer(e)) {
-			setChanged();
-			notifyObservers(e);
-			return true;
-		} else {
-			return false;
-		}
+	public E getFirst() {
+		return queue.getFirst();
 	}
-	
+
+	public E getLast() {
+		return queue.getLast();
+	}
+
 	/**
-	 * Description copied from interface: Queue
-	 * Retrieves, but does not remove, the head of this queue, or returns null if this queue is empty.
+	 * @param o - element to be removed from this deque, if present
 	 * @return
-	 * the head of this queue, or null if this queue is empty
+	 * true if the deque contained the specified element
+	 * @throw
+	 * NullPointerException - if the specified element is null
 	 */
-	public E peek() {
-		return queue.peek();
-	}
-	
-	/**
-	 * Description copied from interface: Queue
-	 * Retrieves and removes the head of this queue, or returns null if this queue is empty.
-	 * @return
-	 * the head of this queue, or null if this queue is empty
-	 */
-	public E poll() {
-		setChanged();
-		notifyObservers(this.notifyingMessageRemove);
-		return queue.poll(); 
-	}
-	
 	public boolean remove(Object o) {
-		if(queue.remove(o)) {
-			setChanged();
-			notifyObservers(this.notifyingMessageRemove);
-			return true;
-		} else {
-			return false;
-		}
+        if (queue.remove(o)) {
+            decreaseQueueSize();
+			synchronized (this) {
+            	if (countObservers() != 0 && notifyRemoval == true) {
+					setChanged();
+					notifyObservers(this.REMOVALMESSAGE);
+				}
+            }
+            return true;
+        } else {
+        	throw(new NoSuchElementException());
+        }
 	}
-	
-	public int size() {
-		return queue.size();
+
+	/**
+	 * @return
+	 * the head of this deque
+	 * @throw
+	 * NoSuchElementException - if this deque is empty
+	 */
+	public E removeFirst() {
+        E ret = queue.removeFirst();
+        if (ret != null) {
+			decreaseQueueSize();
+        	synchronized (this) {
+				if (countObservers() != 0 && notifyRemoval == true) {
+					setChanged();
+					notifyObservers(this.REMOVALMESSAGE);
+				}
+			}
+        }
+        return ret;
+	}
+
+	/**
+	 * @return
+	 * the tail of this deque
+	 * @throw
+	 * NoSuchElementException - if this deque is empty
+	 */
+	public E removeLast() {
+        E ret = queue.removeLast();
+        if (ret != null) {
+            decreaseQueueSize();
+            synchronized (this) {
+				if (countObservers() != 0 && notifyRemoval == true) {
+					setChanged();
+					notifyObservers(this.REMOVALMESSAGE);
+				}
+			}
+        }
+        return ret;
+	}
+
+	public synchronized int size() {
+		assert(queueSize == queue.size());
+		if(queueSize != queue.size()) {
+			logger.error("queueSize: {}, queue.size(): {}", queueSize, queue.size());
+		}
+
+		// Use queueSize instead of queue.size();
+		// Time complexity of ConcurrentQueue.size() is not O(1) but O(n)
+		return queueSize;
 	}
 	
 	public Object[] toArray() {
@@ -187,5 +250,6 @@ public class MessageQueue<E> extends Observable {
 
 	public void clear() {
 		queue.clear();
+		queueSize = 0;
 	}
 }

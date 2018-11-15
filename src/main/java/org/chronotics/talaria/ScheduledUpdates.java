@@ -69,7 +69,7 @@ public class ScheduledUpdates<T> {
 		int count = msgqueue.size();
 		for (int i = 0; i < count; i++) {	
 			try {
-				T v = msgqueue.peek();
+				T v = msgqueue.getFirst();
 				if(v != null) {
 					Future<T> future = executor.execute(v);//(SimpMessagingTemplate)template);
 					T rt = future.get();
@@ -77,7 +77,7 @@ public class ScheduledUpdates<T> {
 						//System.out.println("future is null");
 						logger.error("TaskExecutor execution error, future return is null");
 					} else {
-						msgqueue.poll();
+						msgqueue.removeFirst();
 					}
 				}
 			} catch (Exception e) {

@@ -38,7 +38,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 			mqMap.put(id, mq);
 		}
-		mq.add(_v);
+		mq.addLast(_v);
 		
 		Object rt = null;
 		if(getExecutor() != null) {
@@ -55,7 +55,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
-			mq.add(_v);
+			mq.addLast(_v);
 		}
 		
 		Object rt = null;
@@ -73,7 +73,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
-			mq.add(_v);
+			mq.addLast(_v);
 		}
 		
 		Object rt = null;
@@ -91,7 +91,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
-			mq.add(_v);
+			mq.addLast(_v);
 		}
 		
 		Object rt = null;
@@ -109,7 +109,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
-			mq.add(_v);
+			mq.addLast(_v);
 		}
 		
 		Object rt = null;
@@ -127,7 +127,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
-			mq.add(_v);
+			mq.addLast(_v);
 		}
 		
 		Object rt = null;
@@ -145,7 +145,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
-			mq.add(_v);
+			mq.addLast(_v);
 		}
 		
 		Object rt = null;
@@ -166,7 +166,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			return null;
 		}
 
-		Message value = mq.poll();
+		Message value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			return null;
@@ -189,7 +189,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			throw new TException("There is no matching queue with id");
 		}
 
-		Boolean value = mq.poll();
+		Boolean value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
@@ -212,7 +212,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			throw new TException("There is no matching queue with id");
 		}
 		
-		Short value = mq.poll();
+		Short value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
@@ -234,7 +234,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
-		Integer value = mq.poll();
+		Integer value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
@@ -256,7 +256,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
-		Long value = mq.poll();
+		Long value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
@@ -278,7 +278,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
-		Double value = mq.poll();
+		Double value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
@@ -300,7 +300,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
-		String value = mq.poll();
+		String value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");

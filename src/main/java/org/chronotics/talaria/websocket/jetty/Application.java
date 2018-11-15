@@ -1,6 +1,6 @@
 package org.chronotics.talaria.websocket.jetty;
 
-import org.chronotics.talaria.websocket.jetty.websocketlistener.ListenerEmpty;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -23,7 +23,7 @@ public class Application {
 
         ServletHolder wsHolder = new ServletHolder(
                 "echo",
-                new JettyServlet(ListenerEmpty.class));
+                new JettyWebSocketServlet(null, EmptyListener.class));
         context.addServlet(wsHolder, "/*");
 
 //        URL url = Thread.currentThread().getContextClassLoader().getResource("index.html");

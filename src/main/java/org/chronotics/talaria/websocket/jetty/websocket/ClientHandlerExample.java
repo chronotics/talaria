@@ -1,6 +1,6 @@
 package org.chronotics.talaria.websocket.jetty.websocket;
 
-import org.chronotics.talaria.websocket.jetty.AbstractWebsocket;
+import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -15,11 +15,17 @@ import org.slf4j.LoggerFactory;
  */
 
 @WebSocket(maxTextMessageSize = 64 * 1024)
-public class ClientExample extends AbstractWebsocket {
+public class ClientHandlerExample extends AbstractClientHandler {
     private static final Logger logger =
-            LoggerFactory.getLogger(ClientExample.class);
+            LoggerFactory.getLogger(ClientHandlerExample.class);
 
-    public ClientExample() {
+    private int numOfReceivedMessage = 0;
+
+    public int getNumOfReceivedMessage() {
+        return numOfReceivedMessage;
+    }
+
+    public ClientHandlerExample() {
     }
 
     @OnWebSocketClose
@@ -34,19 +40,13 @@ public class ClientExample extends AbstractWebsocket {
 //        logger.info("client is connected to {}",
 //                session.getRemoteAddress().getAddress().getHostAddress());
 
-        sendMessage("ping");
+//        sendMessage("ping");
     }
 
     @OnWebSocketMessage
     public void onMessage(String msg) {
-        System.out.printf("Got msg: %s%n",msg);
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        sendMessage(msg);
+        numOfReceivedMessage++;
+//        logger.info("Client received {} \n",msg);
     }
 
 }

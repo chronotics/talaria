@@ -1,6 +1,6 @@
 package org.chronotics.talaria.websocket.jetty.websocketlistener;
 
-import org.chronotics.talaria.websocket.jetty.AbstractWebsocketListener;
+import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class ListenerEmpty extends AbstractWebsocketListener {
+public class EmptyListener extends JettyListener {
     private static final Logger logger =
-        LoggerFactory.getLogger(ListenerEmpty.class);
+        LoggerFactory.getLogger(EmptyListener.class);
 
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {

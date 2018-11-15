@@ -47,7 +47,7 @@ public class DummyMessageGenerator implements Runnable {
 				JsonObject jsonObject = new JsonObject();
 				jsonObject.addProperty("time",time);
 				jsonObject.addProperty("value",String.valueOf(random));
-				msgqueue.add(jsonObject.toString());//Integer.toString(i));
+				msgqueue.addLast(jsonObject.toString());//Integer.toString(i));
 				
 				System.out.println(i);
 				try {

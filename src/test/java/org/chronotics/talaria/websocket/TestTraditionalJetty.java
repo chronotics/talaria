@@ -1,12 +1,10 @@
 package org.chronotics.talaria.websocket;
 
-import org.chronotics.talaria.websocket.jetty.websocket.ClientExample;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.ListenerEmpty;
-import org.chronotics.talaria.websocket.jetty.JettyServlet;
-import org.eclipse.jetty.server.Handler;
+import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
+import org.chronotics.talaria.websocket.jetty.JettyWebSocketServlet;
+import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.api.Session;
@@ -23,11 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.net.URI;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestTraditionalJetty {
@@ -49,7 +44,7 @@ public class TestTraditionalJetty {
     private static int port = 8080;
     private static int awaitTimeOfClient = 1000; // ms
     private static int startUpTimeOfClient = 2000; // ms
-    private static int startUpTimeOfServer = 1000; //ms
+    private static int startUpTimeOfServer = 2000; //ms
     private static int stopTimeoutOfServer = 1000; // ms
 
     @BeforeClass
@@ -74,8 +69,8 @@ public class TestTraditionalJetty {
                     gContext.setContextPath("/");
 
                     ServletHolder wsHolder = new ServletHolder(
-                            "ListenerEmpty",
-                            new JettyServlet(ListenerEmpty.class));
+                            "EmptyListener",
+                            new JettyWebSocketServlet(null,EmptyListener.class));
                     gContext.addServlet(wsHolder, "/topic/");
 
                     gServer.setHandler(gContext);
@@ -133,6 +128,7 @@ public class TestTraditionalJetty {
         }
 
         private WebSocketClient client = null;
+        private AbstractClientHandler socket = null;
 
         public WebSocketClient getClient() {
             return client;
@@ -144,12 +140,36 @@ public class TestTraditionalJetty {
             return session;
         }
 
+        public AbstractClientHandler getSocket() {
+            return socket;
+        }
+
+        public void stop() {
+            assertNotNull(socket);
+            if(socket==null) {
+                logger.error("socket is null");
+            }
+            socket.stop();
+
+            assertNotNull(client);
+            if(client==null) {
+                logger.error("client is null");
+                return;
+            }
+            try {
+                client.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         @Override
         public void run() {
             if (client == null) {
                 client = new WebSocketClient();
             }
-            ClientExample socket = new ClientExample();
+            ClientHandlerExample socket = new ClientHandlerExample();
+            this.socket = socket;
             try {
                 client.start();
 
@@ -158,15 +178,12 @@ public class TestTraditionalJetty {
                 Future<Session> future = client.connect(socket, echoUri, request);
                 session = future.get();
 
-                socket.awaitClose(awaitTimeOfClient, TimeUnit.MILLISECONDS);
+                // wait until given time
+//                socket.awaitClose(awaitTimeOfClient, TimeUnit.MILLISECONDS);
+                // wait until stop
+                socket.await();
             } catch (Throwable t) {
                 t.printStackTrace();
-            } finally {
-                try {
-                    client.stop();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -281,6 +298,10 @@ public class TestTraditionalJetty {
         }
 
         assertNull(client1.getSession());
+
+        client1.stop();
+        client2.stop();
+        client3.stop();
     }
 
     @Test
@@ -354,7 +375,10 @@ public class TestTraditionalJetty {
         }
 
         assertNull(client2.getSession());
-        return;
+
+        client1.stop();
+        client2.stop();
+        client3.stop();
     }
 
     @Test
@@ -428,7 +452,10 @@ public class TestTraditionalJetty {
         }
 
         assertNull(client3.getSession());
-        return;
+
+        client1.stop();
+        client2.stop();
+        client3.stop();
     }
 
     @Test
@@ -515,9 +542,9 @@ public class TestTraditionalJetty {
         assertTrue(client2.getSession().isOpen());
         assertTrue(client3.getSession().isOpen());
 
-        thread1.join();
-        thread2.join();
-        thread3.join();
+        client1.stop();
+        client2.stop();
+        client3.stop();
 
         assertTrue(client1.getClient().isStopping() ||
                 client1.getClient().isStopped());
@@ -538,7 +565,7 @@ public class TestTraditionalJetty {
 
         ServletHolder wsHolder = new ServletHolder(
                 "rootListener",
-                new JettyServlet(ListenerEmpty.class));
+                new JettyWebSocketServlet(null, EmptyListener.class));
         gContext.addServlet(wsHolder, "/otherTopic/");
 
         TestClient client1 = new TestClient(otherTopicUrl1);
@@ -616,9 +643,9 @@ public class TestTraditionalJetty {
         assertTrue(client2.getSession().isOpen());
         assertTrue(client3.getSession().isOpen());
 
-        thread1.join();
-        thread2.join();
-        thread3.join();
+        client1.stop();
+        client2.stop();
+        client3.stop();
 
         assertTrue(client1.getClient().isStopping() ||
                 client1.getClient().isStopped());

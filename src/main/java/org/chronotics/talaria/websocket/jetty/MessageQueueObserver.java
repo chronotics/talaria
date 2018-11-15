@@ -10,7 +10,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class MessageQueueObserver
-        extends AbstractWebsocketListener
+        extends JettyListener
         implements Observer {
 
     private static final Logger logger =
@@ -45,7 +45,7 @@ public class MessageQueueObserver
     @Override
     public void update(Observable observable, Object o) {
         String msg = (String)o;
-        if(msg.equals(MessageQueue.notifyingMessageRemove)) {
+        if(msg.equals(MessageQueue.REMOVALMESSAGE)) {
         } else {
             if(o instanceof String) {
                 msg = (String)o;

@@ -61,4 +61,8 @@ public class MessageQueueMap {
 	public Set<Entry<Object, MessageQueue<?>>> entrySet() {
 		return map.entrySet();
 	}
+
+	public void clear() {
+		map.clear();
+	}
 }

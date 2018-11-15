@@ -9,13 +9,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * This class is for WebSocket Client
+ * Use the annotation of @WebSocket above the derived class
+ * and insert codes of super.onConnect(), super.onClose() in corresponding function
  * Since 2015
  * Written by SGlee
  */
 
-public abstract class AbstractWebsocket {
+public abstract class AbstractClientHandler {
     private static final Logger logger =
-            LoggerFactory.getLogger(AbstractWebsocket.class);
+            LoggerFactory.getLogger(AbstractClientHandler.class);
 
     public static int timeoutToSendMessage = 2000;
 
@@ -23,7 +26,7 @@ public abstract class AbstractWebsocket {
     protected boolean isCloseRequested;
     protected Session session = null;
 
-    protected AbstractWebsocket() {
+    protected AbstractClientHandler() {
         isCloseRequested = false;
         latch = new CountDownLatch(1);
     }
@@ -43,6 +46,10 @@ public abstract class AbstractWebsocket {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        latch.countDown();
     }
 
     public Session getSession() {
