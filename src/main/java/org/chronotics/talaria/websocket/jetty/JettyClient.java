@@ -55,6 +55,8 @@ public class JettyClient {
     }
 
     public void start_() {
+        stop();
+
 //        if (client == null) {
             client = new WebSocketClient();
 //        }
@@ -83,49 +85,68 @@ public class JettyClient {
     }
 
     private void stop_() {
-        assert(handler!=null);
+//        assert(handler!=null);
         if(handler==null) {
             logger.error("socket is null");
+        } else {
+            handler.stop();
         }
-        handler.stop();
     }
 
     public void stop() {
         stop_();
-        assert(client!=null);
+//        assert(client!=null);
         if(client==null) {
             logger.error("client is null");
-            return;
-        }
-        try {
-            client.stop();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            try {
+                client.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public boolean isConnected() {
-        assert(client != null);
+//        assert(client != null);
+        if(client == null) {
+            return false;
+        }
         return session != null ? true: false;
     }
 
     public boolean isOpen() {
+        if(session == null) {
+            return false;
+        }
         return this.session.isOpen();
     }
 
     public boolean isStarting() {
+        if(client == null) {
+            return false;
+        }
         return this.client.isStarting();
     }
 
     public boolean isStarted() {
+        if(client == null) {
+            return false;
+        }
         return this.client.isStarted();
     }
 
     public boolean isStopping() {
+        if(client == null) {
+            return false;
+        }
         return this.client.isStopping();
     }
 
     public boolean isStopped() {
+        if(client == null) {
+            return false;
+        }
         return this.client.isStopped();
     }
 }
