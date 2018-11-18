@@ -3,10 +3,12 @@ package org.chronotics.talaria.websocket;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
+import org.chronotics.talaria.websocket.jetty.JettyClient;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToSessions;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
 import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
+import org.eclipse.jetty.util.Jetty;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -51,83 +53,88 @@ public class TestMessageQueueToSession {
     private static int startUpTimeOfClient = 1500; // ms
     private static int startUpTimeOfServer = 1000; //ms
     private static int stopTimeoutOfServer = 1000; // ms
+
     private static JettyServer server = null;
     private static String mqId = "testQueue";
 
+//    private static JettyClient client1 = null;
+//    private static JettyClient client2 = null;
+//    private static JettyClient client3 = null;
+
     private static List<String> msgList = null;
     private static int msgListSize = 1000;
-    private static long insertionTime = 5000;
+    private static long insertionTime = 10000;
 
-    class TestClient implements Runnable {
-        private String url;
-
-        TestClient(String _url) {
-            url = _url;
-        }
-
-        private WebSocketClient client = null;
-        private AbstractClientHandler socket = null;
-
-        public WebSocketClient getClient() {
-            return client;
-        }
-
-        private Session session = null;
-
-        public Session getSession() {
-            return session;
-        }
-
-        public AbstractClientHandler getSocket() {
-            return socket;
-        }
-
-        public void stop() {
-            assertNotNull(socket);
-            if(socket==null) {
-                logger.error("socket is null");
-            }
-            socket.stop();
-        }
-
-        public void close() {
-            stop();
-            assertNotNull(client);
-            if(client==null) {
-                logger.error("client is null");
-                return;
-            }
-            try {
-                client.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void run() {
-            if (client == null) {
-                client = new WebSocketClient();
-            }
-            ClientHandlerExample socket = new ClientHandlerExample();
-            this.socket = socket;
-            try {
-                client.start();
-
-                URI echoUri = new URI(url);
-                ClientUpgradeRequest request = new ClientUpgradeRequest();
-                Future<Session> future = client.connect(socket, echoUri, request);
-                session = future.get();
-
-                // wait until given time
-//                socket.awaitClose(awaitTimeOfClient, TimeUnit.MILLISECONDS);
-                // wait until stop
-                socket.await();
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-    }
+//    class TestClient implements Runnable {
+//        private String url;
+//
+//        TestClient(String _url) {
+//            url = _url;
+//        }
+//
+//        private WebSocketClient client = null;
+//        private AbstractClientHandler socket = null;
+//
+//        public WebSocketClient getClient() {
+//            return client;
+//        }
+//
+//        private Session session = null;
+//
+//        public Session getSession() {
+//            return session;
+//        }
+//
+//        public AbstractClientHandler getSocket() {
+//            return socket;
+//        }
+//
+//        public void stop() {
+//            assertNotNull(socket);
+//            if(socket==null) {
+//                logger.error("socket is null");
+//            }
+//            socket.stop();
+//        }
+//
+//        public void close() {
+//            stop();
+//            assertNotNull(client);
+//            if(client==null) {
+//                logger.error("client is null");
+//                return;
+//            }
+//            try {
+//                client.stop();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public void run() {
+//            if (client == null) {
+//                client = new WebSocketClient();
+//            }
+//            ClientHandlerExample socket = new ClientHandlerExample();
+//            this.socket = socket;
+//            try {
+//                client.start();
+//
+//                URI echoUri = new URI(url);
+//                ClientUpgradeRequest request = new ClientUpgradeRequest();
+//                Future<Session> future = client.connect(socket, echoUri, request);
+//                session = future.get();
+//
+//                // wait until given time
+////                socket.awaitClose(awaitTimeOfClient, TimeUnit.MILLISECONDS);
+//                // wait until stop
+//                socket.await();
+//            } catch (Throwable t) {
+//                t.printStackTrace();
+//            }
+//        }
+//    }
 
     @BeforeClass
     public synchronized static void setup() {
@@ -151,6 +158,7 @@ public class TestMessageQueueToSession {
         insertionTime = Math.max(insertionTime, msgListSize / 1000);
 
         startServer();
+
     }
 
     @AfterClass
@@ -159,6 +167,7 @@ public class TestMessageQueueToSession {
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
         mqMap.clear();
+
     }
 
     private static void startServer() {
@@ -167,12 +176,12 @@ public class TestMessageQueueToSession {
             public void run() {
                 if(server == null) {
                     server = new JettyServer(port);
-                    server.setContextHandler("/", JettyServer.SESSIONS);
+                    server.setContextHandler(contextPath, JettyServer.SESSIONS);
                     server.addWebSocketListener(
-                            "/",
-                            "topic",
+                            contextPath,
+                            topicId,
                             EmptyListener.class,
-                            "/topic/");
+                            topicPath);
                 }
 
                 if(server.isStopped()) {
@@ -200,25 +209,33 @@ public class TestMessageQueueToSession {
         Thread.sleep(startUpTimeOfServer);
         assertTrue(server.isStarting() || server.isStarted());
 
-        // create clients
-        TestClient client1 = new TestClient(topicUrl1);
-        TestClient client2 = new TestClient(topicUrl2);
-        TestClient client3 = new TestClient(topicUrl3);
-        Thread thread1 = new Thread(client1);
-        thread1.start();
-        Thread thread2 = new Thread(client2);
-        thread2.start();
-        Thread thread3 = new Thread(client3);
-        thread3.start();
+        JettyClient client1 = new JettyClient(topicUrl1, ClientHandlerExample.class);
+        JettyClient client2 = new JettyClient(topicUrl1, ClientHandlerExample.class);
+        JettyClient client3 = new JettyClient(topicUrl1, ClientHandlerExample.class);
 
-//        thread1.join();
-//        thread2.join();
-//        thread3.join();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                client1.start();
+            }
+        });
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                client2.start();
+            }
+        });
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                client3.start();
+            }
+        });
 
         int count = 0;
         final int sleepTime = 10;
 
-        while (client1.getClient() == null) {
+        while (!client1.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -226,8 +243,7 @@ public class TestMessageQueueToSession {
                 assertTrue(false);
             }
         }
-
-        while (client2.getClient() == null) {
+        while (!client2.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -235,7 +251,7 @@ public class TestMessageQueueToSession {
                 assertTrue(false);
             }
         }
-        while (client3.getClient() == null) {
+        while (!client3.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -243,14 +259,12 @@ public class TestMessageQueueToSession {
                 assertTrue(false);
             }
         }
-        assertTrue(client1.getClient().isStarting() ||
-                client1.getClient().isStarted());
-        assertTrue(client2.getClient().isStarting() ||
-                client2.getClient().isStarted());
-        assertTrue(client3.getClient().isStarting() ||
-                client3.getClient().isStarted());
 
-        while (client1.getSession() == null) {
+        assertTrue(client1.isStarting() || client1.isStarted());
+        assertTrue(client2.isStarting() || client2.isStarted());
+        assertTrue(client3.isStarting() || client3.isStarted());
+
+        while (!client1.isOpen()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -259,7 +273,7 @@ public class TestMessageQueueToSession {
             }
         }
 
-        while (client2.getSession() == null) {
+        while (!client2.isOpen()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -267,7 +281,7 @@ public class TestMessageQueueToSession {
                 assertTrue(false);
             }
         }
-        while (client3.getSession() == null) {
+        while (!client3.isOpen()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -276,9 +290,9 @@ public class TestMessageQueueToSession {
             }
         }
 
-        assertTrue(client1.getSession().isOpen());
-        assertTrue(client2.getSession().isOpen());
-        assertTrue(client3.getSession().isOpen());
+        assertTrue(client1.isOpen());
+        assertTrue(client2.isOpen());
+        assertTrue(client3.isOpen());
 
         // now clients are connected to a server
 
@@ -322,23 +336,17 @@ public class TestMessageQueueToSession {
 
         Thread.sleep(insertionTime);
 
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client1.getSocket())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client2.getSocket())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client3.getSocket())).getNumOfReceivedMessage());
+        client1.stop();
+        client2.stop();
+        client3.stop();
 
-        client1.close();
-        client2.close();
-        client3.close();
+        assertEquals(msgListSize,
+                ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage());
+        assertEquals(msgListSize,
+                ((ClientHandlerExample)(client2.getHandler())).getNumOfReceivedMessage());
+        assertEquals(msgListSize,
+                ((ClientHandlerExample)(client3.getHandler())).getNumOfReceivedMessage());
 
-        assertTrue(client1.getClient().isStopping() ||
-                client1.getClient().isStopped());
-        assertTrue(client2.getClient().isStopping() ||
-                client2.getClient().isStopped());
-        assertTrue(client3.getClient().isStopping() ||
-                client3.getClient().isStopped());
 
         assertEquals(0, mq.size());
     }

@@ -24,13 +24,19 @@ public class JettyClient {
     public JettyClient(String _url, Class _handlerClass) {
         url = _url;
         handlerClass = _handlerClass;
+        try {
+            _handlerClass.asSubclass(AbstractClientHandler.class);
+        } catch (ClassCastException e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private WebSocketClient getClient() {
         return client;
     }
 
-    private AbstractClientHandler getHandler() {
+    public AbstractClientHandler getHandler() {
         return handler;
     }
 
@@ -55,13 +61,11 @@ public class JettyClient {
     }
 
     public void start_() {
-        stop();
-
-//        if (client == null) {
+        if (client == null) {
             client = new WebSocketClient();
-//        }
+        }
 
-//        if(handler == null) {
+        if(handler == null) {
             try {
                 handler = (AbstractClientHandler)handlerClass.newInstance();
             } catch (InstantiationException e) {
@@ -69,7 +73,7 @@ public class JettyClient {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-//        }
+        }
 
         if(!client.isStarting() || !client.isStarted()) {
             try {
@@ -78,6 +82,7 @@ public class JettyClient {
                 ClientUpgradeRequest request = new ClientUpgradeRequest();
                 Future<Session> future = client.connect(handler, echoUri, request);
                 session = future.get();
+                handler.setSession(session);
             } catch (Throwable t) {
                 t.printStackTrace();
             }
@@ -94,7 +99,6 @@ public class JettyClient {
     }
 
     public void stop() {
-        stop_();
 //        assert(client!=null);
         if(client==null) {
             logger.error("client is null");
@@ -105,6 +109,8 @@ public class JettyClient {
                 e.printStackTrace();
             }
         }
+        // no meaning, because client.stop() invoke onClose() of a handler
+//        stop_();
     }
 
     public boolean isConnected() {

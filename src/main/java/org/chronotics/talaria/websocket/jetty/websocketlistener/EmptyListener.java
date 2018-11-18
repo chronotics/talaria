@@ -22,15 +22,15 @@ public class EmptyListener extends JettyListener {
     public void onWebSocketText(String s) {
         logger.info(getClass().getName() +
                 " received a message of {}", s);
-        Future<Void> future = session.getRemote().sendStringByFuture("pong");
-        try {
-            future.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        logger.info(getClass().getName() + " sent pong");
+//        Future<Void> future = session.getRemote().sendStringByFuture("pong");
+//        try {
+//            future.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//        logger.info(getClass().getName() + " sent pong");
     }
 
     @Override

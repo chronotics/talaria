@@ -1,6 +1,7 @@
 package org.chronotics.talaria.websocket.jetty;
 
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,6 @@ public abstract class AbstractClientHandler {
 
     protected AbstractClientHandler() {
         isCloseRequested = false;
-        latch = new CountDownLatch(1);
     }
 
     public boolean awaitClose(int duration, TimeUnit unit)
@@ -58,6 +58,10 @@ public abstract class AbstractClientHandler {
 
     protected void setSession(Session session) {
         this.session = session;
+        if(latch!=null) {
+            latch.countDown();
+        }
+        latch = new CountDownLatch(1);
     }
 
     /**
@@ -67,7 +71,7 @@ public abstract class AbstractClientHandler {
      */
     protected void onClose(int statusCode, String reason) {
         isCloseRequested = true;
-        logger.info("onClose...statusCode:{}, reason:{}",statusCode, reason);
+        logger.info("onClose...statusCode:{}, reason:{}", statusCode, reason);
 
         if(session != null) {
             session.close();

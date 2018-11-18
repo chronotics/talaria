@@ -17,6 +17,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
+/**
+ * The below is a scenario based test of JettyServer and JettyClient
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestJetty {
     private static final Logger logger =
@@ -170,19 +173,17 @@ public class TestJetty {
 //    }
 
     @Test
-    public void startStopServer() {
+    public void startStopServer() throws InterruptedException {
         assertNotNull(server);
 
+        Thread.sleep(startUpTimeOfServer);
         assertTrue(server.isStarting() || server.isStarted());
 
         if(server.isStarted()) {
             stopServer();
-            try {
-                Thread.sleep(startUpTimeOfServer);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
+
+        Thread.sleep(startUpTimeOfServer);
 
         assertTrue(server.isStopping() || server.isStopped());
 
@@ -196,8 +197,9 @@ public class TestJetty {
 
         assertTrue(server.isStarting() || server.isStarted());
 
-        assertTrue(server.getServer().getURI().getHost().equals("127.0.0.1"));
-        assertEquals(port, server.getServer().getURI().getPort());
+//        logger.info("server ip is {}", server.getServer().getURI().getHost());
+//        assertTrue(server.getServer().getURI().getHost().equals("127.0.0.1"));
+        assertEquals(port, server.getPort());
     }
 
     @Test
@@ -236,7 +238,7 @@ public class TestJetty {
         int count = 0;
         final int sleepTime = 10;
 
-        while (!client1.isConnected()) {
+        while (!client1.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -244,7 +246,7 @@ public class TestJetty {
                 assertTrue(false);
             }
         }
-        while (!client2.isConnected()) {
+        while (!client2.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -252,7 +254,7 @@ public class TestJetty {
                 assertTrue(false);
             }
         }
-        while (!client3.isConnected()) {
+        while (!client3.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -552,14 +554,12 @@ public class TestJetty {
                 client1.start();
             }
         });
-
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 client2.start();
             }
         });
-
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -570,7 +570,7 @@ public class TestJetty {
         int count = 0;
         final int sleepTime = 10;
 
-        while (!client1.isConnected()) {
+        while (!client1.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -578,7 +578,7 @@ public class TestJetty {
                 assertTrue(false);
             }
         }
-        while (!client2.isConnected()) {
+        while (!client2.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -586,7 +586,7 @@ public class TestJetty {
                 assertTrue(false);
             }
         }
-        while (!client3.isConnected()) {
+        while (!client3.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -628,13 +628,13 @@ public class TestJetty {
         assertTrue(client2.isOpen());
         assertTrue(client3.isOpen());
 
-//        client1.stop();
-//        client2.stop();
-//        client3.stop();
-//
-//        assertTrue(client1.isStopping() || client1.isStopped());
-//        assertTrue(client2.isStopping() || client2.isStopped());
-//        assertTrue(client3.isStopping() || client3.isStopped());
+        client1.stop();
+        client2.stop();
+        client3.stop();
+
+        assertTrue(client1.isStopping() || client1.isStopped());
+        assertTrue(client2.isStopping() || client2.isStopped());
+        assertTrue(client3.isStopping() || client3.isStopped());
 
         long startTime = System.currentTimeMillis();
 
@@ -646,31 +646,45 @@ public class TestJetty {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                for(int i =0; i< 1000; i++) {
-                    System.out.println("stop is called \n\n\n\n\n");
-                }
                 client1.stop();
                 client2.stop();
                 client3.stop();
             }
         });
 
-        client1.start();
-        client2.start();
-        client3.start();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                client1.start();
+            }
+        });
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                client2.start();
+            }
+        });
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                client3.start();
+            }
+        });
+
         // wait and will be interrupted after 2000 ms
 
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
         logger.info("elapsed time is {}", elapsedTime);
 
-        assertTrue(elapsedTime < 4000);
-
-        assertTrue(client1.isOpen());
-        assertTrue(client2.isOpen());
-        assertTrue(client3.isOpen());
+        assertTrue(elapsedTime < 1000);
 
         Thread.sleep(4000);
+
+        assertTrue(client1.isStopped());
+        assertTrue(client2.isStopped());
+        assertTrue(client3.isStopped());
+
     }
 
     @Test
@@ -694,7 +708,7 @@ public class TestJetty {
         int count = 0;
         final int sleepTime = 10;
 
-        while (!client1.isConnected()) {
+        while (!client1.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -745,7 +759,7 @@ public class TestJetty {
         int count = 0;
         final int sleepTime = 10;
 
-        while (!client1.isConnected()) {
+        while (!client1.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {
@@ -812,7 +826,7 @@ public class TestJetty {
         int count = 0;
         final int sleepTime = 10;
 
-        while (!client1.isConnected()) {
+        while (!client1.isStarted()) {
             Thread.sleep(sleepTime);
             count++;
             if (count * sleepTime > startUpTimeOfClient) {

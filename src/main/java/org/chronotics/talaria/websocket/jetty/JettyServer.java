@@ -64,7 +64,7 @@ public class JettyServer {
         }
     }
 
-    public Server getServer() {
+    private Server getServer() {
         return server;
     }
 
