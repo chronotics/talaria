@@ -3,17 +3,20 @@ package org.chronotics.talaria.websocket.jetty.taskexecutor;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Future;
 
-public class MessageQueueToSessions<T> extends TaskExecutor {
+public class MessageQueueToOneSession<T> extends TaskExecutor {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(MessageQueueToSessions.class);
+            LoggerFactory.getLogger(MessageQueueToOneSession.class);
 
     private static int futureTimeout = 1000;
 
@@ -44,7 +47,7 @@ public class MessageQueueToSessions<T> extends TaskExecutor {
         return observer;
     }
 
-    public MessageQueueToSessions() {
+    public MessageQueueToOneSession() {
         observer = new MessageQueueObserver<T>();
         observer.setExecutor(this);
     }
@@ -57,20 +60,26 @@ public class MessageQueueToSessions<T> extends TaskExecutor {
     @Override
     public T call() throws Exception {
         String mqId = (String) this.getProperty(PROPERTY_MQID);
-        Set<Session> sessions = (Set<Session>) this.getProperty(PROPERTY_SESSION);
+        Session session = (Session)(this.getProperty(PROPERTY_SESSION));
 
+        assert(mqId != null);
         if (mqId == null) {
             logger.error("MessageQueue id is not defined as a property");
             return null;
         }
 
-        if (sessions == null) {
-            logger.error("List<Session> is not defined as a property");
+        assert(session != null);
+        if (session == null) {
+            logger.error("Session is not defined as a property");
             return null;
         }
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
         MessageQueue<T> mq = (MessageQueue<T>) mqMap.get(mqId);
+        if(mq == null) {
+            logger.error("MessageQueue is null. Check the correct Id");
+            return null;
+        }
 
         T value = mq.removeFirst();
         if(value == null) {
@@ -81,50 +90,23 @@ public class MessageQueueToSessions<T> extends TaskExecutor {
         if (value instanceof Collection) {
             Collection<T> c = (Collection<T>) value;
             for (T v : c) {
-                for(Session session: sessions) {
-                    if(session == null) {
-                        logger.error("session is null");
-                        continue;
-                    }
-                    if(!session.isOpen()) {
-                        logger.error("session is not opened");
-                        continue;
-                    }
-                    Future<Void> future = sendMessage(session, v);
-                    future.get();
-                }
-            }
-        } else {
-            for(Session session: sessions) {
-                if(session == null) {
-                    logger.error("session is null");
-                    continue;
-                }
                 if(!session.isOpen()) {
                     logger.error("session is not opened");
                     continue;
                 }
-                Future<Void> future = sendMessage(session, value);
+                Future<Void> future =
+                        JettySessionCommon.sendMessage(session, v);
                 future.get();
             }
+        } else {
+            if(!session.isOpen()) {
+                logger.error("session is not opened");
+            }
+            Future<Void> future =
+                    JettySessionCommon.sendMessage(session, value);
+            future.get();
         }
 
         return null;
-    }
-
-    private static Future<Void> sendMessage(Session _session, Object _value) {
-        Future<Void> future = null;
-        if(_value instanceof String) {
-            future = _session.getRemote().sendStringByFuture((String)_value);
-//            logger.info("{} is sent to CLients",_value);
-        } else if (_value instanceof byte[]) {
-            // chekc ByteBuffer.wrap
-//            ret = session.getRemote().sendBytesByFuture(ByteBuffer.wrap((byte[])value));
-        } else {
-            logger.error("Unsupported data type");
-            return null;
-        }
-
-        return future;
     }
 }

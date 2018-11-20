@@ -39,6 +39,7 @@ public class MessageQueue<E> extends Observable {
 	private OVERFLOW_STRATEGY overflowStrategy;
 	private Class<E> type;
 	private boolean notifyRemoval = false;
+	private boolean stop = false;
 
 	@SuppressWarnings("unused")
 	private MessageQueue(Class<E> cls) {
@@ -52,6 +53,8 @@ public class MessageQueue<E> extends Observable {
 		maxQueueSize = _maxQueueSize;
 		overflowStrategy = _overflowStrategy;
 		queueSize = 0;
+		notifyRemoval = false;
+		stop = false;
 	}
 	
 	public Class<E> getElementClass() {
@@ -78,7 +81,14 @@ public class MessageQueue<E> extends Observable {
 		notifyRemoval = _v;
 	}
 
+	public synchronized void setStop(boolean _b) {
+		stop = _b;
+	}
+
 	public void addLast(E _e) {
+		if(stop) {
+			return;
+		}
 		if(queueSize() >= maxQueueSize) {
 			switch (overflowStrategy) {
                 case NO_INSERTION:
@@ -112,6 +122,9 @@ public class MessageQueue<E> extends Observable {
 	 * @return
 	 */
 	public boolean addAll(Collection<? extends E> _c) {
+		if(stop) {
+			return false;
+		}
 		if(queueSize() + _c.size() >= maxQueueSize) {
 			switch (overflowStrategy) {
                 case NO_INSERTION:
@@ -160,10 +173,16 @@ public class MessageQueue<E> extends Observable {
 	}
 	
 	public E getFirst() {
+		if(stop) {
+			return null;
+		}
 		return queue.getFirst();
 	}
 
 	public E getLast() {
+		if(stop) {
+			return null;
+		}
 		return queue.getLast();
 	}
 
@@ -175,6 +194,9 @@ public class MessageQueue<E> extends Observable {
 	 * NullPointerException - if the specified element is null
 	 */
 	public boolean remove(Object o) {
+		if(stop) {
+			return false;
+		}
         if (queue.remove(o)) {
             decreaseQueueSize();
 			synchronized (this) {
@@ -196,6 +218,9 @@ public class MessageQueue<E> extends Observable {
 	 * NoSuchElementException - if this deque is empty
 	 */
 	public E removeFirst() {
+		if(stop) {
+			return null;
+		}
         E ret = queue.removeFirst();
         if (ret != null) {
 			decreaseQueueSize();
@@ -216,6 +241,9 @@ public class MessageQueue<E> extends Observable {
 	 * NoSuchElementException - if this deque is empty
 	 */
 	public E removeLast() {
+		if(stop) {
+			return null;
+		}
         E ret = queue.removeLast();
         if (ret != null) {
             decreaseQueueSize();
@@ -230,6 +258,9 @@ public class MessageQueue<E> extends Observable {
 	}
 
 	public synchronized int size() {
+		if(stop) {
+			return 0;
+		}
 		assert(queueSize == queue.size());
 		if(queueSize != queue.size()) {
 			logger.error("queueSize: {}, queue.size(): {}", queueSize, queue.size());
@@ -241,14 +272,23 @@ public class MessageQueue<E> extends Observable {
 	}
 	
 	public Object[] toArray() {
+		if(stop) {
+			return null;
+		}
 		return queue.toArray();
 	}
 	
 	public <E> E[] toArray(E[] a) {
+		if(stop) {
+			return null;
+		}
 		return queue.toArray(a);
 	}
 
 	public void clear() {
+		if(stop) {
+			return;
+		}
 		queue.clear();
 		queueSize = 0;
 	}

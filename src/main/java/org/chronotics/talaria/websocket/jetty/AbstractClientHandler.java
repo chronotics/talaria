@@ -5,6 +5,8 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +64,13 @@ public abstract class AbstractClientHandler {
             latch.countDown();
         }
         latch = new CountDownLatch(1);
+
+        // Get Parameter from Get Request
+//        Map<String, List<String>> paraMap =
+//                session.getUpgradeRequest().getParameterMap();
+//        for(Map.Entry<String,List<String>> e: paraMap.entrySet()) {
+//            logger.info(e.toString());
+//        }
     }
 
     /**

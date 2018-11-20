@@ -2,16 +2,12 @@ package org.chronotics.talaria.websocket;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
 import org.chronotics.talaria.websocket.jetty.JettyClient;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToSessions;
+import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToAllSessions;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
 import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
-import org.eclipse.jetty.util.Jetty;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,22 +16,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TestMessageQueueToSession {
+public class TestMessageQueueToAllSessions {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(TestMessageQueueToSession.class);
+            LoggerFactory.getLogger(TestMessageQueueToAllSessions.class);
 
     private static String contextPath = "/";
     private static String topicId = "topic";
@@ -64,77 +58,6 @@ public class TestMessageQueueToSession {
     private static List<String> msgList = null;
     private static int msgListSize = 1000;
     private static long insertionTime = 10000;
-
-//    class TestClient implements Runnable {
-//        private String url;
-//
-//        TestClient(String _url) {
-//            url = _url;
-//        }
-//
-//        private WebSocketClient client = null;
-//        private AbstractClientHandler socket = null;
-//
-//        public WebSocketClient getClient() {
-//            return client;
-//        }
-//
-//        private Session session = null;
-//
-//        public Session getSession() {
-//            return session;
-//        }
-//
-//        public AbstractClientHandler getSocket() {
-//            return socket;
-//        }
-//
-//        public void stop() {
-//            assertNotNull(socket);
-//            if(socket==null) {
-//                logger.error("socket is null");
-//            }
-//            socket.stop();
-//        }
-//
-//        public void close() {
-//            stop();
-//            assertNotNull(client);
-//            if(client==null) {
-//                logger.error("client is null");
-//                return;
-//            }
-//            try {
-//                client.stop();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        public void run() {
-//            if (client == null) {
-//                client = new WebSocketClient();
-//            }
-//            ClientHandlerExample socket = new ClientHandlerExample();
-//            this.socket = socket;
-//            try {
-//                client.start();
-//
-//                URI echoUri = new URI(url);
-//                ClientUpgradeRequest request = new ClientUpgradeRequest();
-//                Future<Session> future = client.connect(socket, echoUri, request);
-//                session = future.get();
-//
-//                // wait until given time
-////                socket.awaitClose(awaitTimeOfClient, TimeUnit.MILLISECONDS);
-//                // wait until stop
-//                socket.await();
-//            } catch (Throwable t) {
-//                t.printStackTrace();
-//            }
-//        }
-//    }
 
     @BeforeClass
     public synchronized static void setup() {
@@ -299,10 +222,10 @@ public class TestMessageQueueToSession {
         // get session from a server
         Set<Session> sessions = server.getSessionSet();
 
-        MessageQueueToSessions<String> taskExecutor =
-                new MessageQueueToSessions<>();
-        taskExecutor.putProperty(MessageQueueToSessions.PROPERTY_MQID,mqId);
-        taskExecutor.putProperty(MessageQueueToSessions.PROPERTY_SESSION,sessions);
+        MessageQueueToAllSessions<String> taskExecutor =
+                new MessageQueueToAllSessions<>();
+        taskExecutor.putProperty(MessageQueueToAllSessions.PROPERTY_MQID,mqId);
+        taskExecutor.putProperty(MessageQueueToAllSessions.PROPERTY_SESSION,sessions);
 
         MessageQueue<String> mq =
                 (MessageQueue<String>) MessageQueueMap.getInstance().get(mqId);
