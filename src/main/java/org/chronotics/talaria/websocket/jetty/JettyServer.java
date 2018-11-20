@@ -284,7 +284,8 @@ public class JettyServer {
 
     public void sendMessageToClients(Object _value) {
         for(Session session: sessionSet) {
-            Future<Void> future = sendMessage(session, _value);
+            Future<Void> future =
+                    JettySessionCommon.sendMessage(session, _value);
             try {
                 future.get();
             } catch (InterruptedException e) {
@@ -293,19 +294,5 @@ public class JettyServer {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static Future<Void> sendMessage(Session _session, Object _value) {
-        Future<Void> future = null;
-        if(_value instanceof String) {
-            future = _session.getRemote().sendStringByFuture((String)_value);
-        } else if (_value instanceof byte[]) {
-            // chekc ByteBuffer.wrap
-//            ret = session.getRemote().sendBytesByFuture(ByteBuffer.wrap((byte[])value));
-        } else {
-            logger.error("Unsupported data type");
-            return null;
-        }
-        return future;
     }
 }

@@ -36,11 +36,6 @@ public class ClientHandlerExample extends AbstractClientHandler {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         super.onConnect(session);
-
-//        logger.info("client is connected to {}",
-//                session.getRemoteAddress().getAddress().getHostAddress());
-
-//        sendMessage("ping");
     }
 
     @OnWebSocketMessage
@@ -48,5 +43,4 @@ public class ClientHandlerExample extends AbstractClientHandler {
         numOfReceivedMessage++;
 //        logger.info("Client received {} \n",msg);
     }
-
 }

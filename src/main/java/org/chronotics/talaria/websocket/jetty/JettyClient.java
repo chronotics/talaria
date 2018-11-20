@@ -114,7 +114,6 @@ public class JettyClient {
     }
 
     public boolean isConnected() {
-//        assert(client != null);
         if(client == null) {
             return false;
         }

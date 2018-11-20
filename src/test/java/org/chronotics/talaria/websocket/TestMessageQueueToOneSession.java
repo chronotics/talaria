@@ -47,14 +47,14 @@ public class TestMessageQueueToOneSession {
     private static int port = 8080;
     private static int awaitTimeOfClient = 1000; // ms
     private static int startUpTimeOfClient = 1500; // ms
-    private static int startUpTimeOfServer = 1000; //ms
+    private static int startUpTimeOfServer = 1500; //ms
     private static int stopTimeoutOfServer = 1000; // ms
 
     private static JettyServer server = null;
 
     private static List<String> msgList = null;
     private static int msgListSize = 1000;
-    private static long insertionTime = 10000;
+    private static long insertionTime = 5000;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -243,7 +243,6 @@ public class TestMessageQueueToOneSession {
                 ((ClientHandlerExample)(client2.getHandler())).getNumOfReceivedMessage());
         assertEquals(msgListSize,
                 ((ClientHandlerExample)(client3.getHandler())).getNumOfReceivedMessage());
-
 
         assertEquals(0, mq1.size());
         assertEquals(0, mq2.size());

@@ -42,11 +42,11 @@ public class MQGenByIdListener extends JettyListener {
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
 
         // remove observer
-//        MessageQueue mq = mqMap.get(mqId);
-//        mq.deleteObservers();
+        MessageQueue mq = mqMap.get(mqId);
+        mq.deleteObservers();
 
         // remove MessageQueue from QueMap
-//        mqMap.remove(mqId);
+        mqMap.remove(mqId);
     }
 
     @Override
