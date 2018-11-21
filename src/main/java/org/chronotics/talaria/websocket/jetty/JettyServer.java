@@ -14,7 +14,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+/**
+ * @author SG Lee
+ * @since 2013
+ * @description
+ * The class of JettyServer is thread safe for handling
+ * "Handler" such as ContextHandler and WebSocketListener
+ * "SessionSet" to send a message to clients
+ */
 public class JettyServer {
+
     private static final Logger logger =
             LoggerFactory.getLogger(JettyServer.class);
 
@@ -32,12 +41,15 @@ public class JettyServer {
     private int port = 8080;
     private int stopTimeout = 1000; // ms
     private Map<String,ServletContextHandler> contextHandlerMap = null;
-    private Set<Session> sessionSet = new HashSet<>();
+    private Set<Session> sessionSet = null;
+    private Object syncHandler = new Object();
+    private Object syncSessionSet = new Object();
 
     public JettyServer(int _port) {
         setPort(_port);
         createServer();
-        contextHandlerMap = new ConcurrentHashMap<>();
+//        contextHandlerMap = new ConcurrentHashMap<>();
+        contextHandlerMap = new HashMap<>();
 
         ServletContextHandler handler;
     }
@@ -115,31 +127,36 @@ public class JettyServer {
     }
 
     public void setContextHandler(String _contextPath, int _option) {
-        assert (server != null);
-        ServletContextHandler contextHandler =
-                new ServletContextHandler(_option);
-        contextHandler.setContextPath(_contextPath);
-        server.setHandler(contextHandler);
-        contextHandlerMap.clear();
-        contextHandlerMap.put(_contextPath, contextHandler);
+        synchronized (syncHandler) {
+            assert (server != null);
+            ServletContextHandler contextHandler =
+                    new ServletContextHandler(_option);
+            contextHandler.setContextPath(_contextPath);
+            server.setHandler(contextHandler);
+            contextHandlerMap.clear();
+            contextHandlerMap.put(_contextPath, contextHandler);
+        }
     }
 
     public void setContextHandler(ServletContextHandler _contextHandler) {
-        assert (server != null);
-        server.setHandler(_contextHandler);
-        contextHandlerMap.clear();
-        contextHandlerMap.put(_contextHandler.getContextPath(), _contextHandler);
+        synchronized (syncHandler) {
+            assert (server != null);
+            server.setHandler(_contextHandler);
+            contextHandlerMap.clear();
+            contextHandlerMap.put(_contextHandler.getContextPath(), _contextHandler);
+        }
     }
 
     public void addContextHandler(ServletContextHandler _contextHandler)
             throws Exception {
-        assert(server != null);
-        assert(_contextHandler!=null);
+        synchronized (syncHandler) {
+            assert (server != null);
+            assert (_contextHandler != null);
 
-        if(!server.getState().equals("STOPPED")) {
-            logger.error("You can not add ContextHandler during server's running");
-            return;
-        }
+            if (!server.getState().equals("STOPPED")) {
+                logger.error("You can not add ContextHandler during server's running");
+                return;
+            }
 //        // For runtime
 //        if(!server.getState().equals("STOPPED")) {
 //           this.stop();
@@ -158,54 +175,54 @@ public class JettyServer {
 //            }
 //        }
 
-        Map<String,ServletContextHandler> backupMap =
-                new ConcurrentHashMap<>();
-        backupMap.putAll(contextHandlerMap);
-        contextHandlerMap.clear();
-        ////////////////////////////////////////////////////////////////////////
-        Handler []handlerArray = server.getHandlers();
-        List<Handler> handlers = new ArrayList<>();
-        // If you want to multiple handlers,
-        // you have to use difference contextPath
-        for(Handler handler: handlerArray) {
-            ServletContextHandler contextHandler =
-                    (ServletContextHandler)handler;
-            if(contextHandlerMap.get(contextHandler.getContextPath()) != null) {
+            Map<String, ServletContextHandler> backupMap =
+                    new ConcurrentHashMap<>();
+            backupMap.putAll(contextHandlerMap);
+            contextHandlerMap.clear();
+            ////////////////////////////////////////////////////////////////////////
+            Handler[] handlerArray = server.getHandlers();
+            List<Handler> handlers = new ArrayList<>();
+            // If you want to multiple handlers,
+            // you have to use difference contextPath
+            for (Handler handler : handlerArray) {
+                ServletContextHandler contextHandler =
+                        (ServletContextHandler) handler;
+                if (contextHandlerMap.get(contextHandler.getContextPath()) != null) {
+                    // recover
+                    contextHandlerMap.clear();
+                    contextHandlerMap.putAll(backupMap);
+                    logger.error(
+                            "You can not add the ServletContext " +
+                                    "of which contextPath already exists");
+                    throw new IllegalArgumentException(
+                            "You can not add the ServletContext " +
+                                    "of which contextPath already exists");
+                    //                break;
+                }
+                contextHandlerMap.put(
+                        contextHandler.getContextPath(),
+                        contextHandler);
+                handlers.add(handler);
+            }
+
+            if (contextHandlerMap.get(_contextHandler.getContextPath()) != null) {
                 // recover
                 contextHandlerMap.clear();
                 contextHandlerMap.putAll(backupMap);
                 logger.error(
                         "You can not add the ServletContext " +
-                        "of which contextPath already exists");
+                                "of which contextPath already exists");
                 throw new IllegalArgumentException(
                         "You can not add the ServletContext " +
-                        "of which contextPath already exists");
-//                break;
+                                "of which contextPath already exists");
             }
-            contextHandlerMap.put(
-                    contextHandler.getContextPath(),
-                    contextHandler);
-            handlers.add(handler);
-        }
+            handlers.add(_contextHandler);
 
-        if(contextHandlerMap.get(_contextHandler.getContextPath()) != null) {
-            // recover
-            contextHandlerMap.clear();
-            contextHandlerMap.putAll(backupMap);
-            logger.error(
-                    "You can not add the ServletContext " +
-                            "of which contextPath already exists");
-            throw new IllegalArgumentException(
-                    "You can not add the ServletContext " +
-                            "of which contextPath already exists");
-        }
-        handlers.add(_contextHandler);
-
-        HandlerList handlerList =
-                new HandlerList(handlers.stream()
-                        .toArray(Handler[]::new));
-        server.setHandler(handlerList);
-        ////////////////////////////////////////////////////////////////////////
+            HandlerList handlerList =
+                    new HandlerList(handlers.stream()
+                            .toArray(Handler[]::new));
+            server.setHandler(handlerList);
+            ////////////////////////////////////////////////////////////////////////
 
 //        // For runtime
 //        this.start();
@@ -220,6 +237,8 @@ public class JettyServer {
 //                logger.error("It takes long time to stop server");
 //            }
 //        }
+
+        }
     }
 
     /**
@@ -241,49 +260,71 @@ public class JettyServer {
             String _listenerId,
             Class _listenerClass,
             String _listenerPathSpec) {
-        if(!server.getState().equals("STOPPED")) {
-            logger.error("You can not add ContextHandler during server's running");
-            return false;
-        }
+        synchronized (syncHandler) {
+            if (!server.getState().equals("STOPPED")) {
+                logger.error("You can not add ContextHandler during server's running");
+                return false;
+            }
 
-        ServletContextHandler contextHandler =
-                this.contextHandlerMap.get(_contextPath);
-        if(contextHandler == null) {
-            logger.error("can not find the ServletContextHandler with "
-                    + _contextPath);
-            return false;
+            ServletContextHandler contextHandler =
+                    this.contextHandlerMap.get(_contextPath);
+            if (contextHandler == null) {
+                logger.error("can not find the ServletContextHandler with "
+                        + _contextPath);
+                return false;
+            }
+            contextHandler.addServlet(
+                    new ServletHolder(
+                            _listenerId,
+                            new JettyWebSocketServlet(this, _listenerClass)),
+                    _listenerPathSpec);
+            return true;
         }
-        contextHandler.addServlet(
-                new ServletHolder(
-                        _listenerId,
-                        new JettyWebSocketServlet(this, _listenerClass)),
-                _listenerPathSpec);
-        return true;
     }
 
-    public synchronized void addSession(Session _session) {
-        if(sessionSet.contains(_session)) {
-            assert(false);
-            logger.error("duplicated session");
+    public void addSession(Session _session) {
+        if(_session == null) {
+            logger.error("The session you want to add is null");
             return;
         }
-        sessionSet.add(_session);
+        synchronized (syncSessionSet) {
+            if(sessionSet == null) {
+                sessionSet = new HashSet<>();
+            }
+            if (sessionSet.contains(_session)) {
+                assert (false);
+                logger.error("duplicated session");
+                return;
+            }
+            sessionSet.add(_session);
+        }
     }
 
-    public synchronized boolean removeSession(Session _session) {
-        boolean ret = sessionSet.remove(_session);
-        if(!ret) {
-            logger.error("failed to remove session");
+    public boolean removeSession(Session _session) {
+        synchronized (syncSessionSet) {
+            boolean ret = sessionSet.remove(_session);
+            if (!ret) {
+                logger.error("failed to remove session");
+            }
+            return ret;
         }
-        return ret;
     }
 
     public synchronized Set<Session> getSessionSet() {
-        return sessionSet;
+        synchronized (syncSessionSet) {
+            return sessionSet;
+        }
     }
 
     public void sendMessageToClients(Object _value) {
-        for(Session session: sessionSet) {
+        Set<Session> copiedSessionSet;
+        synchronized (syncSessionSet) {
+            if (sessionSet == null) {
+                return;
+            }
+            copiedSessionSet = new HashSet<>(sessionSet);
+        }
+        for (Session session : copiedSessionSet) {
             Future<Void> future =
                     JettySessionCommon.sendMessage(session, _value);
             try {

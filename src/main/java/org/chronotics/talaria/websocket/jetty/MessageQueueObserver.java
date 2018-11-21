@@ -45,7 +45,7 @@ public class MessageQueueObserver
     @Override
     public void update(Observable observable, Object o) {
         String msg = (String)o;
-        if(msg.equals(MessageQueue.REMOVALMESSAGE)) {
+        if(msg.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
         } else {
             if(o instanceof String) {
                 msg = (String)o;

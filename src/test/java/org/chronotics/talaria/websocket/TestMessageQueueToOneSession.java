@@ -53,8 +53,8 @@ public class TestMessageQueueToOneSession {
     private static JettyServer server = null;
 
     private static List<String> msgList = null;
-    private static int msgListSize = 10000;
-    private static long insertionTime = 10000;
+    private static int msgListSize = 1000;
+    private static long insertionTime = 1000;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -258,20 +258,20 @@ public class TestMessageQueueToOneSession {
             Thread.sleep(500);
         }
 
-        int numMsg1 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
-        int numMsg2 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
-        int numMsg3 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
-
         client1.stop();
         client2.stop();
         client3.stop();
+
+        long numMsg1 = ((ClientHandlerExample)(client1.getHandler())).getNumberOfReceivedMessage();
+        long numMsg2 = ((ClientHandlerExample)(client1.getHandler())).getNumberOfReceivedMessage();
+        long numMsg3 = ((ClientHandlerExample)(client1.getHandler())).getNumberOfReceivedMessage();
 
         logger.info("The number of received message of client1 is {}", numMsg1);
         logger.info("The number of received message of client2 is {}", numMsg2);
         logger.info("The number of received message of client3 is {}", numMsg3);
 
         while(!mq1.isEmpty() || !mq2.isEmpty() || !mq3.isEmpty()) {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
 
         logger.info("The size of mq1 is {}", mq1.size());

@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static java.lang.Math.abs;
 
 /**
  * This class is for WebSocket Client
@@ -19,12 +22,20 @@ public abstract class AbstractClientHandler {
     private static final Logger logger =
             LoggerFactory.getLogger(AbstractClientHandler.class);
 
-    protected long idleDuration = 5000; // ms
     public static long timeoutToSendMessage = 2000; // ms
 
-    protected CountDownLatch latch = null;
-    protected boolean isCloseRequested;
+    private CountDownLatch latch = null;
+    private boolean isCloseRequested;
     protected Session session = null;
+
+    private long idleDuration = 5000; // ms
+    private long lastAccessTime = 0;
+
+    private AtomicLong numberOfReceivedMessage = new AtomicLong();
+
+    public long getNumberOfReceivedMessage() {
+        return numberOfReceivedMessage.get();
+    }
 
     protected AbstractClientHandler() {
         isCloseRequested = false;
@@ -48,6 +59,7 @@ public abstract class AbstractClientHandler {
     }
 
     public void stop() {
+        if(latch == null) return;
         latch.countDown();
     }
 
@@ -69,13 +81,6 @@ public abstract class AbstractClientHandler {
             latch.countDown();
         }
         latch = new CountDownLatch(1);
-
-        // Get Parameter from Get Request
-//        Map<String, List<String>> paraMap =
-//                session.getUpgradeRequest().getParameterMap();
-//        for(Map.Entry<String,List<String>> e: paraMap.entrySet()) {
-//            logger.info(e.toString());
-//        }
     }
 
     /**
@@ -86,6 +91,9 @@ public abstract class AbstractClientHandler {
     protected void onClose(int statusCode, String reason) {
         isCloseRequested = true;
         logger.info("onClose...statusCode:{}, reason:{}", statusCode, reason);
+
+        assert(session != null);
+        assert(latch != null);
 
         if(session != null) {
             session.close();
@@ -102,28 +110,25 @@ public abstract class AbstractClientHandler {
      */
     protected void onConnect(Session session) {
         setSession(session);
+        lastAccessTime = System.currentTimeMillis();
     }
 
-    public abstract boolean isBusy();
+    /**
+     * You have to add "super.onMessage()" in a derived class
+     * @param string
+     */
+    protected void onMessage(String string) {
+        lastAccessTime = System.currentTimeMillis();
+        numberOfReceivedMessage.incrementAndGet();
+    }
 
-//    public boolean sendMessage(String _message) {
-//        if(isCloseRequested) {
-//            logger.error("Closing... received message is {}, but cannot reply", _message);
-//            return false;
-//        }
-//        if(session == null) {
-//            logger.info("Session is null");
-//            return false;
-//        }
-//
-//        try {
-//            Future<Void> fut;
-//            fut = session.getRemote().sendStringByFuture(_message);
-//            fut.get(timeoutToSendMessage,TimeUnit.MILLISECONDS); // wait for send to complete.
-//            return true;
-//        } catch (Throwable t) {
-//            t.printStackTrace();
-//            return false;
-//        }
-//    }
+    public void setNumberOfReceivedMessage(long _value) {
+        numberOfReceivedMessage.set(_value);
+    }
+
+    public boolean isBusy() {
+        long currTime = System.currentTimeMillis();
+        long duration = abs(currTime - lastAccessTime);
+        return (duration < idleDuration) ? true : false;
+    }
 }

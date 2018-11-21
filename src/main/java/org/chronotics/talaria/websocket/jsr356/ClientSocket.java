@@ -21,7 +21,6 @@ public class ClientSocket {
     @OnOpen
     public void onOpen(Session _session) {
         this.session = session;
-        latch.countDown();
     }
 
     @OnMessage
@@ -40,6 +39,10 @@ public class ClientSocket {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        latch.countDown();
     }
 
     public CountDownLatch getLatch() {

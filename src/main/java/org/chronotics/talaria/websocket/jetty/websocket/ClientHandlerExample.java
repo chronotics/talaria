@@ -21,12 +21,6 @@ public class ClientHandlerExample extends AbstractClientHandler {
     private static final Logger logger =
             LoggerFactory.getLogger(ClientHandlerExample.class);
 
-    private int numOfReceivedMessage = 0;
-
-    public int getNumOfReceivedMessage() {
-        return numOfReceivedMessage;
-    }
-
     public ClientHandlerExample() {
     }
 
@@ -38,22 +32,18 @@ public class ClientHandlerExample extends AbstractClientHandler {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         super.onConnect(session);
-        lastAccessTime = System.currentTimeMillis();
     }
-
-    private long lastAccessTime = 0;
 
     @Override
     public boolean isBusy() {
-        long currTime = System.currentTimeMillis();
-        long duration = abs(currTime - lastAccessTime);
-        return (duration < idleDuration) ? true: false;
+        return super.isBusy();
     }
 
     @OnWebSocketMessage
     public void onMessage(String msg) {
-        lastAccessTime = System.currentTimeMillis();
-        numOfReceivedMessage++;
+        super.onMessage(msg);
+
+        // your business logic
         logger.info("Client received {} \n",msg);
     }
 }

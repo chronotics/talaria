@@ -17,8 +17,8 @@ public class MessageQueueToAllSessions<T> extends TaskExecutor {
 
     private static int futureTimeout = 1000;
 
-    public static String PROPERTY_MQID = "mqId";
-    public static String PROPERTY_SESSION = "session";
+    public final static String PROPERTY_MQID = "mqId";
+    public final static String PROPERTY_SESSION = "session";
 
     private static class MessageQueueObserver<T> implements Observer {
         TaskExecutor<T> executor = null;
@@ -27,7 +27,8 @@ public class MessageQueueToAllSessions<T> extends TaskExecutor {
         }
         @Override
         public void update(Observable observable, Object o) {
-            if(o instanceof String && o.equals(MessageQueue.REMOVALMESSAGE)) {
+            if(o instanceof String &&
+                    o.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
                 return;
             }
             try {

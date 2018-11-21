@@ -26,7 +26,8 @@ public class MessageQueueToOneSession<T> extends TaskExecutor {
         }
         @Override
         public void update(Observable _observable, Object _object) {
-            if(_object instanceof String && _object.equals(MessageQueue.REMOVALMESSAGE)) {
+            if(_object instanceof String &&
+                    _object.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
                 return;
             }
             try {

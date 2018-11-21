@@ -10,6 +10,15 @@ import java.net.URI;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author SG Lee
+ * @since 2013
+ * @description
+ * The class of JettyClient is designed to use Jetty's WebSocketClient, comfortably.
+ * You have to set handlerClass of which class can be defined with @WebSocket annotation.
+ * Most of all, you have to add super.onConnect(), onClose(), onMessage() in corresponding functions
+ * This class will be stopped gracefully with the delay of delayToStop
+ */
 public class JettyClient {
 
     private static final Logger logger =
@@ -21,7 +30,8 @@ public class JettyClient {
     private AbstractClientHandler handler = null;
     private Session session = null;
 
-    public static long delayTimeToStop = 100; // ms
+    public long delayToStop = 2000; // ms
+    private final static long delayForIteration = 100; // ms
 
     public JettyClient(String _url, Class _handlerClass) {
         url = _url;
@@ -46,13 +56,36 @@ public class JettyClient {
         return session;
     }
 
+    public long getDelayToStop() {
+        return delayToStop;
+    }
+
+    public void setDelayToStop(long _delay) {
+        delayToStop = _delay;
+    }
+
     public void start() {
+        if(isStarted() || isStarted()) {
+            logger.info("Client is already started");
+            return;
+        }
         start_();
         handler.await();
         stop();
     }
 
+    /**
+     *
+     * @param _duration
+     * Client will be stopped after _duration
+     * @param _unit
+     * TimeUnit
+     */
     public void start(int _duration, TimeUnit _unit) {
+        if(isStarted() || isStarted()) {
+            logger.info("Client is already started");
+            return;
+        }
         start_();
         try {
             handler.awaitClose(_duration, _unit);
@@ -62,7 +95,7 @@ public class JettyClient {
         stop();
     }
 
-    public void start_() {
+    private void start_() {
         if (client == null) {
             client = new WebSocketClient();
         }
@@ -92,7 +125,6 @@ public class JettyClient {
     }
 
     private void stop_() {
-//        assert(handler!=null);
         if(handler==null) {
             logger.error("socket is null");
         } else {
@@ -101,7 +133,6 @@ public class JettyClient {
     }
 
     public void stop() {
-//        assert(client!=null);
         if(client==null) {
             logger.error("client is null");
         } else {
@@ -111,14 +142,24 @@ public class JettyClient {
                 e.printStackTrace();
             }
         }
-        // no meaning, because client.stop() invoke onClose() of a handler
-//        stop_();
 
-        while(!isStopped() && !handler.isBusy()) {
+        ///////////////////////////////////////////////////////////////////
+        // The blow hasno meaning,
+        // because client.stop() invoke onClose() of a handler
+//        stop_();
+        ///////////////////////////////////////////////////////////////////
+
+        long startTime = System.currentTimeMillis();
+        while(!isStopped() && handler.isBusy()) {
             try {
-                Thread.sleep(delayTimeToStop);
+                Thread.sleep(delayForIteration);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            long currTime = System.currentTimeMillis();
+            if(currTime - startTime > delayToStop) {
+                logger.info("Delay to stop() was over than the set value");
+                break;
             }
         }
     }
@@ -169,9 +210,6 @@ public class JettyClient {
         if(handler == null) {
             return false;
         }
-//        if(isStopped()) {
-//            return false;
-//        }
         return handler.isBusy();
     }
 }

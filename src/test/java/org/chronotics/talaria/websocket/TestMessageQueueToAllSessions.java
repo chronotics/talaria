@@ -51,13 +51,9 @@ public class TestMessageQueueToAllSessions {
     private static JettyServer server = null;
     private static String mqId = "testQueue";
 
-//    private static JettyClient client1 = null;
-//    private static JettyClient client2 = null;
-//    private static JettyClient client3 = null;
-
     private static List<String> msgList = null;
     private static int msgListSize = 1000;
-    private static long insertionTime = 5000;
+    private static long insertionTime = 1000;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -72,7 +68,7 @@ public class TestMessageQueueToAllSessions {
 //                                    MessageQueue.default_maxQueueSize,
                         MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
         mqMap.put(mqId, mq);
-        mq.setNotifyMessageRemoval(true);
+        mq.setRemovalNotification(true);
 
         msgList = new ArrayList<>();
         for(int i=0; i<msgListSize; i++) {
@@ -229,7 +225,6 @@ public class TestMessageQueueToAllSessions {
 
         MessageQueue<String> mq =
                 (MessageQueue<String>) MessageQueueMap.getInstance().get(mqId);
-//        mq.addObserver(taskExecutor.getMessageQueueObserver());
         mq.addObserver(taskExecutor.getObserver());
 
         Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -262,13 +257,13 @@ public class TestMessageQueueToAllSessions {
             Thread.sleep(500);
         }
 
-        int numMsg1 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
-        int numMsg2 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
-        int numMsg3 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
-
         client1.stop();
         client2.stop();
         client3.stop();
+
+        long numMsg1 = ((ClientHandlerExample)(client1.getHandler())).getNumberOfReceivedMessage();
+        long numMsg2 = ((ClientHandlerExample)(client1.getHandler())).getNumberOfReceivedMessage();
+        long numMsg3 = ((ClientHandlerExample)(client1.getHandler())).getNumberOfReceivedMessage();
 
         logger.info("The number of received message of client1 is {}", numMsg1);
         logger.info("The number of received message of client2 is {}", numMsg2);

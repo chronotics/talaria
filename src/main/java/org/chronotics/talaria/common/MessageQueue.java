@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class MessageQueue<E> extends Observable {
 	
-	public static String REMOVALMESSAGE = "rm";
+	public final static String REMOVAL_NOTIFICATION = "rm";
 	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
@@ -29,14 +29,13 @@ public class MessageQueue<E> extends Observable {
 		DELETE_FIRST,
 		RUNTIME_EXCEPTION;
 	}
-	private ConcurrentLinkedDeque<E> queue =
-			new ConcurrentLinkedDeque<E>();
+	private ConcurrentLinkedDeque<E> queue = null;
 	private int queueSize = 0;
 	
 	private int maxQueueSize = 0;
 	private OVERFLOW_STRATEGY overflowStrategy;
 	private Class<E> type;
-	private boolean notifyMessageRemoval = false;
+	private boolean removalNotification = false;
 //	private boolean stopCommand = false;
 
 	@SuppressWarnings("unused")
@@ -47,11 +46,12 @@ public class MessageQueue<E> extends Observable {
 			Class<E> cls,
 			int _maxQueueSize, 
 			OVERFLOW_STRATEGY _overflowStrategy) {
+		queue = new ConcurrentLinkedDeque<E>();
 		type = cls;
 		maxQueueSize = _maxQueueSize;
 		overflowStrategy = _overflowStrategy;
 		queueSize = 0;
-		notifyMessageRemoval = false;
+		removalNotification = false;
 //		stopCommand = false;
 	}
 	
@@ -75,8 +75,8 @@ public class MessageQueue<E> extends Observable {
 		return queueSize;
 	}
 
-	public synchronized void setNotifyMessageRemoval(boolean _v) {
-		notifyMessageRemoval = _v;
+	public synchronized void setRemovalNotification(boolean _v) {
+		removalNotification = _v;
 	}
 
 //	public synchronized void setStop(boolean _b) {
@@ -189,8 +189,8 @@ public class MessageQueue<E> extends Observable {
 //		}
         if (queue.remove(o)) {
             decreaseQueueSize();
-           	if (notifyMessageRemoval == true) {
-				notifyObservers(this.REMOVALMESSAGE);
+           	if (removalNotification == true) {
+				notifyObservers(this.REMOVAL_NOTIFICATION);
 			}
             return true;
         } else {
@@ -211,8 +211,8 @@ public class MessageQueue<E> extends Observable {
         E ret = queue.removeFirst();
         if (ret != null) {
 			decreaseQueueSize();
-			if (notifyMessageRemoval == true) {
-				notifyObservers(this.REMOVALMESSAGE);
+			if (removalNotification == true) {
+				notifyObservers(this.REMOVAL_NOTIFICATION);
 			}
         }
         return ret;
@@ -231,8 +231,8 @@ public class MessageQueue<E> extends Observable {
         E ret = queue.removeLast();
         if (ret != null) {
             decreaseQueueSize();
-			if (notifyMessageRemoval == true) {
-				notifyObservers(this.REMOVALMESSAGE);
+			if (removalNotification == true) {
+				notifyObservers(this.REMOVAL_NOTIFICATION);
 			}
         }
         return ret;
