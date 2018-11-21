@@ -185,8 +185,8 @@ public abstract class TaskExecutor<T> implements Callable<T> {
 	public final Future<T> execute(T _arg) throws Exception {
 		if(executorService == null) {
 			executorService = 
-					Executors.newSingleThreadExecutor();
-//					Executors.newFixedThreadPool(2 + getChildrenExecutorCount()*2);
+//					Executors.newSingleThreadExecutor();
+					Executors.newFixedThreadPool(2 + getChildrenExecutorCount()*2);
 		}
 	
 		this.setValue(_arg);

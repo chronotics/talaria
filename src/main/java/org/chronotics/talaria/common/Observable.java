@@ -61,7 +61,7 @@ public abstract class Observable {
         Set<Observer> copiedObservers;
         synchronized (syncObj) {
             if(observers == null) {
-                logger.debug("There are no observers");
+//                logger.debug("There are no observers");
                 return;
             }
             copiedObservers = new HashSet<>(observers);

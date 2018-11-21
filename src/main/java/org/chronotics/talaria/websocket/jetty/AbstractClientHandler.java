@@ -101,7 +101,8 @@ public abstract class AbstractClientHandler {
         }
         logger.info("session is closed");
 
-        this.latch.countDown(); // trigger latch
+//        this.latch.countDown(); // trigger latch
+        this.stop();
     }
 
     /**

@@ -41,10 +41,6 @@ public class MessageQueueToAllSessions<T> extends TaskExecutor {
 
     private static MessageQueueObserver observer = null;
 
-//    public MessageQueueObserver<T> getMessageQueueObserver() {
-//        return observer;
-//    }
-
     public Observer getObserver() {
         return observer;
     }
