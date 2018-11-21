@@ -17,16 +17,18 @@ public class MQGenByIdListener extends JettyListener {
 
     public static String KEYID = "id";
 
+    public static long delayTimeToRemoveObserverAndMq = 100;
+
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
-        logger.info(getClass().getName() +
-                " received a message of {} {} {} ", bytes, i, i1);
+//        logger.info(getClass().getName() +
+//                " received a message of {} {} {} ", bytes, i, i1);
     }
 
     @Override
     public void onWebSocketText(String s) {
-        logger.info(getClass().getName() +
-                " received a message of {}", s);
+//        logger.info(getClass().getName() +
+//                " received a message of {}", s);
     }
 
     @Override
@@ -41,9 +43,17 @@ public class MQGenByIdListener extends JettyListener {
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
 
-        // remove observer
+        // wait until MQ flush
         MessageQueue mq = mqMap.get(mqId);
-        mq.deleteObservers();
+        while(!mq.isEmpty()) {
+            try {
+                Thread.sleep(delayTimeToRemoveObserverAndMq);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // remove observer
+        mq.removeAllObservers();
 
         // remove MessageQueue from QueMap
         mqMap.remove(mqId);

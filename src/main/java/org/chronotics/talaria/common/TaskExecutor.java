@@ -186,7 +186,7 @@ public abstract class TaskExecutor<T> implements Callable<T> {
 		if(executorService == null) {
 			executorService = 
 					Executors.newSingleThreadExecutor();
-					//Executors.newFixedThreadPool(this.getExecutorCount() + (int)(this.getExecutorCount()+0.5));
+//					Executors.newFixedThreadPool(2 + getChildrenExecutorCount()*2);
 		}
 	
 		this.setValue(_arg);

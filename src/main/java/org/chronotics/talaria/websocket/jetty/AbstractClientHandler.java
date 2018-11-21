@@ -1,14 +1,10 @@
 package org.chronotics.talaria.websocket.jetty;
 
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,7 +19,8 @@ public abstract class AbstractClientHandler {
     private static final Logger logger =
             LoggerFactory.getLogger(AbstractClientHandler.class);
 
-    public static int timeoutToSendMessage = 2000;
+    protected long idleDuration = 5000; // ms
+    public static long timeoutToSendMessage = 2000; // ms
 
     protected CountDownLatch latch = null;
     protected boolean isCloseRequested;
@@ -52,6 +49,14 @@ public abstract class AbstractClientHandler {
 
     public void stop() {
         latch.countDown();
+    }
+
+    public void setIdleDuration(long _duration) {
+        idleDuration = _duration;
+    }
+
+    public long getIdleDuration() {
+        return idleDuration;
     }
 
     public Session getSession() {
@@ -99,24 +104,26 @@ public abstract class AbstractClientHandler {
         setSession(session);
     }
 
-    public boolean sendMessage(String _message) {
-        if(isCloseRequested) {
-            logger.error("Closing... received message is {}, but cannot reply", _message);
-            return false;
-        }
-        if(session == null) {
-            logger.info("Session is null");
-            return false;
-        }
+    public abstract boolean isBusy();
 
-        try {
-            Future<Void> fut;
-            fut = session.getRemote().sendStringByFuture(_message);
-            fut.get(timeoutToSendMessage,TimeUnit.MILLISECONDS); // wait for send to complete.
-            return true;
-        } catch (Throwable t) {
-            t.printStackTrace();
-            return false;
-        }
-    }
+//    public boolean sendMessage(String _message) {
+//        if(isCloseRequested) {
+//            logger.error("Closing... received message is {}, but cannot reply", _message);
+//            return false;
+//        }
+//        if(session == null) {
+//            logger.info("Session is null");
+//            return false;
+//        }
+//
+//        try {
+//            Future<Void> fut;
+//            fut = session.getRemote().sendStringByFuture(_message);
+//            fut.get(timeoutToSendMessage,TimeUnit.MILLISECONDS); // wait for send to complete.
+//            return true;
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            return false;
+//        }
+//    }
 }

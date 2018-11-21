@@ -35,12 +35,12 @@ public class TestMessageQueueToOneSession {
     private static String topicPath = "/topic/";
     private static String otherTopicId = "otherTopic";
     private static String otherTopicPath = "/otherTopic/";
-    private static String otherTopicUrl1 = "ws://localhost:8080/otherTopic/?id=111";
-    private static String otherTopicUrl2 = "ws://localhost:8080/otherTopic/?id=222";
-    private static String otherTopicUrl3 = "ws://localhost:8080/otherTopic/?id=333";
     private static String id1 = "id1";
     private static String id2 = "id2";
     private static String id3 = "id3";
+    private static String otherTopicUrl1 = "ws://localhost:8080/otherTopic/?id="+id1;
+    private static String otherTopicUrl2 = "ws://localhost:8080/otherTopic/?id="+id2;
+    private static String otherTopicUrl3 = "ws://localhost:8080/otherTopic/?id="+id3;
     private static String topicUrl1 = "ws://localhost:8080/topic/?id="+id1;
     private static String topicUrl2 = "ws://localhost:8080/topic/?id="+id2;
     private static String topicUrl3 = "ws://localhost:8080/topic/?id="+id3;
@@ -53,8 +53,8 @@ public class TestMessageQueueToOneSession {
     private static JettyServer server = null;
 
     private static List<String> msgList = null;
-    private static int msgListSize = 1000;
-    private static long insertionTime = 5000;
+    private static int msgListSize = 10000;
+    private static long insertionTime = 10000;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -218,7 +218,33 @@ public class TestMessageQueueToOneSession {
                 long startTime = System.currentTimeMillis();
                 for(String msg: msgList) {
                     mq1.addLast(msg);
+                }
+                long endTime = System.currentTimeMillis();
+                long elapsedTime = endTime - startTime;
+                logger.info("Elapsed time to add {} elements to Queue : {} ms", msgList.size(), elapsedTime);
+                assertTrue(elapsedTime < insertionTime);
+            }
+        });
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                MessageQueueMap mqMap = MessageQueueMap.getInstance();
+                long startTime = System.currentTimeMillis();
+                for(String msg: msgList) {
                     mq2.addLast(msg);
+                }
+                long endTime = System.currentTimeMillis();
+                long elapsedTime = endTime - startTime;
+                logger.info("Elapsed time to add {} elements to Queue : {} ms", msgList.size(), elapsedTime);
+                assertTrue(elapsedTime < insertionTime);
+            }
+        });
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                MessageQueueMap mqMap = MessageQueueMap.getInstance();
+                long startTime = System.currentTimeMillis();
+                for(String msg: msgList) {
                     mq3.addLast(msg);
                 }
                 long endTime = System.currentTimeMillis();
@@ -228,25 +254,35 @@ public class TestMessageQueueToOneSession {
             }
         });
 
-        Thread.sleep(insertionTime);
+        while(client1.isBusy() || client2.isBusy() || client3.isBusy()) {
+            Thread.sleep(500);
+        }
+
+        int numMsg1 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
+        int numMsg2 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
+        int numMsg3 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
 
         client1.stop();
         client2.stop();
         client3.stop();
 
-        logger.info("The number of received message of client1 is {}",((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage());
-        logger.info("The number of received message of client2 is {}",((ClientHandlerExample)(client2.getHandler())).getNumOfReceivedMessage());
-        logger.info("The number of received message of client3 is {}",((ClientHandlerExample)(client3.getHandler())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client2.getHandler())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client3.getHandler())).getNumOfReceivedMessage());
+        logger.info("The number of received message of client1 is {}", numMsg1);
+        logger.info("The number of received message of client2 is {}", numMsg2);
+        logger.info("The number of received message of client3 is {}", numMsg3);
 
+        while(!mq1.isEmpty() || !mq2.isEmpty() || !mq3.isEmpty()) {
+            Thread.sleep(1000);
+        }
+
+        logger.info("The size of mq1 is {}", mq1.size());
+        logger.info("The size of mq2 is {}", mq2.size());
+        logger.info("The size of mq3 is {}", mq3.size());
         assertEquals(0, mq1.size());
         assertEquals(0, mq2.size());
         assertEquals(0, mq3.size());
+        assertEquals(msgListSize, numMsg1);
+        assertEquals(msgListSize, numMsg2);
+        assertEquals(msgListSize, numMsg3);
     }
 
 }

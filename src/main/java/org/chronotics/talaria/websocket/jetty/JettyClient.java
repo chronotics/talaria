@@ -21,6 +21,8 @@ public class JettyClient {
     private AbstractClientHandler handler = null;
     private Session session = null;
 
+    public static long delayTimeToStop = 100; // ms
+
     public JettyClient(String _url, Class _handlerClass) {
         url = _url;
         handlerClass = _handlerClass;
@@ -111,6 +113,14 @@ public class JettyClient {
         }
         // no meaning, because client.stop() invoke onClose() of a handler
 //        stop_();
+
+        while(!isStopped() && !handler.isBusy()) {
+            try {
+                Thread.sleep(delayTimeToStop);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean isConnected() {
@@ -153,5 +163,15 @@ public class JettyClient {
             return false;
         }
         return this.client.isStopped();
+    }
+
+    public boolean isBusy() {
+        if(handler == null) {
+            return false;
+        }
+//        if(isStopped()) {
+//            return false;
+//        }
+        return handler.isBusy();
     }
 }

@@ -9,6 +9,8 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.Math.abs;
+
 /**
  * 2018. 11. 09
  * @author sglee
@@ -36,11 +38,22 @@ public class ClientHandlerExample extends AbstractClientHandler {
     @OnWebSocketConnect
     public void onConnect(Session session) {
         super.onConnect(session);
+        lastAccessTime = System.currentTimeMillis();
+    }
+
+    private long lastAccessTime = 0;
+
+    @Override
+    public boolean isBusy() {
+        long currTime = System.currentTimeMillis();
+        long duration = abs(currTime - lastAccessTime);
+        return (duration < idleDuration) ? true: false;
     }
 
     @OnWebSocketMessage
     public void onMessage(String msg) {
+        lastAccessTime = System.currentTimeMillis();
         numOfReceivedMessage++;
-//        logger.info("Client received {} \n",msg);
+        logger.info("Client received {} \n",msg);
     }
 }

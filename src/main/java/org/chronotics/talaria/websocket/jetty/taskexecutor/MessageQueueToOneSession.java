@@ -1,16 +1,12 @@
 package org.chronotics.talaria.websocket.jetty.taskexecutor;
 
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.*;
 import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.Future;
 
 public class MessageQueueToOneSession<T> extends TaskExecutor {
@@ -18,30 +14,30 @@ public class MessageQueueToOneSession<T> extends TaskExecutor {
     private static final Logger logger =
             LoggerFactory.getLogger(MessageQueueToOneSession.class);
 
-    private static int futureTimeout = 1000;
+    private static int futureTimeout = 2000;
 
-    public static String PROPERTY_MQID = "mqId";
-    public static String PROPERTY_SESSION = "session";
+    public final static String PROPERTY_MQID = "mqId";
+    public final static String PROPERTY_SESSION = "session";
 
-    private static class MessageQueueObserver<T> implements Observer {
+    private class MessageQueueObserver<T> implements Observer {
         TaskExecutor<T> executor = null;
         public void setExecutor(TaskExecutor _executor) {
             executor = _executor;
         }
         @Override
-        public void update(Observable observable, Object o) {
-            if(o instanceof String && o.equals(MessageQueue.REMOVALMESSAGE)) {
+        public void update(Observable _observable, Object _object) {
+            if(_object instanceof String && _object.equals(MessageQueue.REMOVALMESSAGE)) {
                 return;
             }
             try {
-                executor.execute((T)o);
+                executor.execute((T)_object);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private static MessageQueueObserver observer = null;
+    private MessageQueueObserver observer = null;
 
     public MessageQueueObserver<T> getMessageQueueObserver() {
         return observer;

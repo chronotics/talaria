@@ -1,14 +1,13 @@
 package org.chronotics.talaria.websocket.jetty.taskexecutor;
 
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.*;
 import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 public class MessageQueueToAllSessions<T> extends TaskExecutor {
@@ -41,7 +40,11 @@ public class MessageQueueToAllSessions<T> extends TaskExecutor {
 
     private static MessageQueueObserver observer = null;
 
-    public MessageQueueObserver<T> getMessageQueueObserver() {
+//    public MessageQueueObserver<T> getMessageQueueObserver() {
+//        return observer;
+//    }
+
+    public Observer getObserver() {
         return observer;
     }
 

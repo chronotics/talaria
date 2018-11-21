@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class MessageQueueMap {
-	public static long delayTimeToRemoveMessageQueue = 1000;
+//	public static long delayTimeToRemoveMessageQueue = 1000;
 
 	private static class Holder {
 		private static final MessageQueueMap theInstance=new MessageQueueMap();
@@ -69,12 +69,12 @@ public class MessageQueueMap {
 		if(mq == null) {
 			return null;
 		}
-		mq.setStop(true);
-		try {
-			Thread.sleep(delayTimeToRemoveMessageQueue);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		mq.setStop(true);
+//		try {
+//			Thread.sleep(delayTimeToRemoveMessageQueue);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		return map.remove(_key);
 	}
 

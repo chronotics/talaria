@@ -1,10 +1,8 @@
 package org.chronotics.talaria.common;
 
-import java.nio.BufferOverflowException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.slf4j.Logger;
@@ -38,8 +36,8 @@ public class MessageQueue<E> extends Observable {
 	private int maxQueueSize = 0;
 	private OVERFLOW_STRATEGY overflowStrategy;
 	private Class<E> type;
-	private boolean notifyRemoval = false;
-	private boolean stop = false;
+	private boolean notifyMessageRemoval = false;
+//	private boolean stopCommand = false;
 
 	@SuppressWarnings("unused")
 	private MessageQueue(Class<E> cls) {
@@ -53,8 +51,8 @@ public class MessageQueue<E> extends Observable {
 		maxQueueSize = _maxQueueSize;
 		overflowStrategy = _overflowStrategy;
 		queueSize = 0;
-		notifyRemoval = false;
-		stop = false;
+		notifyMessageRemoval = false;
+//		stopCommand = false;
 	}
 	
 	public Class<E> getElementClass() {
@@ -77,18 +75,18 @@ public class MessageQueue<E> extends Observable {
 		return queueSize;
 	}
 
-	public synchronized void setNotifyRemoval(boolean _v) {
-		notifyRemoval = _v;
+	public synchronized void setNotifyMessageRemoval(boolean _v) {
+		notifyMessageRemoval = _v;
 	}
 
-	public synchronized void setStop(boolean _b) {
-		stop = _b;
-	}
+//	public synchronized void setStop(boolean _b) {
+//		stopCommand = _b;
+//	}
 
 	public void addLast(E _e) {
-		if(stop) {
-			return;
-		}
+//		if(stopCommand) {
+//			return;
+//		}
 		if(queueSize() >= maxQueueSize) {
 			switch (overflowStrategy) {
                 case NO_INSERTION:
@@ -108,12 +106,7 @@ public class MessageQueue<E> extends Observable {
 		// ConcurrentDeque -> synchronized is guaranteed
 		queue.addLast(_e);
         increaseQueueSize();
-		synchronized (this) {
-        	if(countObservers()!=0) {
-				setChanged();
-				notifyObservers(_e);
-			}
-        }
+        notifyObservers(_e);
 	}
 
 	/**
@@ -122,9 +115,9 @@ public class MessageQueue<E> extends Observable {
 	 * @return
 	 */
 	public boolean addAll(Collection<? extends E> _c) {
-		if(stop) {
-			return false;
-		}
+//		if(stopCommand) {
+//			return false;
+//		}
 		if(queueSize() + _c.size() >= maxQueueSize) {
 			switch (overflowStrategy) {
                 case NO_INSERTION:
@@ -153,11 +146,8 @@ public class MessageQueue<E> extends Observable {
 		if(rt) {
 			synchronized (this) {
 				queueSize += _c.size();
-				if(countObservers()!=0) {
-					setChanged();
-					notifyObservers(_c);
-				}
 			}
+			notifyObservers(_c);
 			return true;
 		} else {
 			return false;
@@ -173,16 +163,16 @@ public class MessageQueue<E> extends Observable {
 	}
 	
 	public E getFirst() {
-		if(stop) {
-			return null;
-		}
+//		if(stopCommand) {
+//			return null;
+//		}
 		return queue.getFirst();
 	}
 
 	public E getLast() {
-		if(stop) {
-			return null;
-		}
+//		if(stopCommand) {
+//			return null;
+//		}
 		return queue.getLast();
 	}
 
@@ -194,17 +184,14 @@ public class MessageQueue<E> extends Observable {
 	 * NullPointerException - if the specified element is null
 	 */
 	public boolean remove(Object o) {
-		if(stop) {
-			return false;
-		}
+//		if(stopCommand) {
+//			return false;
+//		}
         if (queue.remove(o)) {
             decreaseQueueSize();
-			synchronized (this) {
-            	if (countObservers() != 0 && notifyRemoval == true) {
-					setChanged();
-					notifyObservers(this.REMOVALMESSAGE);
-				}
-            }
+           	if (notifyMessageRemoval == true) {
+				notifyObservers(this.REMOVALMESSAGE);
+			}
             return true;
         } else {
         	throw(new NoSuchElementException());
@@ -218,17 +205,14 @@ public class MessageQueue<E> extends Observable {
 	 * NoSuchElementException - if this deque is empty
 	 */
 	public E removeFirst() {
-		if(stop) {
-			return null;
-		}
+//		if(stopCommand) {
+//			return null;
+//		}
         E ret = queue.removeFirst();
         if (ret != null) {
 			decreaseQueueSize();
-        	synchronized (this) {
-				if (countObservers() != 0 && notifyRemoval == true) {
-					setChanged();
-					notifyObservers(this.REMOVALMESSAGE);
-				}
+			if (notifyMessageRemoval == true) {
+				notifyObservers(this.REMOVALMESSAGE);
 			}
         }
         return ret;
@@ -241,26 +225,23 @@ public class MessageQueue<E> extends Observable {
 	 * NoSuchElementException - if this deque is empty
 	 */
 	public E removeLast() {
-		if(stop) {
-			return null;
-		}
+//		if(stopCommand) {
+//			return null;
+//		}
         E ret = queue.removeLast();
         if (ret != null) {
             decreaseQueueSize();
-            synchronized (this) {
-				if (countObservers() != 0 && notifyRemoval == true) {
-					setChanged();
-					notifyObservers(this.REMOVALMESSAGE);
-				}
+			if (notifyMessageRemoval == true) {
+				notifyObservers(this.REMOVALMESSAGE);
 			}
         }
         return ret;
 	}
 
 	public synchronized int size() {
-		if(stop) {
-			return 0;
-		}
+//		if(stopCommand) {
+//			return 0;
+//		}
 		assert(queueSize == queue.size());
 		if(queueSize != queue.size()) {
 			logger.error("queueSize: {}, queue.size(): {}", queueSize, queue.size());
@@ -272,23 +253,23 @@ public class MessageQueue<E> extends Observable {
 	}
 	
 	public Object[] toArray() {
-		if(stop) {
-			return null;
-		}
+//		if(stopCommand) {
+//			return null;
+//		}
 		return queue.toArray();
 	}
 	
 	public <E> E[] toArray(E[] a) {
-		if(stop) {
-			return null;
-		}
+//		if(stopCommand) {
+//			return null;
+//		}
 		return queue.toArray(a);
 	}
 
 	public void clear() {
-		if(stop) {
-			return;
-		}
+//		if(stopCommand) {
+//			return;
+//		}
 		queue.clear();
 		queueSize = 0;
 	}

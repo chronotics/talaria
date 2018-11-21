@@ -57,7 +57,7 @@ public class TestMessageQueueToAllSessions {
 
     private static List<String> msgList = null;
     private static int msgListSize = 1000;
-    private static long insertionTime = 10000;
+    private static long insertionTime = 5000;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -72,7 +72,7 @@ public class TestMessageQueueToAllSessions {
 //                                    MessageQueue.default_maxQueueSize,
                         MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
         mqMap.put(mqId, mq);
-        mq.setNotifyRemoval(true);
+        mq.setNotifyMessageRemoval(true);
 
         msgList = new ArrayList<>();
         for(int i=0; i<msgListSize; i++) {
@@ -229,7 +229,8 @@ public class TestMessageQueueToAllSessions {
 
         MessageQueue<String> mq =
                 (MessageQueue<String>) MessageQueueMap.getInstance().get(mqId);
-        mq.addObserver(taskExecutor.getMessageQueueObserver());
+//        mq.addObserver(taskExecutor.getMessageQueueObserver());
+        mq.addObserver(taskExecutor.getObserver());
 
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
@@ -257,20 +258,24 @@ public class TestMessageQueueToAllSessions {
             }
         });
 
-        Thread.sleep(insertionTime);
+        while(client1.isBusy() || client2.isBusy() || client3.isBusy()) {
+            Thread.sleep(500);
+        }
+
+        int numMsg1 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
+        int numMsg2 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
+        int numMsg3 = ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage();
 
         client1.stop();
         client2.stop();
         client3.stop();
 
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client1.getHandler())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client2.getHandler())).getNumOfReceivedMessage());
-        assertEquals(msgListSize,
-                ((ClientHandlerExample)(client3.getHandler())).getNumOfReceivedMessage());
-
-
+        logger.info("The number of received message of client1 is {}", numMsg1);
+        logger.info("The number of received message of client2 is {}", numMsg2);
+        logger.info("The number of received message of client3 is {}", numMsg3);
+        assertEquals(msgListSize, numMsg1);
+        assertEquals(msgListSize, numMsg2);
+        assertEquals(msgListSize, numMsg3);
         assertEquals(0, mq.size());
     }
 
