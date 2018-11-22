@@ -41,7 +41,7 @@ public abstract class AbstractClientHandler {
         isCloseRequested = false;
     }
 
-    public boolean awaitClose(int duration, TimeUnit unit)
+    public boolean awaitClose(long duration, TimeUnit unit)
             throws InterruptedException {
         // wait during duration
         logger.info("awaitClose, duration is {}", duration);

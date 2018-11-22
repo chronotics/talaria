@@ -43,10 +43,10 @@ public class TestMessageQueueToAllSessions {
     private static String topicUrl2 = "ws://localhost:8080/topic/?id=222";
     private static String topicUrl3 = "ws://localhost:8080/topic/?id=333";
     private static int port = 8080;
-    private static int awaitTimeOfClient = 1000; // ms
-    private static int startUpTimeOfClient = 1500; // ms
-    private static int startUpTimeOfServer = 1000; //ms
-    private static int stopTimeoutOfServer = 1000; // ms
+    private static long awaitTimeOfClient = 1000; // ms
+    private static long startUpTimeOfClient = 1500; // ms
+    private static long startUpTimeOfServer = 1000; //ms
+    private static long stopTimeoutOfServer = 1000; // ms
 
     private static JettyServer server = null;
     private static String mqId = "testQueue";

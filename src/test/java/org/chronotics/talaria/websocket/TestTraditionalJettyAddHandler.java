@@ -46,10 +46,10 @@ public class TestTraditionalJettyAddHandler {
     private static String wrongUrl2 = "ws://localhost:8080/wrong/?id=222";
     private static String wrongUrl3 = "ws://localhost:8080/wrong/?id=333";
     private static int port = 8080;
-    private static int awaitTimeOfClient = 1000; // ms
-    private static int startUpTimeOfClient = 2000; // ms
-    private static int startUpTimeOfServer = 1000; //ms
-    private static int stopTimeoutOfServer = 1000; // ms
+    private static long awaitTimeOfClient = 1000; // ms
+    private static long startUpTimeOfClient = 2000; // ms
+    private static long startUpTimeOfServer = 1000; //ms
+    private static long stopTimeoutOfServer = 1000; // ms
 
     @BeforeClass
     public synchronized static void setup() {

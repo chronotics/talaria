@@ -40,10 +40,10 @@ public class TestJetty {
     private static String wrongUrl2 = "ws://localhost:8080/wrong";
     private static String wrongUrl3 = "ws://localhost:8080/wrong";
     private static int port = 8080;
-    private static int awaitTimeOfClient = 1000; // ms
-    private static int startUpTimeOfClient = 1500; // ms
-    private static int startUpTimeOfServer = 1000; //ms
-    private static int stopTimeoutOfServer = 1000; // ms
+    private static long awaitTimeOfClient = 1000; // ms
+    private static long startUpTimeOfClient = 1500; // ms
+    private static long startUpTimeOfServer = 1000; //ms
+    private static long stopTimeoutOfServer = 1000; // ms
 
     private static JettyServer server = null;
 
