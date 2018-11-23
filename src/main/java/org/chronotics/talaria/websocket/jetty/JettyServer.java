@@ -310,7 +310,7 @@ public class JettyServer {
         }
     }
 
-    public synchronized Set<Session> getSessionSet() {
+    public Set<Session> getSessionSet() {
         synchronized (syncSessionSet) {
             return sessionSet;
         }
