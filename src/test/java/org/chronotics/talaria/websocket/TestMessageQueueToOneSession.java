@@ -4,10 +4,8 @@ import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.JettyClient;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToAllSessions;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.MQGenByIdListener;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToEachSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -85,7 +83,7 @@ public class TestMessageQueueToOneSession {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
-                            MQGenByIdListener.class,
+                            EachMQToEachSession.class,
                             topicPath);
                 }
 

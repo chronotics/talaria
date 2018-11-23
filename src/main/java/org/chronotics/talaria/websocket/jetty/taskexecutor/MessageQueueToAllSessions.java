@@ -20,7 +20,7 @@ public class MessageQueueToAllSessions<T> extends TaskExecutor {
     public final static String PROPERTY_MQID = "mqId";
     public final static String PROPERTY_SESSION = "session";
 
-    private static class MessageQueueObserver<T> implements Observer {
+    private static class ObserverImp<T> implements Observer {
         TaskExecutor<T> executor = null;
         public void setExecutor(TaskExecutor _executor) {
             executor = _executor;
@@ -39,14 +39,14 @@ public class MessageQueueToAllSessions<T> extends TaskExecutor {
         }
     }
 
-    private static MessageQueueObserver observer = null;
+    private static ObserverImp observer = null;
 
     public Observer getObserver() {
         return observer;
     }
 
     public MessageQueueToAllSessions() {
-        observer = new MessageQueueObserver<T>();
+        observer = new ObserverImp<T>();
         observer.setExecutor(this);
     }
 

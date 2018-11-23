@@ -9,17 +9,17 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.concurrent.Future;
 
-public class MessageQueueToOneSession<T> extends TaskExecutor {
+public class MessageQueueToEachSession<T> extends TaskExecutor {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(MessageQueueToOneSession.class);
+            LoggerFactory.getLogger(MessageQueueToEachSession.class);
 
     private static int futureTimeout = 2000;
 
     public final static String PROPERTY_MQID = "mqId";
     public final static String PROPERTY_SESSION = "session";
 
-    private class MessageQueueObserver<T> implements Observer {
+    private class ObserverImp<T> implements Observer {
         TaskExecutor<T> executor = null;
         public void setExecutor(TaskExecutor _executor) {
             executor = _executor;
@@ -38,14 +38,14 @@ public class MessageQueueToOneSession<T> extends TaskExecutor {
         }
     }
 
-    private MessageQueueObserver observer = null;
+    private ObserverImp observer = null;
 
-    public MessageQueueObserver<T> getMessageQueueObserver() {
+    public ObserverImp<T> getObserver() {
         return observer;
     }
 
-    public MessageQueueToOneSession() {
-        observer = new MessageQueueObserver<T>();
+    public MessageQueueToEachSession() {
+        observer = new ObserverImp<T>();
         observer.setExecutor(this);
     }
 

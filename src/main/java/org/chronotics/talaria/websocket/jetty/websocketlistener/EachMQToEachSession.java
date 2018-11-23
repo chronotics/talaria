@@ -4,20 +4,29 @@ import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
-import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToOneSession;
+import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToEachSession;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class MQGenByIdListener extends JettyListener {
+public class EachMQToEachSession extends JettyListener {
     private static final Logger logger =
-        LoggerFactory.getLogger(MQGenByIdListener.class);
+        LoggerFactory.getLogger(EachMQToEachSession.class);
 
-    public static String KEYID = "id";
+    public static String KEY_ID = "id";
 
-    public static long delayTimeToRemoveObserverAndMq = 100;
+    public long delayTimeToRemoveObserverAndMq = 1000;
+    public static long delayForIteration = 100;
+
+    public long getDelayTimeToRemoveObserverAndMq() {
+        return delayTimeToRemoveObserverAndMq;
+    }
+
+    public void setDelayTimeToRemoveObserverAndMq(long _delay) {
+        this.delayTimeToRemoveObserverAndMq = _delay;
+    }
 
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
@@ -33,37 +42,49 @@ public class MQGenByIdListener extends JettyListener {
 
     @Override
     public void onWebSocketClose(int i, String s) {
+        super.onWebSocketClose(i,s);
+
         // Session access first!
         List<String> parameterList =
-                JettySessionCommon.getParameterList(session, KEYID);
+                JettySessionCommon.getParameterList(session, KEY_ID);
         String mqId = parameterList.get(0);
-
-        super.onWebSocketClose(i,s);
-        logger.info(getClass().getName()+"::onWebSocketClose");
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
 
         // wait until MQ flush
         MessageQueue mq = mqMap.get(mqId);
+        mq.stopAdd(true);
+        long startTime = System.currentTimeMillis();
         while(!mq.isEmpty()) {
             try {
-                Thread.sleep(delayTimeToRemoveObserverAndMq);
+                Thread.sleep(delayForIteration);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            long currTime = System.currentTimeMillis();
+            if(currTime - startTime > delayTimeToRemoveObserverAndMq) {
+                logger.error("MessageQueue is not cleared within the given delay time");
+                break;
+            }
         }
+        // clear MQ with force
+        mq.clear();
         // remove observer
         mq.removeAllObservers();
-
         // remove MessageQueue from QueMap
         mqMap.remove(mqId);
+
+        logger.info(getClass().getName()+"::onWebSocketClose");
     }
 
     @Override
     public void onWebSocketConnect(Session session) {
+        super.onWebSocketConnect(session);
+
         List<String> parameterList =
-                JettySessionCommon.getParameterList(session, KEYID);
+                JettySessionCommon.getParameterList(session, KEY_ID);
         String mqId = parameterList.get(0);
+        assert(mqId != null && !mqId.equals(""));
 
         // insert MessageQueue to QueMap
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
@@ -78,13 +99,12 @@ public class MQGenByIdListener extends JettyListener {
         }
 
         // add observer
-        MessageQueueToOneSession<String> taskExecutor =
-                new MessageQueueToOneSession<>();
-        taskExecutor.putProperty(MessageQueueToOneSession.PROPERTY_MQID,mqId);
-        taskExecutor.putProperty(MessageQueueToOneSession.PROPERTY_SESSION,session);
-        mq.addObserver(taskExecutor.getMessageQueueObserver());
+        MessageQueueToEachSession<String> taskExecutor =
+                new MessageQueueToEachSession<>();
+        taskExecutor.putProperty(MessageQueueToEachSession.PROPERTY_MQID,mqId);
+        taskExecutor.putProperty(MessageQueueToEachSession.PROPERTY_SESSION,session);
+        mq.addObserver(taskExecutor.getObserver());
 
-        super.onWebSocketConnect(session);
         logger.info(getClass().getName()+"::onWebSocketConnect");
     }
 

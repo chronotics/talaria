@@ -851,7 +851,7 @@ public class TestJetty {
 
         long endTime = System.currentTimeMillis();
         logger.info("elapsed time {}", endTime - startTime);
-        assertTrue(endTime-startTime > 3500);
+        assertTrue(endTime-startTime >= 3500);
 
         assertTrue(client1.isStopping() || client1.isStopped());
     }
