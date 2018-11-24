@@ -16,6 +16,7 @@ public class EachMQToEachSession extends JettyListener {
         LoggerFactory.getLogger(EachMQToEachSession.class);
 
     public static String KEY_ID = "id";
+    public static String KEY_GROUPID = "groupId";
 
     public long delayTimeToRemoveObserverAndMq = 1000;
     public static long delayForIteration = 100;
@@ -41,13 +42,28 @@ public class EachMQToEachSession extends JettyListener {
     }
 
     @Override
+    public String getId() {
+        List<String> parameterList =
+                JettySessionCommon.getParameterList(session, KEY_ID);
+        assert(parameterList!=null);
+        return parameterList==null? null : parameterList.get(0);
+    }
+
+    @Override
+    public String getGroupId() {
+        List<String> parameterList =
+                JettySessionCommon.getParameterList(session, KEY_GROUPID);
+        assert(parameterList!=null);
+        return parameterList==null? null : parameterList.get(0);
+    }
+
+    @Override
     public void onWebSocketClose(int i, String s) {
         super.onWebSocketClose(i,s);
 
         // Session access first!
-        List<String> parameterList =
-                JettySessionCommon.getParameterList(session, KEY_ID);
-        String mqId = parameterList.get(0);
+        String mqId = getId();
+        assert(mqId != null);
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
 
@@ -79,12 +95,16 @@ public class EachMQToEachSession extends JettyListener {
 
     @Override
     public void onWebSocketConnect(Session session) {
-        super.onWebSocketConnect(session);
-
         List<String> parameterList =
                 JettySessionCommon.getParameterList(session, KEY_ID);
         String mqId = parameterList.get(0);
         assert(mqId != null && !mqId.equals(""));
+        if(mqId == null || mqId.equals("")) {
+            logger.error("Client session is not connected because of invalid Id");
+            return;
+        }
+
+        super.onWebSocketConnect(session);
 
         // insert MessageQueue to QueMap
         MessageQueueMap mqMap = MessageQueueMap.getInstance();

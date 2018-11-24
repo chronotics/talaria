@@ -16,7 +16,7 @@ public class GroupMQToGroupSessions extends JettyListener {
             LoggerFactory.getLogger(GroupMQToGroupSessions.class);
 
     public static String KEY_ID = "id";
-    public static String KEY_GROUP = "group";
+    public static String KEY_GROUPID = "groupId";
 
     public long delayTimeToRemoveObserverAndMq = 1000;
     public static long delayForIteration = 100;
@@ -42,17 +42,27 @@ public class GroupMQToGroupSessions extends JettyListener {
     }
 
     @Override
+    public String getId() {
+        List<String> parameterList =
+                JettySessionCommon.getParameterList(session, KEY_ID);
+        assert(parameterList!=null);
+        return parameterList==null? null : parameterList.get(0);
+    }
+
+    @Override
+    public String getGroupId() {
+        List<String> parameterList =
+                JettySessionCommon.getParameterList(session, KEY_GROUPID);
+        assert(parameterList!=null);
+        return parameterList==null? null : parameterList.get(0);
+    }
+
+    @Override
     public void onWebSocketClose(int i, String s) {
         super.onWebSocketClose(i,s);
 
-        // Session access first!
-//        List<String> paraListId =
-//                JettySessionCommon.getParameterList(session, KEY_ID);
-//        String mqId = paraListId.get(0);
-
-        List<String> paraListGroup =
-                JettySessionCommon.getParameterList(session, KEY_GROUP);
-        String groupId = paraListGroup.get(0);
+        String groupId = getGroupId();
+        assert(groupId != null);
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
 
@@ -61,6 +71,7 @@ public class GroupMQToGroupSessions extends JettyListener {
         if(mq == null) {
             return;
         }
+
         mq.stopAdd(true);
         long startTime = System.currentTimeMillis();
         while(!mq.isEmpty()) {
@@ -88,17 +99,14 @@ public class GroupMQToGroupSessions extends JettyListener {
 
     @Override
     public void onWebSocketConnect(Session session) {
-        super.onWebSocketConnect(session);
-
-//        List<String> paraListId =
-//                JettySessionCommon.getParameterList(session, KEY_ID);
-//        String mqId = paraListId.get(0);
-
-        List<String> paraListGroup =
-                JettySessionCommon.getParameterList(session, KEY_GROUP);
-
-        String groupId = paraListGroup.get(0);
+        String groupId = getGroupId();
         assert(groupId != null && !groupId.equals(""));
+        if(groupId == null || groupId.equals("")) {
+            logger.error("Client session is not connected because of invalid Id");
+            return;
+        }
+
+        super.onWebSocketConnect(session);
 
         // insert MessageQueue to QueMap
         MessageQueueMap mqMap = MessageQueueMap.getInstance();

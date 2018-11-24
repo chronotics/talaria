@@ -22,6 +22,16 @@ public class EmptyListener extends JettyListener {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
+    public String getGroupId() {
+        return null;
+    }
+
+    @Override
     public void onWebSocketClose(int i, String s) {
         super.onWebSocketClose(i,s);
         logger.info(getClass().getName()+"::onWebSocketClose");

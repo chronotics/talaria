@@ -52,4 +52,14 @@ public class TaskExecutorListener extends JettyListener {
     public void onWebSocketError(Throwable throwable) {
         logger.error(throwable.toString());
     }
+
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
+    public String getGroupId() {
+        return null;
+    }
 }

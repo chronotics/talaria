@@ -38,6 +38,10 @@ public abstract class JettyListener implements WebSocketListener {
         this.session = session;
     }
 
+    public abstract String getId();
+
+    public abstract String getGroupId();
+
     /**
      * You hava to add "super.onWebSocketClose" in a derived class
      * @param i
@@ -46,7 +50,7 @@ public abstract class JettyListener implements WebSocketListener {
     @Override
     public void onWebSocketClose(int i, String s) {
         if(server!=null) {
-            server.removeSession(session);
+            server.removeSession(session, getId(), getGroupId());
         }
         if(session!=null) {
             this.session.close();
@@ -62,7 +66,7 @@ public abstract class JettyListener implements WebSocketListener {
     public void onWebSocketConnect(Session session) {
         setSession(session);
         if(server!=null) {
-            server.addSession(session);
+            server.addSession(session, getId(), getGroupId());
         }
     }
 

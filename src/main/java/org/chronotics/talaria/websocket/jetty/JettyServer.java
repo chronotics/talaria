@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -42,6 +43,7 @@ public class JettyServer {
     private int stopTimeout = 1000; // ms
     private Map<String,ServletContextHandler> contextHandlerMap = null;
     private Set<Session> sessionSet = null;
+    private Map<String, ConcurrentMap<String, Session>> groupSessions = null;
     private Object syncHandler = new Object();
     private Object syncSessionSet = new Object();
 
@@ -50,6 +52,7 @@ public class JettyServer {
         createServer();
 //        contextHandlerMap = new ConcurrentHashMap<>();
         contextHandlerMap = new HashMap<>();
+        groupSessions = new ConcurrentHashMap<>();
 
         ServletContextHandler handler;
     }
@@ -282,7 +285,7 @@ public class JettyServer {
         }
     }
 
-    public void addSession(Session _session) {
+    public void addSession(Session _session, String _id, String _groupId) {
         if(_session == null) {
             logger.error("The session you want to add is null");
             return;
@@ -300,7 +303,7 @@ public class JettyServer {
         }
     }
 
-    public boolean removeSession(Session _session) {
+    public boolean removeSession(Session _session, String _id, String _groupId) {
         synchronized (syncSessionSet) {
             boolean ret = sessionSet.remove(_session);
             if (!ret) {
