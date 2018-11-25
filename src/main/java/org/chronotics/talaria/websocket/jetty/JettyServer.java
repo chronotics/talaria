@@ -43,16 +43,17 @@ public class JettyServer {
     private int stopTimeout = 1000; // ms
     private Map<String,ServletContextHandler> contextHandlerMap = null;
     private Set<Session> sessionSet = null;
-    private Map<String, ConcurrentMap<String, Session>> groupSessions = null;
+    // Id must be guaranteed uniqueness for the below
+    private Map<String, Session> sessionMap = null;
+    private Map<String, Map<String, Session>> sessionGroup = null;
     private Object syncHandler = new Object();
-    private Object syncSessionSet = new Object();
+    private Object syncSessions = new Object();
 
     public JettyServer(int _port) {
         setPort(_port);
         createServer();
 //        contextHandlerMap = new ConcurrentHashMap<>();
         contextHandlerMap = new HashMap<>();
-        groupSessions = new ConcurrentHashMap<>();
 
         ServletContextHandler handler;
     }
@@ -285,12 +286,12 @@ public class JettyServer {
         }
     }
 
-    public void addSession(Session _session, String _id, String _groupId) {
+    public void addSession(Session _session, String _groupId, String _id) {
         if(_session == null) {
             logger.error("The session you want to add is null");
             return;
         }
-        synchronized (syncSessionSet) {
+        synchronized (syncSessions) {
             if(sessionSet == null) {
                 sessionSet = new HashSet<>();
             }
@@ -300,28 +301,82 @@ public class JettyServer {
                 return;
             }
             sessionSet.add(_session);
+
+            // null _session can be put to sessionMap,
+            // because JettyServer must handle client's request without "id"
+            if(sessionMap == null) {
+                sessionMap = new HashMap<>();
+            }
+            Session sessionM = sessionMap.put(_id, _session);
+            if(sessionM != null) {
+                logger.error("Session insertion failed, check duplicated id");
+                return;
+            }
+
+            // GroupId can be null, if a group is not defined
+            // In this case, by the way, sessionGroup do not create(put) group.
+            if(_groupId == null) {
+                return;
+            }
+            if(sessionGroup == null) {
+                sessionGroup = new HashMap<>();
+            }
+            Map<String,Session> group = sessionGroup.get(_groupId);
+            if(group == null) {
+                group = new HashMap<>();
+                sessionGroup.put(_groupId, group);
+            }
+            Session sessionG = group.put(_id, _session);
+            if(sessionG != null) {
+                logger.error("Session insertion failed, check duplicated groupId");
+                if(group.isEmpty()) {
+                    sessionGroup.remove(group);
+                }
+                return;
+            }
         }
     }
 
-    public boolean removeSession(Session _session, String _id, String _groupId) {
-        synchronized (syncSessionSet) {
+    public boolean removeSession(Session _session, String _groupId, String _id) {
+        synchronized (syncSessions) {
             boolean ret = sessionSet.remove(_session);
             if (!ret) {
                 logger.error("failed to remove session");
             }
+
+            Session session = sessionMap.remove(_id);
+            assert(session != null);
+
+            Map<String,Session> group = sessionGroup.get(_groupId);
+            if(group != null) {
+                Session V = group.remove(_id);
+                if (V == null) {
+                    logger.error("Session removal failed");
+                }
+                if (group.isEmpty()) {
+                    sessionGroup.remove(group);
+                }
+            }
+
             return ret;
         }
     }
 
     public Set<Session> getSessionSet() {
-        synchronized (syncSessionSet) {
+        synchronized (syncSessions) {
             return sessionSet;
         }
     }
 
-    public void sendMessageToClients(Object _value) {
+    public Map<String, Session> getSessionGroup(String _groupId) {
+        synchronized (syncSessions) {
+            return sessionGroup.get(_groupId);
+        }
+    }
+
+    public void sendMessageToAllClients(Object _value) {
         Set<Session> copiedSessionSet;
-        synchronized (syncSessionSet) {
+        synchronized (syncSessions) {
             if (sessionSet == null) {
                 return;
             }
@@ -330,6 +385,54 @@ public class JettyServer {
         for (Session session : copiedSessionSet) {
             Future<Void> future =
                     JettySessionCommon.sendMessage(session, _value);
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendMessageToClient(Object _value, String _id) {
+        Map<String, Session> copiedSessionMap;
+        synchronized (syncSessions) {
+            if(sessionMap == null) {
+                return;
+            }
+            copiedSessionMap = new HashMap<>(sessionMap);
+        }
+        Session session = copiedSessionMap.get(_id);
+        if(session != null) {
+            return;
+        }
+        Future<Void> future =
+                JettySessionCommon.sendMessage(session, _value);
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessageToGroup(Object _value, String _groupId) {
+        Map<String, Map<String, Session>> copiedSessionGroup;
+        synchronized (syncSessions) {
+            if(sessionGroup == null) {
+                return;
+            }
+            copiedSessionGroup = new HashMap<>(sessionGroup);
+        }
+        Map<String, Session> sessions = copiedSessionGroup.get(_groupId);
+        if(sessions != null) {
+            return;
+        }
+        for (Map.Entry<String, Session> entry : sessions.entrySet()) {
+            Future<Void> future =
+                    JettySessionCommon.sendMessage(entry.getValue(), _value);
             try {
                 future.get();
             } catch (InterruptedException e) {

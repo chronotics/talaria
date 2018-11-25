@@ -1,4 +1,4 @@
-package org.chronotics.talaria.websocket.jetty.websocketlistener;
+package temp.ws;
 
 import org.chronotics.talaria.common.TaskExecutor;
 import org.chronotics.talaria.websocket.jetty.JettyListener;

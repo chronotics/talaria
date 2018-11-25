@@ -2,9 +2,10 @@ package org.chronotics.talaria.websocket.jetty.websocketlistener;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
+import org.chronotics.talaria.common.Observer;
 import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
-import org.chronotics.talaria.websocket.jetty.taskexecutor.MessageQueueToEachSession;
+import org.chronotics.talaria.websocket.jetty.taskexecutor.MQToClient;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ public class EachMQToEachSession extends JettyListener {
 
     public static String KEY_ID = "id";
     public static String KEY_GROUPID = "groupId";
+    private Observer observer = null;
 
     public long delayTimeToRemoveObserverAndMq = 1000;
     public static long delayForIteration = 100;
@@ -62,13 +64,17 @@ public class EachMQToEachSession extends JettyListener {
         super.onWebSocketClose(i,s);
 
         // Session access first!
-        String mqId = getId();
-        assert(mqId != null);
+        String id = getId();
+        assert(id != null);
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
 
         // wait until MQ flush
-        MessageQueue mq = mqMap.get(mqId);
+        MessageQueue mq = mqMap.get(id);
+        if(mq == null) {
+            throw new NullPointerException("MQ can not be found, check id's uniqueness");
+        }
+
         mq.stopAdd(true);
         long startTime = System.currentTimeMillis();
         while(!mq.isEmpty()) {
@@ -86,44 +92,47 @@ public class EachMQToEachSession extends JettyListener {
         // clear MQ with force
         mq.clear();
         // remove observer
-        mq.removeAllObservers();
+        mq.removeObserver(this.observer);
         // remove MessageQueue from QueMap
-        mqMap.remove(mqId);
+        mqMap.remove(id);
 
         logger.info(getClass().getName()+"::onWebSocketClose");
     }
 
     @Override
     public void onWebSocketConnect(Session session) {
-        List<String> parameterList =
-                JettySessionCommon.getParameterList(session, KEY_ID);
-        String mqId = parameterList.get(0);
-        assert(mqId != null && !mqId.equals(""));
-        if(mqId == null || mqId.equals("")) {
-            logger.error("Client session is not connected because of invalid Id");
+        super.onWebSocketConnect(session);
+
+        String id = getId();
+        assert(id != null && !id.equals(""));
+        if(id == null || id.equals("")) {
+            logger.error("Client session can not be connected with invalid Id");
             return;
         }
 
-        super.onWebSocketConnect(session);
-
         // insert MessageQueue to QueMap
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
-        MessageQueue<Object> mq =
-                new MessageQueue<>(
-                        Object.class,
-                        MessageQueue.default_maxQueueSize,
-                        MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
-        if(!mqMap.put(mqId, mq)) {
+        MessageQueue<Object> mq = (MessageQueue<Object>) mqMap.get(id);
+        // always null because getId() is unique
+        assert(mq==null);
+        if(mq == null) {
+            mq = new MessageQueue<>(
+                    Object.class,
+                    MessageQueue.default_maxQueueSize,
+                    MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
+        }
+        if(!mqMap.put(id, mq)) {
             logger.error("duplicated client id exist");
             return;
         }
 
         // add observer
-        MessageQueueToEachSession<String> taskExecutor =
-                new MessageQueueToEachSession<>();
-        taskExecutor.putProperty(MessageQueueToEachSession.PROPERTY_MQID,mqId);
-        taskExecutor.putProperty(MessageQueueToEachSession.PROPERTY_SESSION,session);
-        mq.addObserver(taskExecutor.getObserver());
+        MQToClient taskExecutor =
+                new MQToClient(MQToClient.KIND_OF_RECIEVER.EACH_CLIENT);
+        taskExecutor.putProperty(MQToClient.PROPERTY_ID, id);
+        taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
+        this.observer = taskExecutor.getObserver();
+        mq.addObserver(this.observer);
 
         logger.info(getClass().getName()+"::onWebSocketConnect");
     }

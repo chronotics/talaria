@@ -2,7 +2,8 @@ package org.chronotics.talaria.websocket;
 
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.TaskExecutorListener;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.GroupMQToGroupSessions;
+import temp.ws.TaskExecutorListener;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
@@ -25,12 +26,13 @@ public class TestMessageSendToAllSessions {
     private static String id1 = "id1";
     private static String id2 = "id2";
     private static String id3 = "id3";
+    private static String groupId = "group1";
     private static String otherTopicUrl1 = "ws://localhost:8080/otherTopic/?id="+id1;
     private static String otherTopicUrl2 = "ws://localhost:8080/otherTopic/?id="+id2;
     private static String otherTopicUrl3 = "ws://localhost:8080/otherTopic/?id="+id3;
-    private static String topicUrl1 = "ws://localhost:8080/topic/?id="+id1;
-    private static String topicUrl2 = "ws://localhost:8080/topic/?id="+id2;
-    private static String topicUrl3 = "ws://localhost:8080/topic/?id="+id3;
+    private static String topicUrl1 = "ws://localhost:8080/topic/?id="+id1+"&groupId="+groupId;
+    private static String topicUrl2 = "ws://localhost:8080/topic/?id="+id2+"&groupId="+groupId;
+    private static String topicUrl3 = "ws://localhost:8080/topic/?id="+id3+"&groupId="+groupId;
     private static int port = 8080;
     private static long awaitTimeOfClient = 1000; // ms
     private static long startUpTimeOfClient = 1500; // ms
@@ -72,7 +74,7 @@ public class TestMessageSendToAllSessions {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
-                            TaskExecutorListener.class,
+                            GroupMQToGroupSessions.class,
                             topicPath);
                 }
 

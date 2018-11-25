@@ -70,4 +70,14 @@ public abstract class Observable {
             observer.update(this, _object);
         }
     }
+
+    public int countObservers() {
+        synchronized (syncObj) {
+            if(observers == null) {
+                return 0;
+            } else {
+                return observers.size();
+            }
+        }
+    }
 }

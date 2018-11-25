@@ -5,6 +5,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
 
+import java.util.List;
+
 /**
  * This class is for WebSocketListener of WebSocket Server
  * Use the annotation of @WebSocket above the derived class
@@ -16,11 +18,16 @@ import org.eclipse.jetty.websocket.api.WebSocketListener;
 
 public abstract class JettyListener implements WebSocketListener {
 
+    public static String KEY_ID = "id";
+    public static String KEY_GROUPID = "groupId";
+
     protected TaskExecutor<String> stringExecutor = null;
     protected TaskExecutor<byte []> bytesExecutor = null;
 
     protected JettyServer server = null;
     protected Session session = null;
+    private String id = null;
+    private String groupId = null;
 
     protected JettyServer getServer() {
         return server;
@@ -38,10 +45,13 @@ public abstract class JettyListener implements WebSocketListener {
         this.session = session;
     }
 
-    public abstract String getId();
+    public String getId() {
+        return id;
+    }
 
-    public abstract String getGroupId();
-
+    public String getGroupId() {
+        return groupId;
+    }
     /**
      * You hava to add "super.onWebSocketClose" in a derived class
      * @param i
@@ -50,7 +60,7 @@ public abstract class JettyListener implements WebSocketListener {
     @Override
     public void onWebSocketClose(int i, String s) {
         if(server!=null) {
-            server.removeSession(session, getId(), getGroupId());
+            server.removeSession(session, getGroupId(), getId());
         }
         if(session!=null) {
             this.session.close();
@@ -64,9 +74,24 @@ public abstract class JettyListener implements WebSocketListener {
      */
     @Override
     public void onWebSocketConnect(Session session) {
+        List<String> parameterListId =
+                JettySessionCommon.getParameterList(session, KEY_ID);
+        if(parameterListId == null) {
+            id = null;
+        } else {
+            id = parameterListId.get(0);
+        }
+        List<String> parameterListGroupId =
+                JettySessionCommon.getParameterList(session, KEY_GROUPID);
+        if(parameterListGroupId == null) {
+            groupId = null;
+        } else {
+            groupId = parameterListGroupId.get(0);
+        }
+
         setSession(session);
         if(server!=null) {
-            server.addSession(session, getId(), getGroupId());
+            server.addSession(session, getGroupId(), getId());
         }
     }
 

@@ -524,7 +524,7 @@ public class TestJetty {
         assertTrue(client3.isOpen());
 
         for(int i = 0; i< 1000; i++) {
-            server.sendMessageToClients("Hello");
+            server.sendMessageToAllClients("Hello");
         }
 
         client1.stop();

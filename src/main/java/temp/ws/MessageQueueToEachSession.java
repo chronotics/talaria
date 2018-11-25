@@ -1,13 +1,11 @@
-package org.chronotics.talaria.websocket.jetty.taskexecutor;
+package temp.ws;
 
 import org.chronotics.talaria.common.*;
-import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
-import org.eclipse.jetty.websocket.api.Session;
+import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.concurrent.Future;
 
 public class MessageQueueToEachSession<T> extends TaskExecutor {
 
@@ -16,8 +14,9 @@ public class MessageQueueToEachSession<T> extends TaskExecutor {
 
     private static int futureTimeout = 2000;
 
-    public final static String PROPERTY_MQID = "mqId";
-    public final static String PROPERTY_SESSION = "session";
+    public final static String PROPERTY_JETTYSERVER = "jettyServer";
+    public final static String PROPERTY_ID = "id";
+//    public final static String PROPERTY_SESSION = "session";
 
     private class ObserverImp<T> implements Observer {
         TaskExecutor<T> executor = null;
@@ -56,23 +55,28 @@ public class MessageQueueToEachSession<T> extends TaskExecutor {
 
     @Override
     public T call() throws Exception {
-        String mqId = (String) this.getProperty(PROPERTY_MQID);
-        Session session = (Session)(this.getProperty(PROPERTY_SESSION));
-
-        assert(mqId != null);
-        if (mqId == null) {
-            logger.error("MessageQueue id is not defined as a property");
+        String id = (String) this.getProperty(PROPERTY_ID);
+        assert(id != null);
+        if (id == null) {
+            logger.error("MessageQueue's id is not defined as a property");
             return null;
         }
 
-        assert(session != null);
-        if (session == null) {
-            logger.error("Session is not defined as a property");
-            return null;
+//        Session session = (Session)(this.getProperty(PROPERTY_SESSION));
+//        assert(session != null);
+//        if (session == null) {
+//            logger.error("Session is not defined as a property");
+//            return null;
+//        }
+
+        JettyServer server = (JettyServer)this.getProperty(PROPERTY_JETTYSERVER);
+        assert(server != null);
+        if(server == null) {
+            logger.error("JettyServer is not defined as a property");
         }
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
-        MessageQueue<T> mq = (MessageQueue<T>) mqMap.get(mqId);
+        MessageQueue<T> mq = (MessageQueue<T>) mqMap.get(id);
         if(mq == null) {
             logger.error("MessageQueue is null. Check the correct Id");
             return null;
@@ -87,21 +91,23 @@ public class MessageQueueToEachSession<T> extends TaskExecutor {
         if (value instanceof Collection) {
             Collection<T> c = (Collection<T>) value;
             for (T v : c) {
-                if(!session.isOpen()) {
-                    logger.error("session is not opened");
-                    continue;
-                }
-                Future<Void> future =
-                        JettySessionCommon.sendMessage(session, v);
-                future.get();
+                server.sendMessageToClient(v, id);
+//                if(!session.isOpen()) {
+//                    logger.error("session is not opened");
+//                    continue;
+//                }
+//                Future<Void> future =
+//                        JettySessionCommon.sendMessage(session, v);
+//                future.get();
             }
         } else {
-            if(!session.isOpen()) {
-                logger.error("session is not opened");
-            }
-            Future<Void> future =
-                    JettySessionCommon.sendMessage(session, value);
-            future.get();
+            server.sendMessageToClient(value, id);
+//            if(!session.isOpen()) {
+//                logger.error("session is not opened");
+//            }
+//            Future<Void> future =
+//                    JettySessionCommon.sendMessage(session, value);
+//            future.get();
         }
 
         return null;
