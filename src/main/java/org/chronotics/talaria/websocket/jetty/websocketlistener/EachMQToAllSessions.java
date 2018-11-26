@@ -4,17 +4,14 @@ import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.Observer;
 import org.chronotics.talaria.websocket.jetty.JettyListener;
-import org.chronotics.talaria.websocket.jetty.JettySessionCommon;
 import org.chronotics.talaria.websocket.jetty.taskexecutor.MQToClient;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-public class EachMQToEachSession extends JettyListener {
+public class EachMQToAllSessions extends JettyListener {
     private static final Logger logger =
-        LoggerFactory.getLogger(EachMQToEachSession.class);
+        LoggerFactory.getLogger(EachMQToAllSessions.class);
 
     private Observer observer = null;
 
@@ -31,14 +28,10 @@ public class EachMQToEachSession extends JettyListener {
 
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
-//        logger.info(getClass().getName() +
-//                " received a message of {} {} {} ", bytes, i, i1);
     }
 
     @Override
     public void onWebSocketText(String s) {
-//        logger.info(getClass().getName() +
-//                " received a message of {}", s);
     }
 
     @Override
@@ -105,7 +98,7 @@ public class EachMQToEachSession extends JettyListener {
 
         // add observer
         MQToClient taskExecutor =
-                new MQToClient(MQToClient.KIND_OF_RECIEVER.EACH_CLIENT);
+                new MQToClient(MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS);
         taskExecutor.putProperty(MQToClient.PROPERTY_ID, id);
         taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
         this.observer = taskExecutor.getObserver();

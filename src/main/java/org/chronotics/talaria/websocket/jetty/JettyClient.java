@@ -164,6 +164,14 @@ public class JettyClient {
         }
     }
 
+    public void sendString(String _str) {
+        JettySessionCommon.sendMessage(this.session, (Object)_str);
+    }
+
+    public void sendBytes(byte[] _bytes) {
+        JettySessionCommon.sendMessage(this.session, (Object)_bytes);
+    }
+
     public boolean isConnected() {
         if(client == null) {
             return false;

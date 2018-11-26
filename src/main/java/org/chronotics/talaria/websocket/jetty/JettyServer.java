@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.Null;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -45,7 +46,7 @@ public class JettyServer {
     private Set<Session> sessionSet = null;
     // Id must be guaranteed uniqueness for the below
     private Map<String, Session> sessionMap = null;
-    private Map<String, Map<String, Session>> sessionGroup = null;
+    private Map<String, Map<String, Session>> sessionGroupMap = null;
     private Object syncHandler = new Object();
     private Object syncSessions = new Object();
 
@@ -295,6 +296,7 @@ public class JettyServer {
             if(sessionSet == null) {
                 sessionSet = new HashSet<>();
             }
+            assert(!sessionSet.contains(_session));
             if (sessionSet.contains(_session)) {
                 assert (false);
                 logger.error("duplicated session");
@@ -302,37 +304,37 @@ public class JettyServer {
             }
             sessionSet.add(_session);
 
-            // null _session can be put to sessionMap,
-            // because JettyServer must handle client's request without "id"
-            if(sessionMap == null) {
-                sessionMap = new HashMap<>();
-            }
-            Session sessionM = sessionMap.put(_id, _session);
-            if(sessionM != null) {
-                logger.error("Session insertion failed, check duplicated id");
-                return;
+            // JettyServer must handle client's request without "id"
+            if(_id != null) {
+                if (sessionMap == null) {
+                    sessionMap = new HashMap<>();
+                }
+                Session sessionM = sessionMap.put(_id, _session);
+                if (sessionM != null) {
+                    logger.error("Session insertion failed, check duplicated id");
+                    return;
+                }
             }
 
             // GroupId can be null, if a group is not defined
-            // In this case, by the way, sessionGroup do not create(put) group.
-            if(_groupId == null) {
-                return;
-            }
-            if(sessionGroup == null) {
-                sessionGroup = new HashMap<>();
-            }
-            Map<String,Session> group = sessionGroup.get(_groupId);
-            if(group == null) {
-                group = new HashMap<>();
-                sessionGroup.put(_groupId, group);
-            }
-            Session sessionG = group.put(_id, _session);
-            if(sessionG != null) {
-                logger.error("Session insertion failed, check duplicated groupId");
-                if(group.isEmpty()) {
-                    sessionGroup.remove(group);
+            // In this case, by the way, sessionGroupMap do not create(put) group.
+            if(_groupId != null) {
+                if (sessionGroupMap == null) {
+                    sessionGroupMap = new HashMap<>();
                 }
-                return;
+                Map<String, Session> group = sessionGroupMap.get(_groupId);
+                if (group == null) {
+                    group = new HashMap<>();
+                    sessionGroupMap.put(_groupId, group);
+                }
+                Session sessionG = group.put(_id, _session);
+                if (sessionG != null) {
+                    logger.error("Session insertion failed, check duplicated groupId");
+                    if (group.isEmpty()) {
+                        sessionGroupMap.remove(group);
+                    }
+                    return;
+                }
             }
         }
     }
@@ -344,17 +346,23 @@ public class JettyServer {
                 logger.error("failed to remove session");
             }
 
-            Session session = sessionMap.remove(_id);
-            assert(session != null);
+            if(sessionMap != null) {
+                Session session = sessionMap.remove(_id);
+                assert (session != null);
+            }
 
-            Map<String,Session> group = sessionGroup.get(_groupId);
-            if(group != null) {
-                Session V = group.remove(_id);
-                if (V == null) {
-                    logger.error("Session removal failed");
-                }
-                if (group.isEmpty()) {
-                    sessionGroup.remove(group);
+            if(sessionGroupMap != null) {
+                Map<String, Session> group = sessionGroupMap.get(_groupId);
+                if (group != null) {
+                    Session V = group.remove(_id);
+                    if (V == null) {
+                        logger.error("Session removal failed");
+                        throw new NullPointerException(
+                                "couldn't remove session from the group");
+                    }
+                    if (group.isEmpty()) {
+                        sessionGroupMap.remove(group);
+                    }
                 }
             }
 
@@ -368,9 +376,12 @@ public class JettyServer {
         }
     }
 
-    public Map<String, Session> getSessionGroup(String _groupId) {
+    public Map<String, Session> getSessionGroupMap(String _groupId) {
         synchronized (syncSessions) {
-            return sessionGroup.get(_groupId);
+            if(sessionGroupMap == null) {
+                throw new NullPointerException("sessionGroupMap is null");
+            }
+            return sessionGroupMap.get(_groupId);
         }
     }
 
@@ -378,7 +389,8 @@ public class JettyServer {
         Set<Session> copiedSessionSet;
         synchronized (syncSessions) {
             if (sessionSet == null) {
-                return;
+                logger.error("sessionSet is null");
+                throw new NullPointerException("sessionSet is null");
             }
             copiedSessionSet = new HashSet<>(sessionSet);
         }
@@ -399,13 +411,15 @@ public class JettyServer {
         Map<String, Session> copiedSessionMap;
         synchronized (syncSessions) {
             if(sessionMap == null) {
-                return;
+                logger.error("sessionMap is null");
+                throw new NullPointerException("sessionMap is null");
             }
             copiedSessionMap = new HashMap<>(sessionMap);
         }
         Session session = copiedSessionMap.get(_id);
-        if(session != null) {
-            return;
+        if(session == null) {
+            logger.error("session not found");
+            throw new NullPointerException("session not found");
         }
         Future<Void> future =
                 JettySessionCommon.sendMessage(session, _value);
@@ -421,16 +435,18 @@ public class JettyServer {
     public void sendMessageToGroup(Object _value, String _groupId) {
         Map<String, Map<String, Session>> copiedSessionGroup;
         synchronized (syncSessions) {
-            if(sessionGroup == null) {
-                return;
+            if(sessionGroupMap == null) {
+                logger.error("sessionGroupMap is null");
+                throw new NullPointerException("sessionGroupMap is null");
             }
-            copiedSessionGroup = new HashMap<>(sessionGroup);
+            copiedSessionGroup = new HashMap<>(sessionGroupMap);
         }
-        Map<String, Session> sessions = copiedSessionGroup.get(_groupId);
-        if(sessions != null) {
-            return;
+        Map<String, Session> group = copiedSessionGroup.get(_groupId);
+        if(group == null) {
+            logger.error("group not found");
+            throw new NullPointerException("group not found");
         }
-        for (Map.Entry<String, Session> entry : sessions.entrySet()) {
+        for (Map.Entry<String, Session> entry : group.entrySet()) {
             Future<Void> future =
                     JettySessionCommon.sendMessage(entry.getValue(), _value);
             try {

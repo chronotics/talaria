@@ -4,10 +4,10 @@ import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.JettyClient;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.taskexecutor.MQToClient;
+import org.chronotics.talaria.websocket.jetty.JettyWebSocketServlet;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.GroupMQToGroupSessions;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.GroupMQToSessionGroup;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.SessionToSessionGroupThroughMQ;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,15 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TestMessageQueueToAllSessions {
+public class TestSessionToSessionGroupThroughMQ {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(TestMessageQueueToAllSessions.class);
+            LoggerFactory.getLogger(TestSessionToSessionGroupThroughMQ.class);
 
     private static String contextPath = "/";
     private static String topicId = "topic";
@@ -64,14 +62,6 @@ public class TestMessageQueueToAllSessions {
         if(!mqMap.isEmpty()) {
             mqMap.clear();
         }
-//        MessageQueue<String> mq =
-//                new MessageQueue<>(
-//                        String.class,
-//                        msgListSize,
-////                                    MessageQueue.default_maxQueueSize,
-//                        MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
-//        mqMap.put(mqId, mq);
-//        mq.setRemovalNotification(true);
 
         msgList = new ArrayList<>();
         for(int i=0; i<msgListSize; i++) {
@@ -102,7 +92,7 @@ public class TestMessageQueueToAllSessions {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
-                            GroupMQToGroupSessions.class,
+                            SessionToSessionGroupThroughMQ.class,
                             topicPath);
                 }
 
@@ -218,56 +208,31 @@ public class TestMessageQueueToAllSessions {
 
         // now clients are connected to a server
 
-        // get session from a server
-//        Set<Session> sessions = server.getSessionSet();
-
-//        MessageQueueToAllSessions<String> taskExecutor =
-//                new MessageQueueToAllSessions<>();
-//        taskExecutor.putProperty(MessageQueueToAllSessions.PROPERTY_ID,mqId);
-////        taskExecutor.putProperty(MessageQueueToAllSessions.PROPERTY_SESSION,sessions);
-//
-//        MQToClient<String> taskExecutor =
-//                new MQToClient<>(MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS);
-//        taskExecutor.putProperty(MQToClient.PROPERTY_ID, mqId);
-//        taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
-//        MessageQueue<String> mq =
-//                (MessageQueue<String>) MessageQueueMap.getInstance().get(mqId);
-//        mq.addObserver(taskExecutor.getObserver());
-
-        Thread.sleep(1000);
-
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                MessageQueueMap mqMap = MessageQueueMap.getInstance();
-//                if(mqMap.isEmpty()) {
-//                    MessageQueue<String> mq =
-//                            new MessageQueue<>(
-//                                    String.class,
-//                                    msgListSize,
-////                                    MessageQueue.default_maxQueueSize,
-//                                    MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
-//                    mqMap.put(mqId, mq);
-//                }
-//                MessageQueue<String> mq = (MessageQueue<String>) mqMap.get(groupId);
-
-                long startTime = System.currentTimeMillis();
-                MessageQueue<String> mq =
-                        (MessageQueue<String>) MessageQueueMap.getInstance().get(groupId);
-                assertTrue(mq!=null);
                 for(String msg: msgList) {
-                    mq.addLast(msg);
+                    client1.sendString(msg);
+                    client2.sendString(msg);
+                    client3.sendString(msg);
                 }
-                long endTime = System.currentTimeMillis();
-                long elapsedTime = endTime - startTime;
-                logger.info("Elapsed time to add {} elements to Queue : {} ms", msgList.size(), elapsedTime);
-                assertTrue(elapsedTime < insertionTime);
             }
         });
 
         while(client1.isBusy() || client2.isBusy() || client3.isBusy()) {
-            Thread.sleep(500);
+            Thread.sleep(100);
         }
+
+        assertTrue(client1.getHandler().getIdleDuration()
+                < JettyWebSocketServlet.getIdleTimeout());
+        assertTrue(client2.getHandler().getIdleDuration()
+                < JettyWebSocketServlet.getIdleTimeout());
+        assertTrue(client3.getHandler().getIdleDuration()
+                < JettyWebSocketServlet.getIdleTimeout());
+
+        MessageQueueMap mqMap = MessageQueueMap.getInstance();
+        MessageQueue<String> mq = (MessageQueue<String>) mqMap.get(groupId);
+        assertEquals(0, mq.size());
 
         client1.stop();
         client2.stop();
@@ -280,12 +245,11 @@ public class TestMessageQueueToAllSessions {
         logger.info("The number of received message of client1 is {}", numMsg1);
         logger.info("The number of received message of client2 is {}", numMsg2);
         logger.info("The number of received message of client3 is {}", numMsg3);
-        assertEquals(msgListSize, numMsg1);
-        assertEquals(msgListSize, numMsg2);
-        assertEquals(msgListSize, numMsg3);
-        MessageQueue<String> mq =
-                (MessageQueue<String>) MessageQueueMap.getInstance().get(groupId);
-        assertEquals(0, mq.size());
+        assertEquals(msgListSize * 3, numMsg1);
+        assertEquals(msgListSize * 3, numMsg2);
+        assertEquals(msgListSize * 3, numMsg3);
+        mq = (MessageQueue<String>) mqMap.get(groupId);
+        assertEquals(null, mq);
     }
 
 }
