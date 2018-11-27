@@ -51,6 +51,7 @@ public class SessionToSessionGroupThroughMQ extends JettyListener {
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
         MessageQueue mq = mqMap.get(id);
         mq.addLast(s);
+        logger.info("received message is {}", s);
     }
 
     @Override
@@ -93,6 +94,10 @@ public class SessionToSessionGroupThroughMQ extends JettyListener {
     @Override
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
+
+        if(this.session == null) {
+            return;
+        }
 
         String id = getGroupId();
         assert(id != null && !id.equals(""));

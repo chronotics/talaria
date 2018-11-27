@@ -59,7 +59,7 @@ public abstract class JettyListener implements WebSocketListener {
      */
     @Override
     public void onWebSocketClose(int i, String s) {
-        if(server!=null) {
+        if(server!=null && this.session!=null) {
             server.removeSession(session, getGroupId(), getId());
         }
         if(session!=null) {
@@ -89,9 +89,12 @@ public abstract class JettyListener implements WebSocketListener {
             groupId = parameterListGroupId.get(0);
         }
 
-        setSession(session);
         if(server!=null) {
-            server.addSession(session, getGroupId(), getId());
+            if(server.addSession(session, getGroupId(), getId()) == false) {
+                session.close();
+            } else {
+                setSession(session);
+            }
         }
     }
 

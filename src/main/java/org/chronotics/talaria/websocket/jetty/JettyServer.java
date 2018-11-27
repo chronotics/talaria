@@ -287,10 +287,10 @@ public class JettyServer {
         }
     }
 
-    public void addSession(Session _session, String _groupId, String _id) {
+    public boolean addSession(Session _session, String _groupId, String _id) {
         if(_session == null) {
             logger.error("The session you want to add is null");
-            return;
+            return false;
         }
         synchronized (syncSessions) {
             if(sessionSet == null) {
@@ -300,7 +300,7 @@ public class JettyServer {
             if (sessionSet.contains(_session)) {
                 assert (false);
                 logger.error("duplicated session");
-                return;
+                return false;
             }
             sessionSet.add(_session);
 
@@ -312,7 +312,7 @@ public class JettyServer {
                 Session sessionM = sessionMap.put(_id, _session);
                 if (sessionM != null) {
                     logger.error("Session insertion failed, check duplicated id");
-                    return;
+                    return false;
                 }
             }
 
@@ -333,9 +333,10 @@ public class JettyServer {
                     if (group.isEmpty()) {
                         sessionGroupMap.remove(group);
                     }
-                    return;
+                    return false;
                 }
             }
+            return true;
         }
     }
 

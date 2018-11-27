@@ -5,8 +5,8 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 public class JettyWebSocketServlet extends WebSocketServlet {
     // set a 10 second timeout
-    // ms
-    private static long idleTimeout = 10000;
+    // ms, 3,600,000 = 1hour
+    private static long idleTimeout = 3600000;
 
     /**
      * ms
