@@ -29,31 +29,17 @@ public class ThriftServiceExecutor {
 			executorToWrite = _executor;
 		}
 		
-		public Object executeToRead(Object _arg) {
+		public Future<Object> executeToRead(Object _arg) throws Exception {
 			if(executorToRead == null) {
 				return null;
 			}
-			try {
-				Future<Object> future = executorToRead.execute(_arg);
-				return future.get();
-			} catch (Exception e) {
-				logger.error("exception in executeToRead");
-				e.printStackTrace();
-			}
-			return null;
+			return executorToRead.execute(_arg);
 		}
 		
-		public Object executeToWrite(Object _arg) {
+		public Future<Object> executeToWrite(Object _arg) throws Exception {
 			if(executorToWrite == null) {
 				return null;
 			}
-			try {
-				Future<Object> future = executorToWrite.execute(_arg);
-				return future.get();
-			} catch (Exception e) {
-				logger.error("exception in executeToWrite");
-				e.printStackTrace();
-			}
-			return null;
+			return executorToWrite.execute(_arg);
 		}
 }

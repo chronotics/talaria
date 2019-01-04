@@ -14,21 +14,10 @@ import com.google.gson.JsonObject;
 
 @Component
 public class DummyMessageGenerator implements Runnable {
-	
-//	@Autowired
-//	private SpringStompServerProperties properties;
-//	public void setProperties(SpringStompServerProperties _properties) {
-//		properties = _properties;
-//	}
-	
 	int count = 100;
 	@Override
 	public void run() {
-//		assert(properties != null);
-//		if(properties == null) {
-//			return;
-//		}
-		MessageQueue<String> msgqueue = (MessageQueue<String>) 
+		MessageQueue<String> msgqueue = (MessageQueue<String>)
 			MessageQueueMap.getInstance()
 			.get("vibration");//properties.getQueueMapKey());//"vib");
 		if(msgqueue != null) {

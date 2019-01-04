@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class ThriftServiceWithMessageQueue extends ThriftService {
 
@@ -23,6 +25,34 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(_executor != null) {
 			super.setExecutor(_executor);
 		}
+	}
+
+	private String writeFunc(ThriftServiceExecutor executor, Object _v) {
+		if(executor == null) {
+			return null;
+		}
+		Object rt = null;
+		try {
+			Future<Object> future = executor.executeToWrite(_v);
+			rt = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return (rt != null) ? rt.toString() : null;
+	}
+
+	private Object readFunc(ThriftServiceExecutor executor, Object _v) {
+		if(executor == null) {
+			return null;
+		}
+		Object rt = null;
+		try {
+			Future<Object> future = executor.executeToRead(_v);
+			rt = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rt;
 	}
 
 	@Override
@@ -39,12 +69,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			mqMap.put(id, mq);
 		}
 		mq.addLast(_v);
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -57,12 +83,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(mq != null) {
 			mq.addLast(_v);
 		}
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -75,12 +97,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(mq != null) {
 			mq.addLast(_v);
 		}
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -93,12 +111,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(mq != null) {
 			mq.addLast(_v);
 		}
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -111,12 +125,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(mq != null) {
 			mq.addLast(_v);
 		}
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -129,12 +139,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(mq != null) {
 			mq.addLast(_v);
 		}
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -147,12 +153,8 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		if(mq != null) {
 			mq.addLast(_v);
 		}
-		
-		Object rt = null;
-		if(getExecutor() != null) {
-			rt = getExecutor().executeToWrite(_v);
-		}
-		return (rt != null) ? rt.toString() : null;
+
+		return writeFunc(getExecutor(), _v);
 	}
 
 	@Override
@@ -171,10 +173,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			return null;
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (Message)readFunc(getExecutor(),value);
 		}
 	}
 
@@ -194,10 +193,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (boolean)readFunc(getExecutor(),value);
 		}
 	}
 
@@ -217,10 +213,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (short)readFunc(getExecutor(),value);
 		}
 	}
 
@@ -239,10 +232,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (int)readFunc(getExecutor(),value);
 		}
 	}
 
@@ -261,10 +251,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (long)readFunc(getExecutor(),value);
 		}
 	}
 
@@ -283,10 +270,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (double)readFunc(getExecutor(),value);
 		}
 	}
 
@@ -305,10 +289,7 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
-			if(getExecutor() != null) {
-				getExecutor().executeToRead(value);
-			}
-			return value;
+			return (String)readFunc(getExecutor(),value);
 		}
 	}
 

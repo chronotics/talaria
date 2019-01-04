@@ -4,7 +4,6 @@ import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TaskExecutor;
-import org.chronotics.talaria.common.taskexecutor.BypathExecutor;
 import org.chronotics.talaria.common.taskexecutor.EmptyExecutor;
 import org.chronotics.talaria.common.taskexecutor.SimplePrintExecutor;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
@@ -70,7 +69,7 @@ public class ThriftClientTest {
 //                        TaskExecutor.PROPAGATION_RULE.STEP_BY_STEP_ORIGINAL_ARG,
 //                        null);
         TaskExecutor<Object> executorToWrite =
-                new BypathExecutor<>();
+                new EmptyExecutor<>();
         ThriftServiceExecutor thriftServiceExecutor =
                 new ThriftServiceExecutor(executorToRead, executorToWrite);
 		ThriftService thriftServiceHandler =
