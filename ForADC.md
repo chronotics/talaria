@@ -1,0 +1,1 @@
+Thrift is old version.
