@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @PropertySources({
 	@PropertySource(value = "classpath:spring/properties/missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:spring/properties/thriftclient.properties")
+	@PropertySource("classpath:spring/properties/thrift_client.properties")
 	})
 @Component
 public class ThriftClientProperties {
@@ -38,7 +38,7 @@ public class ThriftClientProperties {
 
 	@Valid
 	@NotNull	
-	@Value("${thrift.server.ip}")
+	@Value("${thrift.client.ip}")
 	private String ip;
 	public String getIp() {
 		return ip;
@@ -49,7 +49,7 @@ public class ThriftClientProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${thrift.server.port}")
+	@Value("${thrift.client.port}")
 	private String port;
 	public String getPort() {
 		return port;

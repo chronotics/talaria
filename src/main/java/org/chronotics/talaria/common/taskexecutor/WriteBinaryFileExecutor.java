@@ -12,13 +12,13 @@ public class WriteBinaryFileExecutor<T> extends TaskExecutor<T>  {
 	@Override
 	public T call() throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return super.getValue();
 	}
 
 	@Override
 	public int getFutureTimeout() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 100;
 	}
 
 }

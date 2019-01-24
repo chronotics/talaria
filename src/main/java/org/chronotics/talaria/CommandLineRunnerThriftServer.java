@@ -1,9 +1,13 @@
 package org.chronotics.talaria;
 
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
+import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.ThriftServer;
 import org.chronotics.talaria.thrift.ThriftServerProperties;
-import org.chronotics.talaria.thrift.ThriftService;
+import org.chronotics.talaria.thrift.ThriftServiceExecutor;
+import org.chronotics.talaria.thrift.ThriftServiceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +24,13 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 	@Autowired
 	private ApplicationContext context;
 	
-	static private ThriftServer thriftServer = null;
+	private static ThriftServer thriftServer = null;
 	
 	@Override
 	public void run(String... arg0) throws Exception {
 		
 		TalariaProperties properties = 
 				(TalariaProperties)context.getBean("talariaProperties");
-					
 		assert(properties != null);
 		if(properties == null) {
 			return;
@@ -36,7 +39,6 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		// thrift server properties
 		ThriftServerProperties thriftServerProperties = 
 				properties.getThriftServerProperties();
-
 		assert(thriftServerProperties != null);
 		if(thriftServerProperties == null) {
 			return;
@@ -48,8 +50,26 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		}
 		
 		// start thrift server
-		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+		/**
+		 * start Thrift server
+		 * BypassExecutor to Read: bypass a read value
+		 * NullReturnExecutor to Write: write and return null
+		 */
+		TaskExecutor<Object> executorToRead =
+				new BypassExecutor<>();
+		TaskExecutor<Object> executorToWrite =
+				new NullReturnExecutor<>();
+		ThriftServiceExecutor thriftServiceExecutor =
+				new ThriftServiceExecutor(executorToRead, executorToWrite);
+		ThriftServiceHandler thriftServiceHandler =
+				new ThriftServiceWithMessageQueue(thriftServiceExecutor);
+
 		thriftServer = new ThriftServer(thriftServiceHandler, thriftServerProperties);
 		thriftServer.start();
+
+		logger.info("Thrift server is started...");
+		logger.info("URL of Thrift server is {}:{}",
+				thriftServerProperties.getIp(),
+				thriftServerProperties.getPort());
 	}
 }

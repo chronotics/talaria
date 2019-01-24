@@ -10,7 +10,7 @@ import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.chronotics.talaria.thrift.gen.TransferService;
+import org.chronotics.talaria.thrift.gen.ThriftRWService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
@@ -38,17 +38,17 @@ public class ThriftServer {
 		public String toString() { return type; }
 	}
 
-	private TransferService.Processor<TransferService.Iface> processor;
+	private ThriftRWService.Processor<ThriftRWService.Iface> processor;
 	private ThriftServerProperties properties;
 	private TServer server = null;
 
 	private ThriftServer() {}
 
 	public ThriftServer(
-		TransferService.Iface _service,
+		ThriftRWService.Iface _serviceHandler,
 		ThriftServerProperties _properties) {
 		this.properties = _properties;
-		processor = new TransferService.Processor<TransferService.Iface>(_service);
+		processor = new ThriftRWService.Processor<ThriftRWService.Iface>(_serviceHandler);
 	}
 
 	public ThriftServerProperties getProperties() {
@@ -61,24 +61,26 @@ public class ThriftServer {
 	}
 	
 	public void start() {
-        Runnable serverService = new Runnable() {
-        	@Override
-            public void run() {
-                try {
-                    SERVERTYPE type;
-                    if(properties.getServerType().equals(SERVERTYPE.SIMPLE.toString())) {
-                        type = SERVERTYPE.SIMPLE;
-                    } else if(properties.getServerType().equals(SERVERTYPE.THREADPOOL.toString())) {
-                        type = SERVERTYPE.THREADPOOL;
-                    } else {
-                        logger.error(properties.getServerType());
-                        logger.error("Unknown Thrift server type");
-                        return;
-                    }
-                    createServer(processor, type);
-                } catch (Exception e) {
-                    e.printStackTrace();
+//		Runnable serverService = new Runnable() {
+//			@Override
+//			public void run() {
+//			}
+//		};
+        Runnable serverService = () -> {
+            try {
+                SERVERTYPE type;
+                if(properties.getServerType().equals(SERVERTYPE.SIMPLE.toString())) {
+                    type = SERVERTYPE.SIMPLE;
+                } else if(properties.getServerType().equals(SERVERTYPE.THREADPOOL.toString())) {
+                    type = SERVERTYPE.THREADPOOL;
+                } else {
+                    logger.error(properties.getServerType());
+                    logger.error("Unknown Thrift server type");
+                    return;
                 }
+                createServer(processor, type);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
         new Thread(serverService).start();
@@ -98,6 +100,7 @@ public class ThriftServer {
                 break;
             }
         }
+//		logger.info("Thrift server is started ... ");
 	}
 	
 	public void stop() {
@@ -133,7 +136,7 @@ public class ThriftServer {
 	}
     
 	private void createServer(
-			TransferService.Processor<TransferService.Iface> processor,
+			ThriftRWService.Processor<ThriftRWService.Iface> processor,
 			SERVERTYPE _type)
 			throws Exception {
 		
@@ -154,7 +157,6 @@ public class ThriftServer {
 			throw new Exception("Unknown Thrift server type");
 		}
 
-		logger.info("Thrift server is started ... ");
 		server.serve();
 	}
 	
@@ -165,7 +167,7 @@ public class ThriftServer {
 	 * @throws TTransportException
 	 */
 	public void createSecure(
-			TransferService.Processor<TransferService.Iface> processor) throws TTransportException {
+			ThriftRWService.Processor<ThriftRWService.Iface> processor) throws TTransportException {
 
 		int port = Integer.parseInt(properties.getSecurePort());
 		String keyStore = properties.getSecureKeyStore();
@@ -194,7 +196,7 @@ public class ThriftServer {
 		// Use this for a multi threaded server
 		server = new TThreadPoolServer(
 				new TThreadPoolServer.Args(serverTransport).processor(processor));
-		System.out.println("Starting the secure server...");
+//		System.out.println("Starting the secure server...");
 		server.serve();
 	}
 }

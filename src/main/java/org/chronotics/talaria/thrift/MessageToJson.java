@@ -1,27 +1,12 @@
 package org.chronotics.talaria.thrift;
 
-import org.chronotics.talaria.thrift.gen.Message;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-//public java.lang.String _sender_id; // required
-//public java.lang.String _receiver_id; // required
-//public java.lang.String _subject; // required
-//public java.lang.String _sequence_no; // required
-//public java.lang.String _timestamp; // required
-//public java.util.List<java.lang.Boolean> _list_bool; // required
-//public java.util.List<java.lang.Short> _list_i16; // required
-//public java.util.List<java.lang.Integer> _list_i32; // required
-//public java.util.List<java.lang.Long> _list_i64; // required
-//public java.util.List<java.lang.Double> _list_double; // required
-//public java.util.List<java.lang.String> _list_string; // required
-//public java.nio.ByteBuffer _binary; // required
-//public java.lang.String _payload; // optional
+import org.chronotics.talaria.thrift.gen.ThriftMessage;
 
 public class MessageToJson {
-	public static String convert(Message _message) {
+	public static String convert(ThriftMessage _message) {
 		JsonObject root = new JsonObject();
 		root.addProperty("senderId", _message._sender_id);
 		root.addProperty("receiverId", _message._receiver_id);

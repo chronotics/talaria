@@ -4,6 +4,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.chronotics.talaria.thrift.ThriftServerProperties;
+import org.chronotics.talaria.websocket.jetty.JettyWebSocketServerProperties;
+import org.chronotics.talaria.websocket.jetty.JettyWebSocketServlet;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +21,15 @@ import org.springframework.stereotype.Component;
  */
 
 @PropertySources({
-	@PropertySource(value = "classpath:spring/properties/missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:spring/properties/mqMap.properties")
+	@PropertySource(
+			value = "classpath:spring/properties/missing.properties",
+			ignoreResourceNotFound=true),
+	@PropertySource("classpath:spring/properties/talaria.properties")
 	})
-@ComponentScan(basePackages = {
-		"org.chronotics.talaria.websocket.springstompserver", 
-		"org.chronotics.talaria.thrift"})
+//@ComponentScan(basePackages = {
+////		"org.chronotics.talaria.websocket.springstompserver",
+//		"org.chronotics.talaria.thrift",
+//		"org.chronotics.talaria.websocket.jetty"})
 @Component
 public class TalariaProperties {
 	
@@ -36,7 +41,18 @@ public class TalariaProperties {
 //			return false;
 //		}
 //	}
-	
+
+//	@Autowired
+//	private SpringStompServerProperties springStompServerProperties;
+//
+//	public SpringStompServerProperties getSpringStompServerProperties() {
+//		return springStompServerProperties;
+//	}
+//
+//	public void setSpringStompServerProperties(SpringStompServerProperties _prop) {
+//		springStompServerProperties = _prop;
+//	}
+
 	@Autowired
 	private ThriftServerProperties thriftServerProperties;
 
@@ -46,26 +62,22 @@ public class TalariaProperties {
 	public void setThriftServerProperties(ThriftServerProperties _prop) {
 		thriftServerProperties = _prop;
 	}
-	
+
 	@Autowired
-	private SpringStompServerProperties springStompServerProperties;
+	private JettyWebSocketServerProperties jettyWebSocketServerproperties;
 
-	public SpringStompServerProperties getSpringStompServerProperties() {
-		return springStompServerProperties;
+	public JettyWebSocketServerProperties getJettyWebSocketServerproperties() {
+		return jettyWebSocketServerproperties;
 	}
 
-	public void setSpringStompServerProperties(SpringStompServerProperties _prop) {
-		springStompServerProperties = _prop;
-	}
-	
 	@Valid
 	@NotNull
-	@Value("${mqMap.key}")
-	private String mqMapKey;
-	public String getMqMapKey() {
-		return mqMapKey;
+	@Value("${messageQueue.key}")
+	private String messageQueueKey;
+	public String getMessageQueueKey() {
+		return messageQueueKey;
 	}
-	public void setMqMapKey(String _mqMapKey) {
-		mqMapKey = _mqMapKey;
+	public void setMessageQueueKey(String _mqKey) {
+		messageQueueKey = _mqKey;
 	}
 }

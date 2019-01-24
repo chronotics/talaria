@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @PropertySources({
 	@PropertySource(value = "classpath:spring/properties/missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:spring/properties/thriftserver.properties")
+	@PropertySource("classpath:spring/properties/thrift_server.properties")
 	})
 @Component
 public class ThriftServerProperties {
@@ -68,7 +68,7 @@ public class ThriftServerProperties {
 
 	@Valid
 	@NotNull	
-	@Value("${thrift.ip}")
+	@Value("${thrift.server.ip}")
 	private String ip;
 	public String getIp() {
 		return ip;
@@ -79,7 +79,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${thrift.port}")
+	@Value("${thrift.server.port}")
 	private String port;
 	public String getPort() {
 		return port;
@@ -90,14 +90,14 @@ public class ThriftServerProperties {
 
 	@Valid
     @NotNull
-    @Value("${thrift.serverType}")
+    @Value("${thrift.server.serverType}")
     private String serverType;
 	public String getServerType() { return serverType; }
 	public void setServerType(String _serverType) { serverType = _serverType; }
 
 	@Valid
 	@NotNull	
-	@Value("${thrift.securePort}")
+	@Value("${thrift.server.securePort}")
 	private String securePort;
 	public String getSecurePort() {
 		return securePort;
@@ -108,7 +108,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${thrift.secureKeyStore}")
+	@Value("${thrift.server.secureKeyStore}")
 	private String secureKeyStore;
 	public String getSecureKeyStore() {
 		return secureKeyStore;
@@ -119,7 +119,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${thrift.secureKeyPass}")
+	@Value("${thrift.server.secureKeyPass}")
 	private String secureKeyPass;
 	public String getSecureKeyPass() {
 		return secureKeyPass;
@@ -130,7 +130,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${thrift.secureServer}")
+	@Value("${thrift.server.secureServer}")
 	private String secureServer;
 	public String getSecureServer() {
 		return secureServer;

@@ -4,10 +4,10 @@ import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TaskExecutor;
-import org.chronotics.talaria.common.taskexecutor.EmptyExecutor;
-import org.chronotics.talaria.common.taskexecutor.SimplePrintExecutor;
+import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
+import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
-import org.chronotics.talaria.thrift.gen.TransferService;
+import org.chronotics.talaria.thrift.gen.ThriftRWService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -63,16 +63,16 @@ public class ThriftClientTest {
 		serverProperties.setPort("9091");
 		serverProperties.setServerType("simple");
 		TaskExecutor<Object> executorToRead =
-				new EmptyExecutor<>();
+				new BypassExecutor<>();
 //		TaskExecutor<Object> executorToWrite =
 //                new SimplePrintExecutor<Object>(
 //                        TaskExecutor.PROPAGATION_RULE.STEP_BY_STEP_ORIGINAL_ARG,
 //                        null);
         TaskExecutor<Object> executorToWrite =
-                new EmptyExecutor<>();
+                new NullReturnExecutor<>();
         ThriftServiceExecutor thriftServiceExecutor =
                 new ThriftServiceExecutor(executorToRead, executorToWrite);
-		ThriftService thriftServiceHandler =
+		ThriftServiceHandler thriftServiceHandler =
                 new ThriftServiceWithMessageQueue(thriftServiceExecutor);
 		thriftServer = new ThriftServer(thriftServiceHandler, serverProperties);
 		thriftServer.start();
@@ -95,7 +95,7 @@ public class ThriftClientTest {
 		ThriftClient client = new ThriftClient(clientProperties);
 		client.start();
 
-		TransferService.Client service = client.getService();
+		ThriftRWService.Client service = client.getService();
 		logger.info("hello client");
 
 		// create the message queue
@@ -161,7 +161,7 @@ public class ThriftClientTest {
 		ThriftClient client = new ThriftClient(clientProperties);
 		client.start();
 
-		TransferService.Client service = client.getService();
+		ThriftRWService.Client service = client.getService();
 
 		// create the message queue
 		try {
@@ -216,7 +216,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -269,7 +269,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -309,7 +309,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("300k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -322,7 +322,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -362,7 +362,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("400k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -375,7 +375,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -415,7 +415,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("500k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -428,7 +428,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -468,7 +468,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("600k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -481,7 +481,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -521,7 +521,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("700k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -534,7 +534,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -574,7 +574,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("800k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -587,7 +587,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -627,7 +627,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("900k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 
@@ -640,7 +640,7 @@ public class ThriftClientTest {
         ThriftClient client = new ThriftClient(clientProperties);
         client.start();
 
-        TransferService.Client service = client.getService();
+        ThriftRWService.Client service = client.getService();
 
         // create the message queue
         try {
@@ -681,7 +681,7 @@ public class ThriftClientTest {
             }
         }
 
-        System.out.format("200k, elapsed Time : %f \n", avrElapsedTime);
+        System.out.format("1,000k, elapsed Time : %f \n", avrElapsedTime);
 
         client.stop();
 

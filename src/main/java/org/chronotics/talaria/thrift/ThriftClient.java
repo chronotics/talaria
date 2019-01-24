@@ -6,7 +6,8 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import org.chronotics.talaria.thrift.gen.TransferService;
+import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.thrift.gen.ThriftRWService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,8 @@ public class ThriftClient {
 			LoggerFactory.getLogger(ThriftServer.class);
 	
 	private ThriftClientProperties properties = null;
-	private TransferService.Client service = null;
+	private ThriftRWService.Client service = null;
+//	private ThriftRWService.Iface service = null;
 	private TTransport transport = null;
 
 	private ThriftClient() {}
@@ -33,9 +35,12 @@ public class ThriftClient {
 		properties = _properties;
 	}
 	
-	public TransferService.Client getService() {
+	public ThriftRWService.Client getService() {
 		return service;
 	}
+//	public ThriftRWService.Iface getService() {
+//		return service;
+//	}
 	
 	public void start() {
 		this.createClinet();
@@ -91,7 +96,8 @@ public class ThriftClient {
 		TProtocol protocol = new TBinaryProtocol(transport);
 		
 		if(service == null) {
-			service = new TransferService.Client(protocol);
+			service = new ThriftRWService.Client(protocol);
+//			service = new ThriftServiceWithMessageQueue(null);
 		}
 	}
 	

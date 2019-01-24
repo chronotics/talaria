@@ -12,7 +12,7 @@ import java.util.Map;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
-import org.chronotics.talaria.thrift.gen.Message;
+import org.chronotics.talaria.thrift.gen.ThriftMessage;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class MessageTransferThroughThriftServer {
 		
 		System.out.println(thriftServerProperties.toString());
 
-		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+		ThriftServiceHandler thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
 		thriftServer = new ThriftServer(thriftServiceHandler, thriftServerProperties);
 		thriftServer.start();
 	}
@@ -100,12 +100,12 @@ public class MessageTransferThroughThriftServer {
 	public void insertMessage() {
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		for(int i=0; i<keySize; i++) {
-			MessageQueue<Message> mq = 
-					(MessageQueue<Message>) 
+			MessageQueue<ThriftMessage> mq =
+					(MessageQueue<ThriftMessage>)
 					mqMap.get(keyList.get(i));
 			if(mq==null) {
-				mq = new MessageQueue<Message>(
-						Message.class,
+				mq = new MessageQueue<ThriftMessage>(
+						ThriftMessage.class,
 							MessageQueue.default_maxQueueSize,
 							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 				mqMap.put(keyList.get(i), mq);
@@ -118,10 +118,10 @@ public class MessageTransferThroughThriftServer {
 				break;
 			}
 			for(int i=0; i<keySize; i++) {
-				MessageQueue<Message> mq = 
-						(MessageQueue<Message>) 
+				MessageQueue<ThriftMessage> mq =
+						(MessageQueue<ThriftMessage>)
 						mqMap.get(keyList.get(i));
-				Message message = new Message();
+				ThriftMessage message = new ThriftMessage();
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 				String _payload = timestamp.toString();
 				message.set_timestamp(timestamp.toString());

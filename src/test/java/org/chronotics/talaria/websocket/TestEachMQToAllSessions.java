@@ -49,7 +49,6 @@ public class TestEachMQToAllSessions {
     private static long stopTimeoutOfServer = 1000; // ms
 
     private static JettyServer server = null;
-//    private static String mqId = "testQueue";
 
     private static List<String> msgList = null;
     private static int msgListSize = 1000;

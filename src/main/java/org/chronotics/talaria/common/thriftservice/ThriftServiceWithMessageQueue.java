@@ -3,19 +3,23 @@ package org.chronotics.talaria.common.thriftservice;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.thrift.ThriftService;
+import org.chronotics.talaria.thrift.ThriftServiceHandler;
 import org.chronotics.talaria.thrift.ThriftServiceExecutor;
-import org.chronotics.talaria.thrift.gen.Message;
+import org.chronotics.talaria.thrift.gen.InvalidOperationException;
+import org.chronotics.talaria.thrift.gen.ThriftMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class ThriftServiceWithMessageQueue extends ThriftService {
+///////////////////////////////////////!!!!!!!!!!!!!1
+// default executor => EmptyExecutor
+///////////////////////////////////////!!!!!!!!!!!!!1
+
+public class ThriftServiceWithMessageQueue extends ThriftServiceHandler {
 
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
@@ -38,10 +42,13 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return (rt != null) ? rt.toString() : null;
+
+//		return (rt != null) ? rt.toString() : null;
+		return (rt != null) ? rt.toString() : "null";
 	}
 
-	private Object readFunc(ThriftServiceExecutor executor, Object _v) {
+	private Object readFunc(ThriftServiceExecutor executor, Object _v)
+			throws InvalidOperationException {
 		if(executor == null) {
 			return null;
 		}
@@ -52,18 +59,26 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(rt == null) {
+			throw new InvalidOperationException(-1,"null return");
+		}
 		return rt;
 	}
 
 	@Override
-	public String writeMessage(Message _v) throws TException { 
+	public boolean ping() throws InvalidOperationException, TException {
+		return true;
+	}
+
+	@Override
+	public String writeThriftMessage(ThriftMessage _v) throws TException {
 		String id = _v.get_sender_id();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue<Message> mq = 
-				(MessageQueue<Message>) mqMap.get(id);
+		MessageQueue<ThriftMessage> mq =
+				(MessageQueue<ThriftMessage>) mqMap.get(id);
 		if(mq == null) {
-			mq = new MessageQueue<Message>(
-					Message.class,
+			mq = new MessageQueue<ThriftMessage>(
+					ThriftMessage.class,
 					MessageQueue.default_maxQueueSize,
 					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 			mqMap.put(id, mq);
@@ -158,9 +173,9 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 	}
 
 	@Override
-	public Message readMessage(String _id) throws TException {
-		MessageQueue<Message> mq = 
-				(MessageQueue<Message>) 
+	public ThriftMessage readThriftMessage(String _id) throws TException {
+		MessageQueue<ThriftMessage> mq =
+				(MessageQueue<ThriftMessage>)
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
@@ -168,12 +183,12 @@ public class ThriftServiceWithMessageQueue extends ThriftService {
 			return null;
 		}
 
-		Message value = mq.removeFirst();
+		ThriftMessage value = mq.removeFirst();
 		if(value == null) {
 			logger.info("Queue is empty");
 			return null;
 		} else {
-			return (Message)readFunc(getExecutor(),value);
+			return (ThriftMessage)readFunc(getExecutor(),value);
 		}
 	}
 

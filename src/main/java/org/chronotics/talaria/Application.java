@@ -10,20 +10,23 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {
 		"org.chronotics.talaria",
-		"org.chronotics.talaria.common",
-		"org.chronotics.talaria.websocket.jsr356",
-//		"org.chronotics.talaria.websocket.springstompserver",
+		"org.chronotics.talaria.websocket.jetty",
 		"org.chronotics.talaria.thrift"})
 public class Application {
-	
-	private static final Logger logger = 
+	private static final Logger logger =
 			LoggerFactory.getLogger(Application.class);
-	
-	@SuppressWarnings("unused")
+
 	public static void main(String[] args) {
 		// run spring boot
 		ApplicationContext context = SpringApplication
 				.run(Application.class,args);
-		
+
+		/**
+		 * CommandLineRunnerJettyWEbSocketServer
+		 *
+		 * CommandLineRunnerThriftServer
+		 *
+		 * CommandLineMessageQueue
+		 */
 	}
 }

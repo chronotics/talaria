@@ -77,6 +77,8 @@ public class EachMQToAllSessions extends JettyListener {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
 
+        // id is dynamic and it depends on a parameter of API
+        // http://url/?id=***
         String id = getId();
         assert(id != null && !id.equals(""));
 

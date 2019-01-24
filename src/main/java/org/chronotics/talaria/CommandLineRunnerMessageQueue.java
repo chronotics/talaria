@@ -2,13 +2,18 @@ package org.chronotics.talaria;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
-public class CommandLineRunnerMessageMapQueue implements CommandLineRunner {
+public class CommandLineRunnerMessageQueue implements CommandLineRunner {
+
+	private static Logger logger =
+			LoggerFactory.getLogger(CommandLineRunnerMessageQueue.class);
 
 	@Autowired
 	private ApplicationContext context;
@@ -23,16 +28,16 @@ public class CommandLineRunnerMessageMapQueue implements CommandLineRunner {
 			return;
 		}
 		
-		String mqMapKey = properties.getMqMapKey();
+		String mqKey = properties.getMessageQueueKey();
 		
 		// register message queue
-		if(MessageQueueMap.getInstance().get(mqMapKey) == null) {
-			MessageQueue<String> msgqueue = 
+		if(MessageQueueMap.getInstance().get(mqKey) == null) {
+			MessageQueue<String> mq =
 					new MessageQueue<String>(
 							String.class,
 							MessageQueue.default_maxQueueSize,
 							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-			MessageQueueMap.getInstance().put(mqMapKey, msgqueue);
+			MessageQueueMap.getInstance().put(mqKey, mq);
 		}
 	}
 }

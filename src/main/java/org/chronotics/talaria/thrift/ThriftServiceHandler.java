@@ -1,9 +1,9 @@
 package org.chronotics.talaria.thrift;
 
-import org.chronotics.talaria.thrift.gen.TransferService;
+import org.chronotics.talaria.thrift.gen.ThriftRWService;
 
-//public interface ThriftService extends TransferService.Iface {
-public abstract class ThriftService implements TransferService.Iface {
+public abstract class ThriftServiceHandler implements ThriftRWService.Iface {
+
     private ThriftServiceExecutor executor = null;
 
     public void setExecutor(ThriftServiceExecutor _executor) {
