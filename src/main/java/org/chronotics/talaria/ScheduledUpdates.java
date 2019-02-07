@@ -58,49 +58,17 @@ public class ScheduledUpdates<T> {
 			return;
 		}
 
-		// add value
-		mq.addLast(String.valueOf(System.currentTimeMillis()));
-		//
-		logger.info("The current time is inserted");
+		////////////////////////////////////////////////
+		// example, add value
+		long currTime = System.currentTimeMillis();
+		mq.addLast(String.valueOf(currTime));
+		logger.info("The current time is inserted. {}", currTime);
+		////////////////////////////////////////////////
 
-    	if(executor == null) {
-    		logger.error("Executor is not defined. This can be occurred few times when the process is initialized");
-    		return;
-    	}
-
-//    	assert(mqKey != null);
-//    	if(mqKey == null) {
-//    		throw new NullPointerException("queueMapKey is null");
+//    	if(executor == null) {
+//    		logger.error("Executor is not defined. This can be occurred few times when the process is initialized");
+//    		return;
 //    	}
-//
-//		MessageQueue<T> mq = (MessageQueue<T>)
-//				MessageQueueMap.getInstance().
-//				get(mqKey);
-//		assert(mq != null);
-//		if(mq == null) {
-//			throw new NullPointerException();
-//		}
-//
-//		if(mq.isEmpty()) {
-//			return;
-//		}
-//		int count = mq.size();
-//		for (int i = 0; i < count; i++) {
-//			try {
-//				T v = mq.getFirst();
-//				if(v != null) {
-//					Future<T> future = executor.execute(v);
-//					T rt = future.get();
-//					if(rt == null) {
-//						logger.error("TaskExecutor execution error, future return is null");
-//					} else {
-//						mq.removeFirst();
-//					}
-//				}
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+
     }
 }
