@@ -100,7 +100,9 @@ public class EachMQToAllSessions extends JettyListener {
 
         // add observer
         MQToClient taskExecutor =
-                new MQToClient(MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS);
+                new MQToClient(
+                        MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS,
+                        true);
         taskExecutor.putProperty(MQToClient.PROPERTY_ID, id);
         taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
         this.observer = taskExecutor.getObserver();

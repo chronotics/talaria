@@ -3,10 +3,12 @@ package org.chronotics.talaria.common.thriftservice;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
+import org.chronotics.talaria.thrift.ThriftMessageToJson;
 import org.chronotics.talaria.thrift.ThriftServiceHandler;
 import org.chronotics.talaria.thrift.ThriftServiceExecutor;
 import org.chronotics.talaria.thrift.gen.InvalidOperationException;
 import org.chronotics.talaria.thrift.gen.ThriftMessage;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,17 +76,16 @@ public class ThriftServiceWithMessageQueue extends ThriftServiceHandler {
 	public String writeThriftMessage(ThriftMessage _v) throws TException {
 		String id = _v.get_sender_id();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue<ThriftMessage> mq =
-				(MessageQueue<ThriftMessage>) mqMap.get(id);
+		MessageQueue<String> mq = (MessageQueue<String>) mqMap.get(id);
 		if(mq == null) {
-			mq = new MessageQueue<ThriftMessage>(
-					ThriftMessage.class,
+			mq = new MessageQueue<String>(
+					String.class,
 					MessageQueue.default_maxQueueSize,
 					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 			mqMap.put(id, mq);
 		}
-		mq.addLast(_v);
-//		logger.info("===== The size of MQ with a key of {} is {}", id, mq.size());
+		JSONObject jsonObject = ThriftMessageToJson.convert(_v);
+		mq.addLast(jsonObject.toString());
 
 		return writeFunc(getExecutor(), _v);
 	}

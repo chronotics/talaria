@@ -35,7 +35,8 @@ public class CommandLineRunnerMessageQueue implements CommandLineRunner {
 			MessageQueue<String> mq =
 					new MessageQueue<String>(
 							String.class,
-							MessageQueue.default_maxQueueSize,
+							100,
+//							MessageQueue.default_maxQueueSize,
 							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 			MessageQueueMap.getInstance().put(mqKey, mq);
 		}

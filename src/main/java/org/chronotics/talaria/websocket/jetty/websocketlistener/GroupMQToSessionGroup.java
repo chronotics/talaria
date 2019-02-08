@@ -100,7 +100,9 @@ public class GroupMQToSessionGroup extends JettyListener {
         if(mq.countObservers() == 0) {
             // add observer
             MQToClient taskExecutor =
-                    new MQToClient(MQToClient.KIND_OF_RECIEVER.GROUP);
+                    new MQToClient(
+                            MQToClient.KIND_OF_RECIEVER.GROUP,
+                            true);
             taskExecutor.putProperty(MQToClient.PROPERTY_ID, id);
             taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
             this.observer = taskExecutor.getObserver();

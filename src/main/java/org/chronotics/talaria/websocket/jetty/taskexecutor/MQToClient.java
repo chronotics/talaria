@@ -18,6 +18,8 @@ public class MQToClient<T> extends TaskExecutor {
         GROUP
     };
 
+    private boolean isMQElementRemoval = false;
+
     private KIND_OF_RECIEVER kindOfReceiver;
     public void setKindOfReceiver(KIND_OF_RECIEVER _kindOfReciever) {
         kindOfReceiver = _kindOfReciever;
@@ -53,10 +55,12 @@ public class MQToClient<T> extends TaskExecutor {
         return observer;
     }
 
-    public MQToClient(KIND_OF_RECIEVER _kindOfReceiver) {
+    public MQToClient(KIND_OF_RECIEVER _kindOfReceiver,
+                      boolean _isMQElementRemoval) {
         observer = new ObserverImp<T>();
         observer.setExecutor(this);
         kindOfReceiver = _kindOfReceiver;
+        isMQElementRemoval = _isMQElementRemoval;
     }
 
     @Override
@@ -86,10 +90,12 @@ public class MQToClient<T> extends TaskExecutor {
             return null;
         }
 
-        T value = mq.removeFirst();
-        if(value == null) {
-            logger.error("A message of MessageQueue is null");
-            return null;
+        if(isMQElementRemoval) {
+            T value = mq.removeFirst();
+            if (value == null) {
+                logger.error("A message of MessageQueue is null");
+                return null;
+            }
         }
 
         if (value instanceof Collection) {

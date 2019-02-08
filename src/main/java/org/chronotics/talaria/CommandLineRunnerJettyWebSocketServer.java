@@ -5,6 +5,7 @@ import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.chronotics.talaria.websocket.jetty.JettyWebSocketServerProperties;
 import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessions;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessionsReadOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class CommandLineRunnerJettyWebSocketServer implements CommandLineRunner 
 				server.addWebSocketListener(
 						jettyWebSocketServerProperties.getContextPath(),
 						jettyWebSocketServerProperties.getTopicId(),
-						EachMQToAllSessions.class,
+						EachMQToAllSessionsReadOnly.class,
 						jettyWebSocketServerProperties.getTopicPath());
 			}
 
