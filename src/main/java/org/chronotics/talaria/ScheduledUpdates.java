@@ -53,22 +53,23 @@ public class ScheduledUpdates<T> {
 		mqKey = properties.getMessageQueueKey();
 
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue<String> mq = (MessageQueue<String>)mqMap.get(mqKey);
+		MessageQueue<?> mq = (MessageQueue<?>)mqMap.get(mqKey);
 		if(mq == null) {
 			return;
 		}
+		logger.info("The size of MQ with key {} is {}", mqKey, mq.size());
 
-		////////////////////////////////////////////////
-		// example, add value
-		long currTime = System.currentTimeMillis();
-		mq.addLast(String.valueOf(currTime));
-		logger.info("The current time is inserted. {}", currTime);
-		////////////////////////////////////////////////
-
-//    	if(executor == null) {
-//    		logger.error("Executor is not defined. This can be occurred few times when the process is initialized");
-//    		return;
-//    	}
+//		////////////////////////////////////////////////
+//		// example, add value
+//		long currTime = System.currentTimeMillis();
+//		mq.addLast(String.valueOf(currTime));
+//		logger.info("The current time is inserted. {}", currTime);
+//		////////////////////////////////////////////////
+//
+////    	if(executor == null) {
+////    		logger.error("Executor is not defined. This can be occurred few times when the process is initialized");
+////    		return;
+////    	}
 
     }
 }

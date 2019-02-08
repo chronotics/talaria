@@ -84,6 +84,7 @@ public class ThriftServiceWithMessageQueue extends ThriftServiceHandler {
 			mqMap.put(id, mq);
 		}
 		mq.addLast(_v);
+//		logger.info("===== The size of MQ with a key of {} is {}", id, mq.size());
 
 		return writeFunc(getExecutor(), _v);
 	}

@@ -26,6 +26,7 @@ public class JettySessionCommon {
             byte []bytes = SerializationUtils.serialize((Serializable) _value);
             future = _session.getRemote().sendBytesByFuture(ByteBuffer.wrap(bytes));
             logger.info("Unsupported data type, but serialized");
+            logger.info("toString() is {}", _value.toString());
         }
 
         return future;
