@@ -70,8 +70,13 @@ public class TestJsr356ClientAndJettyServer {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
+                            topicPath,
                             EmptyListener.class,
-                            topicPath);
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
                 }
 
                 if(server.isStopped()) {

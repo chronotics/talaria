@@ -94,7 +94,8 @@ public class MessageQueue<E> extends Observable {
                     return;
                 case DELETE_FIRST:
                     logger.info("MessageQueue is overflowed, first element is removed");
-                    this.removeFirst();
+                    E ret = this.removeFirst();
+                    ret = null;
                     break;
                 case RUNTIME_EXCEPTION:
                     logger.info("MessageQueue is overflowed, nothing is changed");

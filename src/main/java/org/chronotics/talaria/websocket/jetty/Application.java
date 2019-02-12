@@ -1,13 +1,9 @@
 package org.chronotics.talaria.websocket.jetty;
 
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import java.util.concurrent.Executors;
 
 /**
  * if you don't want to use ScheduledUpdates,
@@ -58,48 +54,27 @@ public class Application {
 //            e.printStackTrace();
 //        }
 
-        /**
-         * The proposed method
-         */
-        // run spring boot
-        ApplicationContext context = SpringApplication
-                .run(Application.class,args);
-
-        JettyWebSocketServerProperties jettyWebSocketServerProperties =
-                (JettyWebSocketServerProperties)context.getBean("jettyWebSocketServerProperties");
-        if(jettyWebSocketServerProperties == null) {
-            logger.error("check DI injection of JettyWebSocketServerProperties");
-        }
-
-        assert(jettyWebSocketServerProperties != null);
-        if(jettyWebSocketServerProperties == null) {
-            return;
-        }
-        assert(!jettyWebSocketServerProperties.isNull());
-        if(jettyWebSocketServerProperties.isNull()) {
-            logger.error("JettyWebSocketServerProperties is null");
-            return;
-        }
-
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(server == null) {
-                    server = new JettyServer(
-                            Integer.valueOf(jettyWebSocketServerProperties.getPort()));
-                    server.setContextHandler(
-                            jettyWebSocketServerProperties.getContextPath(),
-                            JettyServer.SESSIONS);
-                    server.addWebSocketListener(
-                            jettyWebSocketServerProperties.getContextPath(),
-                            jettyWebSocketServerProperties.getTopicId(),
-                            EachMQToAllSessions.class,
-                            jettyWebSocketServerProperties.getTopicPath());
-                }
-                if(server.isStopped()) {
-                    server.start();
-                }
-            }
-        });
+//        /**
+//         * The proposed method
+//         */
+//        // run spring boot
+//        ApplicationContext context = SpringApplication
+//                .run(Application.class,args);
+//
+//        JettyWebSocketServerProperties jettyWebSocketServerProperties =
+//                (JettyWebSocketServerProperties)context.getBean("jettyWebSocketServerProperties");
+//        if(jettyWebSocketServerProperties == null) {
+//            logger.error("check DI injection of JettyWebSocketServerProperties");
+//        }
+//
+//        assert(jettyWebSocketServerProperties != null);
+//        if(jettyWebSocketServerProperties == null) {
+//            return;
+//        }
+//        assert(!jettyWebSocketServerProperties.isNull());
+//        if(jettyWebSocketServerProperties.isNull()) {
+//            logger.error("JettyWebSocketServerProperties is null");
+//            return;
+//        }
     }
 }

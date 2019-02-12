@@ -14,9 +14,42 @@ public class JettyWebSocketCreator implements WebSocketCreator {
     private JettyServer server = null;
     private Class webSocketClass = null;
 
-    public JettyWebSocketCreator(JettyServer _server, Class _websocketClass) {
+    protected JettyListenerAction listenerCloseAction = null;
+    protected JettyListenerAction listenerConnectAction = null;
+    protected JettyListenerAction listenerBinaryAction = null;
+    protected JettyListenerAction listenerTextAction = null;
+    protected JettyListenerAction listenerErrorAction = null;
+
+    public JettyWebSocketCreator(
+            JettyServer _server,
+            Class _websocketClass,
+            JettyListenerAction _listenerConnectAction,
+            JettyListenerAction _listenerCloseAction,
+            JettyListenerAction _listenerErrorAction,
+            JettyListenerAction _listenerBinaryAction,
+            JettyListenerAction _listenerTextAction) {
         server = _server;
         webSocketClass = _websocketClass;
+
+        if(_listenerConnectAction!=null) {
+            listenerConnectAction = _listenerConnectAction;
+        }
+
+        if(_listenerCloseAction!=null) {
+            listenerCloseAction = _listenerCloseAction;
+        }
+
+        if(_listenerErrorAction!=null) {
+            listenerErrorAction = _listenerErrorAction;
+        }
+
+        if(_listenerBinaryAction!=null) {
+            listenerBinaryAction = _listenerBinaryAction;
+        }
+
+        if(_listenerTextAction!=null) {
+            listenerTextAction = _listenerTextAction;
+        }
     }
 
     @Override
@@ -32,6 +65,26 @@ public class JettyWebSocketCreator implements WebSocketCreator {
                 if(server!=null) {
                     JettyListener listener = (JettyListener) object;
                     listener.setServer(server);
+
+                    if(listenerConnectAction!=null) {
+                        listener.setConnectAction(listenerConnectAction);
+                    }
+
+                    if(listenerCloseAction!=null) {
+                        listener.setCloseAction(listenerCloseAction);
+                    }
+
+                    if(listenerErrorAction!=null) {
+                        listener.setErrorAction(listenerErrorAction);
+                    }
+
+                    if(listenerBinaryAction!=null) {
+                        listener.setBinaryAction(listenerBinaryAction);
+                    }
+
+                    if(listenerTextAction!=null) {
+                        listener.setTextAction(listenerTextAction);
+                    }
                 }
             }
         } catch (InstantiationException e) {

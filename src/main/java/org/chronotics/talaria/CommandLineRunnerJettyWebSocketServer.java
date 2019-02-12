@@ -1,11 +1,11 @@
 package org.chronotics.talaria;
 
-import org.chronotics.talaria.thrift.ThriftServer;
-import org.chronotics.talaria.thrift.ThriftServerProperties;
+import org.chronotics.talaria.common.MessageQueue;
+import org.chronotics.talaria.common.MessageQueueMap;
+import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.chronotics.talaria.websocket.jetty.JettyWebSocketServerProperties;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessions;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessionsReadOnly;
+import org.chronotics.talaria.websocket.jetty.taskexecutor.MQToClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +57,6 @@ public class CommandLineRunnerJettyWebSocketServer implements CommandLineRunner 
 		 * EachMQToAllSession
 		 * send messages on each MQ to all websocket clients
 		 */
-//		Executors.newSingleThreadExecutor().execute(new Runnable() {
-//			@Override
-//			public void run() {
-//            }
-//        });
 		Executors.newSingleThreadExecutor().execute( () -> {
 			if(server == null) {
 				server = new JettyServer(
@@ -72,8 +67,35 @@ public class CommandLineRunnerJettyWebSocketServer implements CommandLineRunner 
 				server.addWebSocketListener(
 						jettyWebSocketServerProperties.getContextPath(),
 						jettyWebSocketServerProperties.getTopicId(),
-						EachMQToAllSessionsReadOnly.class,
-						jettyWebSocketServerProperties.getTopicPath());
+						jettyWebSocketServerProperties.getTopicPath(),
+//						EachMQToAllSessionsReadOnly.class,
+//						null,
+						JettyListener.class,
+						(listener, session) -> {
+							String id = listener.getId();
+							assert(id != null && !id.equals(""));
+							MessageQueueMap mqMap = MessageQueueMap.getInstance();
+							MessageQueue<Object> mq = (MessageQueue<Object>) mqMap.get(id);
+							assert(mq==null);
+							// add observer
+							MQToClient taskExecutor =
+									new MQToClient(
+											MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS,
+											false);
+							taskExecutor.putProperty(
+									MQToClient.PROPERTY_ID,
+									id);
+							taskExecutor.putProperty(
+									MQToClient.PROPERTY_JETTYSERVER,
+									listener.getServer());
+//							this.observer = taskExecutor.getObserver();
+							mq.addObserver(taskExecutor.getObserver());
+						},
+						null,
+						null,
+						null,
+						null
+						);
 			}
 
 			if(server.isStopped()) {

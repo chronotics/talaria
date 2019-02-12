@@ -67,8 +67,13 @@ public class TestJetty {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
+                            topicPath,
                             EmptyListener.class,
-                            topicPath);
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
                 }
 
                 if(server.isStopped()) {
@@ -325,8 +330,13 @@ public class TestJetty {
         server.addWebSocketListener(
                 contextPath,
                 otherTopicId,
+                otherTopicPath,
                 EmptyListener.class,
-                otherTopicPath);
+                null,
+                null,
+                null,
+                null,
+                null);
 
         startServer();
 

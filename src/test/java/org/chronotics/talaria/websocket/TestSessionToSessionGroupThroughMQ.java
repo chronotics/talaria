@@ -92,8 +92,13 @@ public class TestSessionToSessionGroupThroughMQ {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
+                            topicPath,
                             SessionToSessionGroupThroughMQ.class,
-                            topicPath);
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
                 }
 
                 if(server.isStopped()) {

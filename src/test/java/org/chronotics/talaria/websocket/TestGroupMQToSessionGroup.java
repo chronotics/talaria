@@ -93,8 +93,13 @@ public class TestGroupMQToSessionGroup {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
+                            topicPath,
                             GroupMQToSessionGroup.class,
-                            topicPath);
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
                 }
 
                 if(server.isStopped()) {

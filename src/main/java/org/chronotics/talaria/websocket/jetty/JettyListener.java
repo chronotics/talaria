@@ -1,7 +1,7 @@
 package org.chronotics.talaria.websocket.jetty;
 
+import com.google.common.primitives.Ints;
 import org.chronotics.talaria.common.TaskExecutor;
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * Written by SGlee
  */
 
-public abstract class JettyListener implements WebSocketListener {
+public class JettyListener implements WebSocketListener {
 
     public static String KEY_ID = "id";
     public static String KEY_GROUPID = "groupId";
@@ -24,12 +24,18 @@ public abstract class JettyListener implements WebSocketListener {
     protected TaskExecutor<String> stringExecutor = null;
     protected TaskExecutor<byte []> bytesExecutor = null;
 
+    protected JettyListenerAction closeAction = null;
+    protected JettyListenerAction connectAction = null;
+    protected JettyListenerAction binaryAction = null;
+    protected JettyListenerAction textAction = null;
+    protected JettyListenerAction errorAction = null;
+
     protected JettyServer server = null;
     protected Session session = null;
     private String id = null;
     private String groupId = null;
 
-    protected JettyServer getServer() {
+    public JettyServer getServer() {
         return server;
     }
 
@@ -51,21 +57,6 @@ public abstract class JettyListener implements WebSocketListener {
 
     public String getGroupId() {
         return groupId;
-    }
-    /**
-     * You hava to add "super.onWebSocketClose" in a derived class
-     * @param i
-     * @param s
-     */
-    @Override
-    public void onWebSocketClose(int i, String s) {
-        if(server!=null && this.session!=null) {
-            server.removeSession(session, getGroupId(), getId());
-        }
-        if(session!=null) {
-            this.session.close();
-        }
-        this.session = null;
     }
 
     /**
@@ -96,6 +87,55 @@ public abstract class JettyListener implements WebSocketListener {
                 setSession(session);
             }
         }
+
+        if(connectAction!=null) {
+            connectAction.execute(this, session);
+        }
+    }
+
+    /**
+     * You hava to add "super.onWebSocketClose" in a derived class
+     * @param i
+     * @param s
+     */
+    @Override
+    public void onWebSocketClose(int i, String s) {
+        if(server!=null && this.session!=null) {
+            server.removeSession(session, getGroupId(), getId());
+        }
+        if(session!=null) {
+            this.session.close();
+        }
+        this.session = null;
+
+        if(closeAction!=null) {
+            closeAction.execute(this, session, String.valueOf(i));
+        }
+    }
+
+    @Override
+    public void onWebSocketError(Throwable var1) {
+        if(errorAction!=null) {
+            errorAction.execute(this, var1);
+        }
+    }
+
+    @Override
+    public void onWebSocketBinary(byte[] bytes, int i, int i1) {
+        if(binaryAction!=null) {
+            binaryAction.execute(
+                    this,
+                    bytes,
+                    Ints.toByteArray(i),
+                    Ints.toByteArray(i1));
+        }
+    }
+
+    @Override
+    public void onWebSocketText(String s) {
+        if(textAction!=null) {
+            textAction.execute(this, s);
+        }
     }
 
     protected void setStringExecutor(TaskExecutor<String> _executor) {
@@ -113,4 +153,45 @@ public abstract class JettyListener implements WebSocketListener {
     protected TaskExecutor<byte []> getBytesExecutor() {
         return bytesExecutor;
     }
+
+    public JettyListenerAction getCloseAction() {
+        return closeAction;
+    }
+
+    public void setCloseAction(JettyListenerAction closeAction) {
+        this.closeAction = closeAction;
+    }
+
+    public JettyListenerAction getConnectAction() {
+        return connectAction;
+    }
+
+    public void setConnectAction(JettyListenerAction connectAction) {
+        this.connectAction = connectAction;
+    }
+
+    public JettyListenerAction getBinaryAction() {
+        return binaryAction;
+    }
+
+    public void setBinaryAction(JettyListenerAction binaryAction) {
+        this.binaryAction = binaryAction;
+    }
+
+    public JettyListenerAction getTextAction() {
+        return textAction;
+    }
+
+    public void setTextAction(JettyListenerAction textAction) {
+        this.textAction = textAction;
+    }
+
+    public JettyListenerAction getErrorAction() {
+        return errorAction;
+    }
+
+    public void setErrorAction(JettyListenerAction errorAction) {
+        this.errorAction = errorAction;
+    }
+
 }

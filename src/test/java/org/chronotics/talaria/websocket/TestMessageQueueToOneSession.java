@@ -83,8 +83,14 @@ public class TestMessageQueueToOneSession {
                     server.addWebSocketListener(
                             contextPath,
                             topicId,
+                            topicPath,
                             EachMQToEachSession.class,
-                            topicPath);
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                            );
                 }
 
                 if(server.isStopped()) {

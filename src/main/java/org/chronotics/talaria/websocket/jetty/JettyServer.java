@@ -263,8 +263,13 @@ public class JettyServer {
     public boolean addWebSocketListener(
             String _contextPath,
             String _listenerId,
+            String _listenerPathSpec,
             Class _listenerClass,
-            String _listenerPathSpec) {
+            JettyListenerAction _listenerConnectAction,
+            JettyListenerAction _listenerCloseAction,
+            JettyListenerAction _listenerErrorAction,
+            JettyListenerAction _listenerBinaryAction,
+            JettyListenerAction _listenerTextAction) {
         synchronized (syncHandler) {
             if (!server.getState().equals("STOPPED")) {
                 logger.error("You can not add ContextHandler during server's running");
@@ -281,7 +286,14 @@ public class JettyServer {
             contextHandler.addServlet(
                     new ServletHolder(
                             _listenerId,
-                            new JettyWebSocketServlet(this, _listenerClass)),
+                            new JettyWebSocketServlet(
+                                    this,
+                                    _listenerClass,
+                                    _listenerConnectAction,
+                                    _listenerCloseAction,
+                                    _listenerErrorAction,
+                                    _listenerBinaryAction,
+                                    _listenerTextAction)),
                     _listenerPathSpec);
             return true;
         }
