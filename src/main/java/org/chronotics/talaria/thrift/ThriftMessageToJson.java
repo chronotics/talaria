@@ -2,7 +2,6 @@ package org.chronotics.talaria.thrift;
 
 import org.chronotics.talaria.thrift.gen.ThriftMessage;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Base64;
@@ -255,5 +254,144 @@ public class ThriftMessageToJson {
         }
 
         return root;
+    }
+
+    public static void clear(ThriftMessage _message) {
+        if(_message.isSet_sender_id()) {
+            _message._sender_id = null;
+        }
+
+        if(_message.isSet_receiver_id()) {
+            _message._receiver_id = null;
+        }
+
+        if(_message.isSet_timestamp()) {
+            _message._timestamp = null;
+        }
+
+        if(_message.isSet_subject()) {
+            _message._subject = null;
+        }
+
+        if(_message.isSet_sequence_no()) {
+            _message._sequence_no = 0;
+        }
+
+        if(_message.isSet_total_count()) {
+            _message._total_count = 0;
+        }
+
+        if(_message.isSet_binary()) {
+            _message._binary = null;
+        }
+
+        if(_message.isSet_payload()) {
+            _message._payload = null;
+        }
+
+        if(_message.isSet_list_message()) {
+            _message._list_message.clear();
+            _message._list_message = null;
+        }
+
+        if(_message.isSet_set_message()) {
+            _message._set_message.clear();
+            _message._set_message = null;
+        }
+
+        if(_message.isSet_map_message()) {
+            _message._map_message.clear();
+            _message._map_message = null;
+        }
+
+        if(_message.isSet_list_bool()) {
+            _message._list_bool.clear();
+            _message._list_bool = null;
+        }
+
+        if(_message.isSet_list_i16()) {
+            _message._list_i16.clear();
+            _message._list_i16 = null;
+        }
+
+        if(_message.isSet_list_i32()) {
+            _message._list_i32.clear();
+            _message._list_i32 = null;
+        }
+
+        if(_message.isSet_list_i64()) {
+            _message._list_i64.clear();
+            _message._list_i64 = null;
+        }
+
+        if(_message.isSet_list_double()) {
+            _message._list_double.clear();
+            _message._list_double = null;
+        }
+
+        if(_message.isSet_list_string()) {
+            _message._list_string.clear();
+            _message._list_string = null;
+        }
+
+        if(_message.isSet_set_bool()) {
+            _message._list_bool.clear();
+            _message._list_bool = null;
+        }
+
+        if(_message.isSet_set_i16()) {
+            _message._set_i16.clear();
+            _message._set_i16 = null;
+        }
+
+        if(_message.isSet_set_i32()) {
+            _message._set_i32.clear();
+            _message._set_i32 = null;
+        }
+
+        if(_message.isSet_set_i64()) {
+            _message._set_i64.clear();
+            _message._set_i64 = null;
+        }
+
+        if(_message.isSet_set_double()) {
+            _message._set_double.clear();
+            _message._set_double = null;
+        }
+
+        if(_message.isSet_set_string()) {
+            _message._set_string.clear();
+            _message._set_string = null;
+        }
+
+        if(_message.isSet_map_bool()) {
+            _message._map_bool.clear();
+            _message._map_bool = null;
+        }
+
+        if(_message.isSet_map_i16()) {
+            _message._map_i16.clear();
+            _message._map_i16 = null;
+        }
+
+        if(_message.isSet_map_i32()) {
+            _message._map_i32.clear();
+            _message._map_i32 = null;
+        }
+
+        if(_message.isSet_map_i64()) {
+            _message._map_i64.clear();
+            _message._map_i64 = null;
+        }
+
+        if(_message.isSet_map_double()) {
+            _message._map_double.clear();
+            _message._map_double = null;
+        }
+
+        if(_message.isSet_map_string()) {
+            _message._map_string.clear();
+            _message._map_string = null;
+        }
     }
 }

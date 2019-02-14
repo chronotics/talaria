@@ -63,14 +63,6 @@ public class MessageQueue<E> extends Observable {
 		return maxQueueSize;
 	}
 
-	private synchronized void increaseQueueSize() {
-		queueSize++;
-	}
-
-	private synchronized void decreaseQueueSize() {
-		queueSize--;
-	}
-
 	private synchronized int queueSize() {
 		return queueSize;
 	}
@@ -90,12 +82,11 @@ public class MessageQueue<E> extends Observable {
 		if(queueSize() >= maxQueueSize) {
 			switch (overflowStrategy) {
                 case NO_INSERTION:
-                    logger.info("MessageQueue is overflowed, element is not inserted");
+//                    logger.info("MessageQueue is overflowed, element is not inserted");
                     return;
                 case DELETE_FIRST:
-                    logger.info("MessageQueue is overflowed, first element is removed");
+//                    logger.info("MessageQueue is overflowed, first element is removed");
                     E ret = this.removeFirst();
-                    ret = null;
                     break;
                 case RUNTIME_EXCEPTION:
                     logger.info("MessageQueue is overflowed, nothing is changed");
@@ -105,9 +96,11 @@ public class MessageQueue<E> extends Observable {
                     return;
 			}
 		}
-		// ConcurrentDeque -> synchronized is guaranteed
-		queue.addLast(_e);
-        increaseQueueSize();
+		synchronized (this) {
+			// ConcurrentDeque -> synchronized is guaranteed
+			queue.addLast(_e);
+			queueSize++;
+		}
         notifyObservers(_e);
 	}
 
@@ -144,11 +137,14 @@ public class MessageQueue<E> extends Observable {
 		} 
 		
 		boolean rt = true;
-		rt = queue.addAll(_c);
-		if(rt) {
-			synchronized (this) {
+		synchronized (this) {
+			rt = queue.addAll(_c);
+			if(rt) {
 				queueSize += _c.size();
 			}
+		}
+
+		if(rt) {
 			notifyObservers(_c);
 			return true;
 		} else {
@@ -180,8 +176,14 @@ public class MessageQueue<E> extends Observable {
 	 * NullPointerException - if the specified element is null
 	 */
 	public boolean remove(Object o) {
-        if (queue.remove(o)) {
-            decreaseQueueSize();
+		boolean ret = false;
+		synchronized (this) {
+			ret = queue.remove(o);
+			if(ret) {
+				queueSize--;
+			}
+		}
+        if (ret) {
            	if (removalNotification == true) {
 				notifyObservers(this.REMOVAL_NOTIFICATION);
 			}
@@ -198,9 +200,14 @@ public class MessageQueue<E> extends Observable {
 	 * NoSuchElementException - if this deque is empty
 	 */
 	public E removeFirst() {
-        E ret = queue.removeFirst();
+        E ret = null;
+        synchronized (this) {
+        	ret = queue.removeFirst();
+        	if(ret != null) {
+				queueSize--;
+			}
+		}
         if (ret != null) {
-			decreaseQueueSize();
 			if (removalNotification == true) {
 				notifyObservers(this.REMOVAL_NOTIFICATION);
 			}
@@ -215,9 +222,12 @@ public class MessageQueue<E> extends Observable {
 	 * NoSuchElementException - if this deque is empty
 	 */
 	public E removeLast() {
-        E ret = queue.removeLast();
+        E ret = null;
+        synchronized (this) {
+        	queue.removeLast();
+        	queueSize--;
+		}
         if (ret != null) {
-            decreaseQueueSize();
 			if (removalNotification == true) {
 				notifyObservers(this.REMOVAL_NOTIFICATION);
 			}
@@ -226,6 +236,7 @@ public class MessageQueue<E> extends Observable {
 	}
 
 	public synchronized int size() {
+//		logger.info("queueSize: {}, queue.size: {}", queueSize, queue.size());
 		assert(queueSize == queue.size());
 		if(queueSize != queue.size()) {
 			logger.error("queueSize: {}, queue.size(): {}", queueSize, queue.size());

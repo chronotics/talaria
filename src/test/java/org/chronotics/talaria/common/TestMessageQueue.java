@@ -27,8 +27,9 @@ public class TestMessageQueue {
     private static String queId = "testQueue";
 
     private static List<String> msgList = null;
-    private static int msgListSize = 1000000;
+    private static int msgListSize = 10000000;
     private static long insertionTime = 1000;
+    private static int queSize = 10;
 
     @BeforeClass
     public synchronized static void setup() {
@@ -36,6 +37,15 @@ public class TestMessageQueue {
         for(int i=0; i<msgListSize; i++) {
             msgList.add(String.valueOf(i));
         }
+
+        MessageQueueMap mqMap = MessageQueueMap.getInstance();
+        mqMap.clear();
+        MessageQueue<String> mq =
+                new MessageQueue<>(
+                        String.class,
+                        queSize,
+                        MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+        mqMap.put(queId, mq);
 
         insertionTime = Math.max(insertionTime, msgListSize / 1000);
     }
@@ -49,33 +59,20 @@ public class TestMessageQueue {
         }
     }
 
+    @Test
     public void addToMessageQueue() {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 MessageQueueMap mqMap = MessageQueueMap.getInstance();
-                if(mqMap.isEmpty()) {
-                    MessageQueue<String> mq =
-                            new MessageQueue<>(
-                                    String.class,
-                                    msgListSize,
-//                                    MessageQueue.default_maxQueueSize,
-                                    MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
-                    mqMap.put(queId, mq);
-                }
                 MessageQueue<String> mq =
                         (MessageQueue<String>) MessageQueueMap.getInstance().get(queId);
                 for(String msg: msgList) {
                     mq.addLast(msg);
                 }
+                assertEquals(queSize, mq.size());
             }
         });
-    }
-
-    public void clearMessageQueue() {
-        MessageQueue<String> mq =
-                (MessageQueue<String>) MessageQueueMap.getInstance().get(queId);
-        mq.clear();
     }
 
     @Test
@@ -103,16 +100,6 @@ public class TestMessageQueue {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                MessageQueueMap mqMap = MessageQueueMap.getInstance();
-                if(mqMap.isEmpty()) {
-                    MessageQueue<String> mq =
-                            new MessageQueue<>(
-                                    String.class,
-                                    msgListSize*2,
-//                                    MessageQueue.default_maxQueueSize,
-                                    MessageQueue.OVERFLOW_STRATEGY.NO_INSERTION);
-                    mqMap.put(queId, mq);
-                }
                 MessageQueue<String> mq =
                         (MessageQueue<String>) MessageQueueMap.getInstance().get(queId);
                 long startTime = System.currentTimeMillis();
@@ -129,7 +116,8 @@ public class TestMessageQueue {
         Thread.sleep(insertionTime);
         MessageQueue<String> mq =
                 (MessageQueue<String>) MessageQueueMap.getInstance().get(queId);
-        assertEquals(msgList.size(), mq.size());
+//        assertEquals(msgList.size(), mq.size());
+        assertEquals(queSize, mq.size());
         mq.clear();
         assertEquals(0, mq.size());
     }
@@ -152,8 +140,10 @@ public class TestMessageQueue {
     public void testRemove() {
         MessageQueue<String> mq =
                 (MessageQueue<String>) MessageQueueMap.getInstance().get(queId);
-        assertThrows(NoSuchElementException.class, () -> mq.remove("1"));
-        assertEquals(0,mq.size());
+        assertThrows(NoSuchElementException.class, () -> mq.remove("no value"));
+        assertEquals(queSize,mq.size());
+        mq.clear();
+        assertEquals(0, mq.size());
 
         mq.addLast("new value");
         assertEquals(1,mq.size());

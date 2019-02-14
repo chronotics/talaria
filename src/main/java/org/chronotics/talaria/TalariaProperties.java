@@ -14,6 +14,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author SG Lee
  * @since 3/20/2015
@@ -26,33 +28,8 @@ import org.springframework.stereotype.Component;
 			ignoreResourceNotFound=true),
 	@PropertySource("classpath:spring/properties/talaria.properties")
 	})
-//@ComponentScan(basePackages = {
-////		"org.chronotics.talaria.websocket.springstompserver",
-//		"org.chronotics.talaria.thrift",
-//		"org.chronotics.talaria.websocket.jetty"})
 @Component
 public class TalariaProperties {
-	
-//	public boolean isNull() {
-//		if( thriftServerProperties == null &&
-//				springStompServerProperties == null) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-
-//	@Autowired
-//	private SpringStompServerProperties springStompServerProperties;
-//
-//	public SpringStompServerProperties getSpringStompServerProperties() {
-//		return springStompServerProperties;
-//	}
-//
-//	public void setSpringStompServerProperties(SpringStompServerProperties _prop) {
-//		springStompServerProperties = _prop;
-//	}
-
 	@Autowired
 	private ThriftServerProperties thriftServerProperties;
 
@@ -72,12 +49,12 @@ public class TalariaProperties {
 
 	@Valid
 	@NotNull
-	@Value("${messageQueue.key}")
-	private String messageQueueKey;
-	public String getMessageQueueKey() {
-		return messageQueueKey;
+	@Value("#{'${messageQueue.key}'.split(',')}")
+	private List<String> messageQueueKeyList;
+	public List<String> getMessageQueueKeyList() {
+		return messageQueueKeyList;
 	}
-	public void setMessageQueueKey(String _mqKey) {
-		messageQueueKey = _mqKey;
+	public void setMessageQueueKey(List<String> _mqKeyList) {
+		messageQueueKeyList = _mqKeyList;
 	}
 }

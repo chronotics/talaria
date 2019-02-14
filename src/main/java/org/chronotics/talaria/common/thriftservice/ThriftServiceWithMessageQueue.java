@@ -87,7 +87,9 @@ public class ThriftServiceWithMessageQueue extends ThriftServiceHandler {
 		JSONObject jsonObject = ThriftMessageToJson.convert(_v);
 		mq.addLast(jsonObject.toString());
 
-		return writeFunc(getExecutor(), _v);
+		String ret = writeFunc(getExecutor(), _v);
+		ThriftMessageToJson.clear(_v);
+		return ret;
 	}
 
 	@Override

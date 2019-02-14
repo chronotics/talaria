@@ -9,6 +9,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
+
 @SpringBootApplication
 public class CommandLineRunnerMessageQueue implements CommandLineRunner {
 
@@ -28,17 +30,19 @@ public class CommandLineRunnerMessageQueue implements CommandLineRunner {
 			return;
 		}
 		
-		String mqKey = properties.getMessageQueueKey();
-		
-		// register message queue
-		if(MessageQueueMap.getInstance().get(mqKey) == null) {
-			MessageQueue<String> mq =
-					new MessageQueue<String>(
-							String.class,
-							10,
+		List<String> mqKeyList = properties.getMessageQueueKeyList();
+
+		mqKeyList.forEach(mqKey -> {
+			// register message queue
+			if(MessageQueueMap.getInstance().get(mqKey) == null) {
+				MessageQueue<String> mq =
+						new MessageQueue<String>(
+								String.class,
+								10,
 //							MessageQueue.default_maxQueueSize,
-							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-			MessageQueueMap.getInstance().put(mqKey, mq);
-		}
+								MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+				MessageQueueMap.getInstance().put(mqKey, mq);
+			}
+		});
 	}
 }

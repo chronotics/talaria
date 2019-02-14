@@ -85,6 +85,9 @@ public class MQToClient<T> extends TaskExecutor {
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
         MessageQueue<T> mq = (MessageQueue<T>) mqMap.get(id);
+
+//        logger.info("mqId for ws is {}, size is {}",id, mq.size());
+
         if(mq == null) {
             logger.error("MessageQueue is null. Check the correct Id");
             return null;

@@ -81,7 +81,8 @@ public class CommandLineRunnerJettyWebSocketServer implements CommandLineRunner 
 							MQToClient taskExecutor =
 									new MQToClient(
 											MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS,
-											false);
+                        false);
+//											true);
 							taskExecutor.putProperty(
 									MQToClient.PROPERTY_ID,
 									id);

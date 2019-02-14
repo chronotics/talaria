@@ -3,6 +3,7 @@ package org.chronotics.talaria;
 import org.chronotics.talaria.common.TaskExecutor;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
+import org.chronotics.talaria.websocket.jetty.JettyWebSocketServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author SG Lee
@@ -28,48 +32,21 @@ public class ScheduledUpdates<T> {
 	@Autowired
 	private ApplicationContext context;
 
-//	@Autowired
-//    private SimpMessagingTemplate simpMessagingTemplate;
-
-	public String mqKey = null;
-
-	private TaskExecutor<T> executor = null;
-	
-//	public void setAttribute(
-//			TaskExecutor<T> _executor) {
-//		executor = _executor;
-//		executor.setProperty(_executor);
-//	}
-	
     @Scheduled(fixedDelayString = "${application.scheduledUpdatesDelay}")
     public void update(){
-		TalariaProperties properties =
-				(TalariaProperties)context.getBean("talariaProperties");
-		assert(properties != null);
-		if(properties == null) {
-			return;
-		}
+//		TalariaProperties properties =
+//				(TalariaProperties)context.getBean("talariaProperties");
+//		assert(properties != null);
+//		if(properties == null) {
+//			return;
+//		}
 
-		mqKey = properties.getMessageQueueKey();
-
-		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue<?> mq = (MessageQueue<?>)mqMap.get(mqKey);
-		if(mq == null) {
-			return;
-		}
-		logger.info("The size of MQ with key {} is {}", mqKey, mq.size());
-
-//		////////////////////////////////////////////////
-//		// example, add value
-//		long currTime = System.currentTimeMillis();
-//		mq.addLast(String.valueOf(currTime));
-//		logger.info("The current time is inserted. {}", currTime);
-//		////////////////////////////////////////////////
+//		MessageQueueMap mqMap = MessageQueueMap.getInstance();
+//		List<String> mqKeyList = properties.getMessageQueueKeyList();
+//		mqKeyList.forEach(mqKey -> {
+//			MessageQueue<?> mq = mqMap.get(mqKey);
+//		logger.info("The size of MQ with key {} is {}", mqKey, mq.size());
 //
-////    	if(executor == null) {
-////    		logger.error("Executor is not defined. This can be occurred few times when the process is initialized");
-////    		return;
-////    	}
-
+//		});
     }
 }
