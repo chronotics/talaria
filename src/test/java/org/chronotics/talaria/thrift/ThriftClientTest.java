@@ -3,9 +3,9 @@ package org.chronotics.talaria.thrift;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TaskExecutor;
-import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
-import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
+import org.chronotics.talaria.common.CallableExecutor;
+import org.chronotics.talaria.common.callableexecutor.BypassExecutor;
+import org.chronotics.talaria.common.callableexecutor.NullReturnExecutor;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.ThriftRWService;
 import org.junit.AfterClass;
@@ -62,13 +62,13 @@ public class ThriftClientTest {
 		serverProperties.setIp("localhost");
 		serverProperties.setPort("9091");
 		serverProperties.setServerType("simple");
-		TaskExecutor<Object> executorToRead =
+		CallableExecutor<Object> executorToRead =
 				new BypassExecutor<>();
 //		TaskExecutor<Object> executorToWrite =
 //                new SimplePrintExecutor<Object>(
 //                        TaskExecutor.PROPAGATION_RULE.STEP_BY_STEP_ORIGINAL_ARG,
 //                        null);
-        TaskExecutor<Object> executorToWrite =
+        CallableExecutor<Object> executorToWrite =
                 new NullReturnExecutor<>();
         ThriftServiceExecutor thriftServiceExecutor =
                 new ThriftServiceExecutor(executorToRead, executorToWrite);

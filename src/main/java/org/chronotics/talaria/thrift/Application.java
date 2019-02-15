@@ -1,14 +1,11 @@
 package org.chronotics.talaria.thrift;
 
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TaskExecutor;
-import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
-import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
+import org.chronotics.talaria.common.CallableExecutor;
+import org.chronotics.talaria.common.callableexecutor.BypassExecutor;
+import org.chronotics.talaria.common.callableexecutor.NullReturnExecutor;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -36,9 +33,9 @@ public class Application {
 		}
 
 		// start thrift server
-		TaskExecutor<Object> executorToRead =
+		CallableExecutor<Object> executorToRead =
 				new BypassExecutor<>();
-		TaskExecutor<Object> executorToWrite =
+		CallableExecutor<Object> executorToWrite =
 				new NullReturnExecutor<>();
 		ThriftServiceExecutor thriftServiceExecutor =
 				new ThriftServiceExecutor(executorToRead, executorToWrite);

@@ -1,21 +1,20 @@
-package org.chronotics.talaria.common.taskexecutor;
+package org.chronotics.talaria.common.callableexecutor;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.CallableExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-public class MessageQueueToStompServer<T> extends TaskExecutor<T> {
+public class MessageQueueToStompServer<T> extends CallableExecutor<T> {
 	private static final Logger logger =
 			LoggerFactory.getLogger(MessageQueueToStompServer.class);
 
 	public MessageQueueToStompServer(
 			PROPAGATION_RULE _propagationRule,
-			TaskExecutor<T> _nextExecutor) {
+			CallableExecutor<T> _nextExecutor) {
 		super(_propagationRule, _nextExecutor);
 		// TODO Auto-generated constructor stub
 	}

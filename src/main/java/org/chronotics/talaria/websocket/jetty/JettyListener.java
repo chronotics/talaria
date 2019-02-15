@@ -1,7 +1,7 @@
 package org.chronotics.talaria.websocket.jetty;
 
 import com.google.common.primitives.Ints;
-import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.CallableExecutor;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
 
@@ -21,8 +21,8 @@ public class JettyListener implements WebSocketListener {
     public static String KEY_ID = "id";
     public static String KEY_GROUPID = "groupId";
 
-    protected TaskExecutor<String> stringExecutor = null;
-    protected TaskExecutor<byte []> bytesExecutor = null;
+    protected CallableExecutor<String> stringExecutor = null;
+    protected CallableExecutor<byte []> bytesExecutor = null;
 
     protected JettyListenerAction closeAction = null;
     protected JettyListenerAction connectAction = null;
@@ -138,19 +138,19 @@ public class JettyListener implements WebSocketListener {
         }
     }
 
-    protected void setStringExecutor(TaskExecutor<String> _executor) {
+    protected void setStringExecutor(CallableExecutor<String> _executor) {
         stringExecutor = _executor;
     }
 
-    protected TaskExecutor<String> getStringExecutor() {
+    protected CallableExecutor<String> getStringExecutor() {
         return stringExecutor;
     }
 
-    protected void setBytesExecutor(TaskExecutor<byte []> _executor) {
+    protected void setBytesExecutor(CallableExecutor<byte []> _executor) {
         bytesExecutor = _executor;
     }
 
-    protected TaskExecutor<byte []> getBytesExecutor() {
+    protected CallableExecutor<byte []> getBytesExecutor() {
         return bytesExecutor;
     }
 

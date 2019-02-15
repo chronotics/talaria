@@ -61,11 +61,6 @@ public class ThriftServer {
 	}
 	
 	public void start() {
-//		Runnable serverService = new Runnable() {
-//			@Override
-//			public void run() {
-//			}
-//		};
         Runnable serverService = () -> {
             try {
                 SERVERTYPE type;
@@ -100,7 +95,6 @@ public class ThriftServer {
                 break;
             }
         }
-//		logger.info("Thrift server is started ... ");
 	}
 	
 	public void stop() {

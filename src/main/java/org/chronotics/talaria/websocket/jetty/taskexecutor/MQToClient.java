@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public class MQToClient<T> extends TaskExecutor {
+public class MQToClient<T> extends CallableExecutor {
 
     private static final Logger logger =
             LoggerFactory.getLogger(MQToClient.class);
@@ -31,8 +31,8 @@ public class MQToClient<T> extends TaskExecutor {
     public final static String PROPERTY_ID = "id";
 
     private class ObserverImp<T> implements Observer {
-        TaskExecutor<T> executor = null;
-        public void setExecutor(TaskExecutor _executor) {
+        CallableExecutor<T> executor = null;
+        public void setExecutor(CallableExecutor _executor) {
             executor = _executor;
         }
         @Override
@@ -85,9 +85,6 @@ public class MQToClient<T> extends TaskExecutor {
 
         MessageQueueMap mqMap = MessageQueueMap.getInstance();
         MessageQueue<T> mq = (MessageQueue<T>) mqMap.get(id);
-
-//        logger.info("mqId for ws is {}, size is {}",id, mq.size());
-
         if(mq == null) {
             logger.error("MessageQueue is null. Check the correct Id");
             return null;

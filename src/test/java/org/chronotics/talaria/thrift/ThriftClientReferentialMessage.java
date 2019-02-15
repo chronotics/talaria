@@ -3,9 +3,9 @@ package org.chronotics.talaria.thrift;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TaskExecutor;
-import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
-import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
+import org.chronotics.talaria.common.CallableExecutor;
+import org.chronotics.talaria.common.callableexecutor.BypassExecutor;
+import org.chronotics.talaria.common.callableexecutor.NullReturnExecutor;
 import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.InvalidOperationException;
 import org.chronotics.talaria.thrift.gen.ThriftMessage;
@@ -51,10 +51,10 @@ public class ThriftClientReferentialMessage {
 		serverProperties.setIp("localhost");
 		serverProperties.setPort("9091");
 		serverProperties.setServerType("simple");
-		TaskExecutor<Object> executorToRead =
+		CallableExecutor<Object> executorToRead =
 				new BypassExecutor<>();
 //				new NullReturnExecutor<>();
-        TaskExecutor<Object> executorToWrite =
+        CallableExecutor<Object> executorToWrite =
                 new NullReturnExecutor<>();
         ThriftServiceExecutor thriftServiceExecutor =
                 new ThriftServiceExecutor(executorToRead, executorToWrite);

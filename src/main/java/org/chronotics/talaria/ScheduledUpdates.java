@@ -1,19 +1,11 @@
 package org.chronotics.talaria;
 
-import org.chronotics.talaria.common.TaskExecutor;
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.websocket.jetty.JettyWebSocketServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author SG Lee
