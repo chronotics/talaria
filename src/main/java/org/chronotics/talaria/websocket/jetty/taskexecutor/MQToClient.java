@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public class MQToClient<T> extends CallableExecutor {
+public class MQToClient<T> extends ChainExecutor {
 
     private static final Logger logger =
             LoggerFactory.getLogger(MQToClient.class);
@@ -31,8 +31,8 @@ public class MQToClient<T> extends CallableExecutor {
     public final static String PROPERTY_ID = "id";
 
     private class ObserverImp<T> implements Observer {
-        CallableExecutor<T> executor = null;
-        public void setExecutor(CallableExecutor _executor) {
+        ChainExecutor<T> executor = null;
+        public void setExecutor(ChainExecutor _executor) {
             executor = _executor;
         }
         @Override

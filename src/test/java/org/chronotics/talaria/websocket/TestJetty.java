@@ -3,6 +3,7 @@ package org.chronotics.talaria.websocket;
 import org.chronotics.talaria.websocket.jetty.JettyClient;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
+import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessions;
 import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -68,7 +69,8 @@ public class TestJetty {
                             contextPath,
                             topicId,
                             topicPath,
-                            EmptyListener.class,
+//                            EmptyListener.class,
+                            EachMQToAllSessions.class,
                             null,
                             null,
                             null,

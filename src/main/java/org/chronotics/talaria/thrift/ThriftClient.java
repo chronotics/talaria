@@ -6,7 +6,6 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.ThriftRWService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

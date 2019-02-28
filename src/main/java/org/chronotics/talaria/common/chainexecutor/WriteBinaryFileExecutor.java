@@ -1,10 +1,10 @@
-package org.chronotics.talaria.common.callableexecutor;
+package org.chronotics.talaria.common.chainexecutor;
 
-import org.chronotics.talaria.common.CallableExecutor;
+import org.chronotics.talaria.common.ChainExecutor;
 
-public class WriteBinaryFileExecutor<T> extends CallableExecutor<T> {
+public class WriteBinaryFileExecutor<T> extends ChainExecutor<T> {
 
-	protected WriteBinaryFileExecutor(PROPAGATION_RULE _propagationRule, CallableExecutor<T> _nextExecutor) {
+	protected WriteBinaryFileExecutor(PROPAGATION_RULE _propagationRule, ChainExecutor<T> _nextExecutor) {
 		super(_propagationRule, _nextExecutor);
 		// TODO Auto-generated constructor stub
 	}

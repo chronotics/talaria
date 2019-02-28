@@ -3,10 +3,10 @@ package org.chronotics.talaria.thrift;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.CallableExecutor;
-import org.chronotics.talaria.common.callableexecutor.BypassExecutor;
-import org.chronotics.talaria.common.callableexecutor.NullReturnExecutor;
-import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.ChainExecutor;
+import org.chronotics.talaria.common.chainexecutor.BypassExecutor;
+import org.chronotics.talaria.common.chainexecutor.NullReturnExecutor;
+import org.chronotics.talaria.thrift.thriftservicehandler.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.InvalidOperationException;
 import org.chronotics.talaria.thrift.gen.ThriftMessage;
 import org.chronotics.talaria.thrift.gen.ThriftRWService;
@@ -37,7 +37,7 @@ public class ThriftClientReferentialMessage {
 
 	private static ThriftServer thriftServer = null;
 
-	private String messageQueueId = "thrift";
+	private String messageQueueId = "d0";
 
 	private static int count = 100;
 
@@ -51,10 +51,10 @@ public class ThriftClientReferentialMessage {
 		serverProperties.setIp("localhost");
 		serverProperties.setPort("9091");
 		serverProperties.setServerType("simple");
-		CallableExecutor<Object> executorToRead =
+		ChainExecutor<Object> executorToRead =
 				new BypassExecutor<>();
 //				new NullReturnExecutor<>();
-        CallableExecutor<Object> executorToWrite =
+        ChainExecutor<Object> executorToWrite =
                 new NullReturnExecutor<>();
         ThriftServiceExecutor thriftServiceExecutor =
                 new ThriftServiceExecutor(executorToRead, executorToWrite);
@@ -172,13 +172,21 @@ public class ThriftClientReferentialMessage {
 		for(int i=0; i<count; i++) {
 			ThriftMessage childMsg = new ThriftMessage();
 			childMsg.set_sender_id("child");
+			childMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
 			childMsg.set_list_i32(new ArrayList<>());
 			childMsg.get_list_i32().add(i);
 			childMsg.set_payload("payload");
+			childMsg.set_list_double(new ArrayList<>());
+			childMsg.set_list_message(new ArrayList<>());
+			List<ThriftMessage> messageList = new ArrayList<>();
+			messageList.add(childMsg);
 			ThriftMessage rootMsg = new ThriftMessage();
 			rootMsg.set_sender_id(messageQueueId);
-			rootMsg._list_message = new ArrayList<ThriftMessage>();
-			rootMsg._list_message.add(childMsg);
+			rootMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
+			rootMsg.set_list_double(new ArrayList<>());
+			rootMsg.set_list_message(messageList);
+//			rootMsg._list_message = new ArrayList<ThriftMessage>();
+//			rootMsg._list_message.add(childMsg);
 
 			String result = null;
 			long startingTime = System.currentTimeMillis();
@@ -199,7 +207,7 @@ public class ThriftClientReferentialMessage {
 			int value = 0;
 			try {
 				message = clientService.readThriftMessage(messageQueueId);
-				ThriftMessage childMessage = message._list_message.get(0);
+				ThriftMessage childMessage = message.get_list_message().get(0);
 				value = childMessage.get_list_i32().get(0);
 			} catch (TException e) {
 				e.printStackTrace();
@@ -212,4 +220,5 @@ public class ThriftClientReferentialMessage {
 		assertEquals(0, mq.size());
 		mq.clear();
 	}
+
 }

@@ -1,8 +1,8 @@
-package org.chronotics.talaria.common.callableexecutor;
+package org.chronotics.talaria.common.chainexecutor;
 
-import org.chronotics.talaria.common.CallableExecutor;
+import org.chronotics.talaria.common.ChainExecutor;
 
-public class BypassExecutor <T> extends CallableExecutor<T> {
+public class BypassExecutor <T> extends ChainExecutor<T> {
     @Override
     public int getFutureTimeout() {
         return 100;

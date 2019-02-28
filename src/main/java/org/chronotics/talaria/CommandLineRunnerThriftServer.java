@@ -1,9 +1,9 @@
 package org.chronotics.talaria;
 
-import org.chronotics.talaria.common.CallableExecutor;
-import org.chronotics.talaria.common.callableexecutor.BypassExecutor;
-import org.chronotics.talaria.common.callableexecutor.NullReturnExecutor;
-import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.common.ChainExecutor;
+import org.chronotics.talaria.common.chainexecutor.BypassExecutor;
+import org.chronotics.talaria.common.chainexecutor.NullReturnExecutor;
+import org.chronotics.talaria.thrift.thriftservicehandler.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.ThriftServer;
 import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.thrift.ThriftServiceExecutor;
@@ -55,9 +55,9 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		 * BypassExecutor to Read: bypass a read value
 		 * NullReturnExecutor to Write: write and return null
 		 */
-		CallableExecutor<Object> executorToRead =
+		ChainExecutor<Object> executorToRead =
 				new BypassExecutor<>();
-		CallableExecutor<Object> executorToWrite =
+		ChainExecutor<Object> executorToWrite =
 				new NullReturnExecutor<>();
 		ThriftServiceExecutor thriftServiceExecutor =
 				new ThriftServiceExecutor(executorToRead, executorToWrite);

@@ -22,22 +22,22 @@ import org.slf4j.LoggerFactory;
  * A registered task is executed with thread based on ExecutorService.
  */
 
-public abstract class CallableExecutor<T> implements Callable<T> {
+public abstract class ChainExecutor<T> implements Callable<T> {
 
 	private static final Logger logger = 
-			LoggerFactory.getLogger(CallableExecutor.class);
+			LoggerFactory.getLogger(ChainExecutor.class);
 	
 	public static class Builder<T> {
-		private CallableExecutor<T> executor = null;
+		private ChainExecutor<T> executor = null;
 		
 		public Builder() {}
 		
-		public CallableExecutor<T> build() {
+		public ChainExecutor<T> build() {
 			return executor;
 		}
 		
 		public Builder<T> setExecutor(
-				CallableExecutor<T> _executor,
+				ChainExecutor<T> _executor,
 				PROPAGATION_RULE _propagationRule) {
 			assert(executor == null);
 			if(executor != null) {
@@ -49,7 +49,7 @@ public abstract class CallableExecutor<T> implements Callable<T> {
 		}
 		
 		public Builder<T> addExecutor(
-				CallableExecutor<T> _executor) throws Exception {
+				ChainExecutor<T> _executor) throws Exception {
 			assert(executor != null && executor != _executor);
 			if(executor == null) {
 				logger.error("You have to call setExecutor before addExecutor");
@@ -60,7 +60,7 @@ public abstract class CallableExecutor<T> implements Callable<T> {
 				throw new Exception("You can not add existing TaskExecutor");
 			}
 			
-			CallableExecutor<T> finalExecutor = executor;
+			ChainExecutor<T> finalExecutor = executor;
 			while(finalExecutor.getNextExecutor() != null ) {
 				finalExecutor=finalExecutor.getNextExecutor();
 				assert(finalExecutor != _executor);
@@ -102,21 +102,21 @@ public abstract class CallableExecutor<T> implements Callable<T> {
 
 	protected ExecutorService executorService = null;
 	
-	protected CallableExecutor<T> nextExecutor = null;
+	protected ChainExecutor<T> nextExecutor = null;
 	
 	protected PROPAGATION_RULE propagationRule = PROPAGATION_RULE.NOT_DEFINED;
 	
 	protected T value;
 	
 	@SuppressWarnings("unused")
-	protected CallableExecutor() {}
+	protected ChainExecutor() {}
 	
-	protected CallableExecutor(PROPAGATION_RULE _propagationRule, CallableExecutor<T> _nextExecutor) {
+	protected ChainExecutor(PROPAGATION_RULE _propagationRule, ChainExecutor<T> _nextExecutor) {
 		addNextExecutor(_propagationRule, _nextExecutor);
 	}
 	
 	public int getChildrenExecutorCount() {
-		CallableExecutor<T> finalExecutor = this;
+		ChainExecutor<T> finalExecutor = this;
 		int count = 0;
 		while(finalExecutor.getNextExecutor() != null) {
 			finalExecutor = finalExecutor.getNextExecutor();
@@ -144,7 +144,7 @@ public abstract class CallableExecutor<T> implements Callable<T> {
 	// You can execute many tasks with added executors
 	// The code will be run like 
 	// this.call() => nextExecutor.call() => nextExecutor.call()
-	public void addNextExecutor(PROPAGATION_RULE _propagationRule, CallableExecutor<T> _nextExecutor) {
+	public void addNextExecutor(PROPAGATION_RULE _propagationRule, ChainExecutor<T> _nextExecutor) {
 		this.setPropagationRule(_propagationRule);
 		
 		nextExecutor = _nextExecutor;
@@ -163,7 +163,7 @@ public abstract class CallableExecutor<T> implements Callable<T> {
 
 	}
 	
-	public CallableExecutor<T> getNextExecutor() {
+	public ChainExecutor<T> getNextExecutor() {
 		return nextExecutor;
 	}
 	
@@ -238,7 +238,7 @@ public abstract class CallableExecutor<T> implements Callable<T> {
 		return properties.entrySet();
 	}
 	
-	public void setProperty(CallableExecutor<?> _executor) {
+	public void setProperty(ChainExecutor<?> _executor) {
 		if(!properties.isEmpty()) {
 			properties.clear();
 		}

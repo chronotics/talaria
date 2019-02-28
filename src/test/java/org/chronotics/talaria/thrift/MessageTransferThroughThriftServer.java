@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.thriftservice.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.thrift.thriftservicehandler.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.ThriftMessage;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -1,4 +1,4 @@
-package org.chronotics.talaria.common.thriftservice;
+package org.chronotics.talaria.thrift.thriftservicehandler;
 
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;

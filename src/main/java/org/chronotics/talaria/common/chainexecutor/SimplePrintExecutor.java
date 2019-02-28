@@ -1,17 +1,17 @@
-package org.chronotics.talaria.common.callableexecutor;
+package org.chronotics.talaria.common.chainexecutor;
 
-import org.chronotics.talaria.common.CallableExecutor;
+import org.chronotics.talaria.common.ChainExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimplePrintExecutor<T> extends CallableExecutor<T> {
+public class SimplePrintExecutor<T> extends ChainExecutor<T> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(SimplePrintExecutor.class);
 
     public SimplePrintExecutor(
             PROPAGATION_RULE _propagationRule,
-            CallableExecutor<T> _nextExecutor) {
+            ChainExecutor<T> _nextExecutor) {
        super(_propagationRule,_nextExecutor);
     }
 
