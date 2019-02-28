@@ -170,21 +170,21 @@ public class ThriftClientReferentialMessage {
 		MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
 
 		for(int i=0; i<count; i++) {
-			ThriftMessage childMsg = new ThriftMessage();
-			childMsg.set_sender_id("child");
-			childMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
-			childMsg.set_list_i32(new ArrayList<>());
-			childMsg.get_list_i32().add(i);
-			childMsg.set_payload("payload");
-			childMsg.set_list_double(new ArrayList<>());
-			childMsg.set_list_message(new ArrayList<>());
-			List<ThriftMessage> messageList = new ArrayList<>();
-			messageList.add(childMsg);
+//			ThriftMessage childMsg = new ThriftMessage();
+//			childMsg.set_sender_id("child");
+//			childMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
+//			childMsg.set_list_i32(new ArrayList<>());
+//			childMsg.get_list_i32().add(i);
+//			childMsg.set_payload("payload");
+//			childMsg.set_list_double(new ArrayList<>());
+//			childMsg.set_list_message(new ArrayList<>());
+//			List<ThriftMessage> messageList = new ArrayList<>();
+//			messageList.add(childMsg);
 			ThriftMessage rootMsg = new ThriftMessage();
 			rootMsg.set_sender_id(messageQueueId);
-			rootMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
-			rootMsg.set_list_double(new ArrayList<>());
-			rootMsg.set_list_message(messageList);
+//			rootMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
+//			rootMsg.set_list_double(new ArrayList<>());
+//			rootMsg.set_list_message(messageList);
 //			rootMsg._list_message = new ArrayList<ThriftMessage>();
 //			rootMsg._list_message.add(childMsg);
 

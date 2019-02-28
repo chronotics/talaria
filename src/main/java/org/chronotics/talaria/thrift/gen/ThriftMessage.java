@@ -19,27 +19,27 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
   private static final org.apache.thrift.protocol.TField _TOTAL_COUNT_FIELD_DESC = new org.apache.thrift.protocol.TField("_total_count", org.apache.thrift.protocol.TType.I64, (short)6);
   private static final org.apache.thrift.protocol.TField _BINARY_FIELD_DESC = new org.apache.thrift.protocol.TField("_binary", org.apache.thrift.protocol.TType.STRING, (short)7);
   private static final org.apache.thrift.protocol.TField _PAYLOAD_FIELD_DESC = new org.apache.thrift.protocol.TField("_payload", org.apache.thrift.protocol.TType.STRING, (short)8);
-  private static final org.apache.thrift.protocol.TField _LIST_MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_message", org.apache.thrift.protocol.TType.LIST, (short)9);
-  private static final org.apache.thrift.protocol.TField _SET_MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_message", org.apache.thrift.protocol.TType.SET, (short)10);
-  private static final org.apache.thrift.protocol.TField _MAP_MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_message", org.apache.thrift.protocol.TType.MAP, (short)11);
-  private static final org.apache.thrift.protocol.TField _LIST_BOOL_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_bool", org.apache.thrift.protocol.TType.LIST, (short)12);
-  private static final org.apache.thrift.protocol.TField _LIST_I16_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_i16", org.apache.thrift.protocol.TType.LIST, (short)13);
-  private static final org.apache.thrift.protocol.TField _LIST_I32_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_i32", org.apache.thrift.protocol.TType.LIST, (short)14);
-  private static final org.apache.thrift.protocol.TField _LIST_I64_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_i64", org.apache.thrift.protocol.TType.LIST, (short)15);
-  private static final org.apache.thrift.protocol.TField _LIST_DOUBLE_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_double", org.apache.thrift.protocol.TType.LIST, (short)16);
-  private static final org.apache.thrift.protocol.TField _LIST_STRING_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_string", org.apache.thrift.protocol.TType.LIST, (short)17);
-  private static final org.apache.thrift.protocol.TField _SET_BOOL_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_bool", org.apache.thrift.protocol.TType.SET, (short)18);
-  private static final org.apache.thrift.protocol.TField _SET_I16_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_i16", org.apache.thrift.protocol.TType.SET, (short)19);
-  private static final org.apache.thrift.protocol.TField _SET_I32_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_i32", org.apache.thrift.protocol.TType.SET, (short)20);
-  private static final org.apache.thrift.protocol.TField _SET_I64_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_i64", org.apache.thrift.protocol.TType.SET, (short)21);
-  private static final org.apache.thrift.protocol.TField _SET_DOUBLE_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_double", org.apache.thrift.protocol.TType.SET, (short)22);
-  private static final org.apache.thrift.protocol.TField _SET_STRING_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_string", org.apache.thrift.protocol.TType.SET, (short)23);
-  private static final org.apache.thrift.protocol.TField _MAP_BOOL_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_bool", org.apache.thrift.protocol.TType.MAP, (short)24);
-  private static final org.apache.thrift.protocol.TField _MAP_I16_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_i16", org.apache.thrift.protocol.TType.MAP, (short)25);
-  private static final org.apache.thrift.protocol.TField _MAP_I32_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_i32", org.apache.thrift.protocol.TType.MAP, (short)26);
-  private static final org.apache.thrift.protocol.TField _MAP_I64_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_i64", org.apache.thrift.protocol.TType.MAP, (short)27);
-  private static final org.apache.thrift.protocol.TField _MAP_DOUBLE_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_double", org.apache.thrift.protocol.TType.MAP, (short)28);
-  private static final org.apache.thrift.protocol.TField _MAP_STRING_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_string", org.apache.thrift.protocol.TType.MAP, (short)29);
+  private static final org.apache.thrift.protocol.TField _LIST_BOOL_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_bool", org.apache.thrift.protocol.TType.LIST, (short)9);
+  private static final org.apache.thrift.protocol.TField _LIST_I16_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_i16", org.apache.thrift.protocol.TType.LIST, (short)10);
+  private static final org.apache.thrift.protocol.TField _LIST_I32_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_i32", org.apache.thrift.protocol.TType.LIST, (short)11);
+  private static final org.apache.thrift.protocol.TField _LIST_I64_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_i64", org.apache.thrift.protocol.TType.LIST, (short)12);
+  private static final org.apache.thrift.protocol.TField _LIST_DOUBLE_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_double", org.apache.thrift.protocol.TType.LIST, (short)13);
+  private static final org.apache.thrift.protocol.TField _LIST_STRING_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_string", org.apache.thrift.protocol.TType.LIST, (short)14);
+  private static final org.apache.thrift.protocol.TField _SET_BOOL_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_bool", org.apache.thrift.protocol.TType.SET, (short)15);
+  private static final org.apache.thrift.protocol.TField _SET_I16_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_i16", org.apache.thrift.protocol.TType.SET, (short)16);
+  private static final org.apache.thrift.protocol.TField _SET_I32_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_i32", org.apache.thrift.protocol.TType.SET, (short)17);
+  private static final org.apache.thrift.protocol.TField _SET_I64_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_i64", org.apache.thrift.protocol.TType.SET, (short)18);
+  private static final org.apache.thrift.protocol.TField _SET_DOUBLE_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_double", org.apache.thrift.protocol.TType.SET, (short)19);
+  private static final org.apache.thrift.protocol.TField _SET_STRING_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_string", org.apache.thrift.protocol.TType.SET, (short)20);
+  private static final org.apache.thrift.protocol.TField _MAP_BOOL_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_bool", org.apache.thrift.protocol.TType.MAP, (short)21);
+  private static final org.apache.thrift.protocol.TField _MAP_I16_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_i16", org.apache.thrift.protocol.TType.MAP, (short)22);
+  private static final org.apache.thrift.protocol.TField _MAP_I32_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_i32", org.apache.thrift.protocol.TType.MAP, (short)23);
+  private static final org.apache.thrift.protocol.TField _MAP_I64_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_i64", org.apache.thrift.protocol.TType.MAP, (short)24);
+  private static final org.apache.thrift.protocol.TField _MAP_DOUBLE_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_double", org.apache.thrift.protocol.TType.MAP, (short)25);
+  private static final org.apache.thrift.protocol.TField _MAP_STRING_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_string", org.apache.thrift.protocol.TType.MAP, (short)26);
+  private static final org.apache.thrift.protocol.TField _LIST_MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("_list_message", org.apache.thrift.protocol.TType.LIST, (short)27);
+  private static final org.apache.thrift.protocol.TField _SET_MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("_set_message", org.apache.thrift.protocol.TType.SET, (short)28);
+  private static final org.apache.thrift.protocol.TField _MAP_MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("_map_message", org.apache.thrift.protocol.TType.MAP, (short)29);
 
   private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new ThriftMessageStandardSchemeFactory();
   private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new ThriftMessageTupleSchemeFactory();
@@ -52,9 +52,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
   public long _total_count; // optional
   public java.nio.ByteBuffer _binary; // optional
   public java.lang.String _payload; // optional
-  public java.util.List<ThriftMessage> _list_message; // optional
-  public java.util.Set<ThriftMessage> _set_message; // optional
-  public java.util.Map<java.lang.String,ThriftMessage> _map_message; // optional
   public java.util.List<java.lang.Boolean> _list_bool; // optional
   public java.util.List<java.lang.Short> _list_i16; // optional
   public java.util.List<java.lang.Integer> _list_i32; // optional
@@ -73,6 +70,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
   public java.util.Map<java.lang.String,java.lang.Long> _map_i64; // optional
   public java.util.Map<java.lang.String,java.lang.Double> _map_double; // optional
   public java.util.Map<java.lang.String,java.lang.String> _map_string; // optional
+  public java.util.List<ThriftMessage> _list_message; // optional
+  public java.util.Set<ThriftMessage> _set_message; // optional
+  public java.util.Map<java.lang.String,ThriftMessage> _map_message; // optional
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -84,27 +84,27 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     _TOTAL_COUNT((short)6, "_total_count"),
     _BINARY((short)7, "_binary"),
     _PAYLOAD((short)8, "_payload"),
-    _LIST_MESSAGE((short)9, "_list_message"),
-    _SET_MESSAGE((short)10, "_set_message"),
-    _MAP_MESSAGE((short)11, "_map_message"),
-    _LIST_BOOL((short)12, "_list_bool"),
-    _LIST_I16((short)13, "_list_i16"),
-    _LIST_I32((short)14, "_list_i32"),
-    _LIST_I64((short)15, "_list_i64"),
-    _LIST_DOUBLE((short)16, "_list_double"),
-    _LIST_STRING((short)17, "_list_string"),
-    _SET_BOOL((short)18, "_set_bool"),
-    _SET_I16((short)19, "_set_i16"),
-    _SET_I32((short)20, "_set_i32"),
-    _SET_I64((short)21, "_set_i64"),
-    _SET_DOUBLE((short)22, "_set_double"),
-    _SET_STRING((short)23, "_set_string"),
-    _MAP_BOOL((short)24, "_map_bool"),
-    _MAP_I16((short)25, "_map_i16"),
-    _MAP_I32((short)26, "_map_i32"),
-    _MAP_I64((short)27, "_map_i64"),
-    _MAP_DOUBLE((short)28, "_map_double"),
-    _MAP_STRING((short)29, "_map_string");
+    _LIST_BOOL((short)9, "_list_bool"),
+    _LIST_I16((short)10, "_list_i16"),
+    _LIST_I32((short)11, "_list_i32"),
+    _LIST_I64((short)12, "_list_i64"),
+    _LIST_DOUBLE((short)13, "_list_double"),
+    _LIST_STRING((short)14, "_list_string"),
+    _SET_BOOL((short)15, "_set_bool"),
+    _SET_I16((short)16, "_set_i16"),
+    _SET_I32((short)17, "_set_i32"),
+    _SET_I64((short)18, "_set_i64"),
+    _SET_DOUBLE((short)19, "_set_double"),
+    _SET_STRING((short)20, "_set_string"),
+    _MAP_BOOL((short)21, "_map_bool"),
+    _MAP_I16((short)22, "_map_i16"),
+    _MAP_I32((short)23, "_map_i32"),
+    _MAP_I64((short)24, "_map_i64"),
+    _MAP_DOUBLE((short)25, "_map_double"),
+    _MAP_STRING((short)26, "_map_string"),
+    _LIST_MESSAGE((short)27, "_list_message"),
+    _SET_MESSAGE((short)28, "_set_message"),
+    _MAP_MESSAGE((short)29, "_map_message");
 
     private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -135,48 +135,48 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           return _BINARY;
         case 8: // _PAYLOAD
           return _PAYLOAD;
-        case 9: // _LIST_MESSAGE
-          return _LIST_MESSAGE;
-        case 10: // _SET_MESSAGE
-          return _SET_MESSAGE;
-        case 11: // _MAP_MESSAGE
-          return _MAP_MESSAGE;
-        case 12: // _LIST_BOOL
+        case 9: // _LIST_BOOL
           return _LIST_BOOL;
-        case 13: // _LIST_I16
+        case 10: // _LIST_I16
           return _LIST_I16;
-        case 14: // _LIST_I32
+        case 11: // _LIST_I32
           return _LIST_I32;
-        case 15: // _LIST_I64
+        case 12: // _LIST_I64
           return _LIST_I64;
-        case 16: // _LIST_DOUBLE
+        case 13: // _LIST_DOUBLE
           return _LIST_DOUBLE;
-        case 17: // _LIST_STRING
+        case 14: // _LIST_STRING
           return _LIST_STRING;
-        case 18: // _SET_BOOL
+        case 15: // _SET_BOOL
           return _SET_BOOL;
-        case 19: // _SET_I16
+        case 16: // _SET_I16
           return _SET_I16;
-        case 20: // _SET_I32
+        case 17: // _SET_I32
           return _SET_I32;
-        case 21: // _SET_I64
+        case 18: // _SET_I64
           return _SET_I64;
-        case 22: // _SET_DOUBLE
+        case 19: // _SET_DOUBLE
           return _SET_DOUBLE;
-        case 23: // _SET_STRING
+        case 20: // _SET_STRING
           return _SET_STRING;
-        case 24: // _MAP_BOOL
+        case 21: // _MAP_BOOL
           return _MAP_BOOL;
-        case 25: // _MAP_I16
+        case 22: // _MAP_I16
           return _MAP_I16;
-        case 26: // _MAP_I32
+        case 23: // _MAP_I32
           return _MAP_I32;
-        case 27: // _MAP_I64
+        case 24: // _MAP_I64
           return _MAP_I64;
-        case 28: // _MAP_DOUBLE
+        case 25: // _MAP_DOUBLE
           return _MAP_DOUBLE;
-        case 29: // _MAP_STRING
+        case 26: // _MAP_STRING
           return _MAP_STRING;
+        case 27: // _LIST_MESSAGE
+          return _LIST_MESSAGE;
+        case 28: // _SET_MESSAGE
+          return _SET_MESSAGE;
+        case 29: // _MAP_MESSAGE
+          return _MAP_MESSAGE;
         default:
           return null;
       }
@@ -220,7 +220,7 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
   private static final int ___SEQUENCE_NO_ISSET_ID = 0;
   private static final int ___TOTAL_COUNT_ISSET_ID = 1;
   private byte __isset_bitfield = 0;
-  private static final _Fields optionals[] = {_Fields._RECEIVER_ID,_Fields._TIMESTAMP,_Fields._SUBJECT,_Fields._SEQUENCE_NO,_Fields._TOTAL_COUNT,_Fields._BINARY,_Fields._PAYLOAD,_Fields._LIST_MESSAGE,_Fields._SET_MESSAGE,_Fields._MAP_MESSAGE,_Fields._LIST_BOOL,_Fields._LIST_I16,_Fields._LIST_I32,_Fields._LIST_I64,_Fields._LIST_DOUBLE,_Fields._LIST_STRING,_Fields._SET_BOOL,_Fields._SET_I16,_Fields._SET_I32,_Fields._SET_I64,_Fields._SET_DOUBLE,_Fields._SET_STRING,_Fields._MAP_BOOL,_Fields._MAP_I16,_Fields._MAP_I32,_Fields._MAP_I64,_Fields._MAP_DOUBLE,_Fields._MAP_STRING};
+  private static final _Fields optionals[] = {_Fields._RECEIVER_ID,_Fields._TIMESTAMP,_Fields._SUBJECT,_Fields._SEQUENCE_NO,_Fields._TOTAL_COUNT,_Fields._BINARY,_Fields._PAYLOAD,_Fields._LIST_BOOL,_Fields._LIST_I16,_Fields._LIST_I32,_Fields._LIST_I64,_Fields._LIST_DOUBLE,_Fields._LIST_STRING,_Fields._SET_BOOL,_Fields._SET_I16,_Fields._SET_I32,_Fields._SET_I64,_Fields._SET_DOUBLE,_Fields._SET_STRING,_Fields._MAP_BOOL,_Fields._MAP_I16,_Fields._MAP_I32,_Fields._MAP_I64,_Fields._MAP_DOUBLE,_Fields._MAP_STRING,_Fields._LIST_MESSAGE,_Fields._SET_MESSAGE,_Fields._MAP_MESSAGE};
   public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -240,16 +240,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING        , true)));
     tmpMap.put(_Fields._PAYLOAD, new org.apache.thrift.meta_data.FieldMetaData("_payload", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-    tmpMap.put(_Fields._LIST_MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("_list_message", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT            , "ThriftMessage"))));
-    tmpMap.put(_Fields._SET_MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("_set_message", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.SetMetaData(org.apache.thrift.protocol.TType.SET, 
-            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT            , "ThriftMessage"))));
-    tmpMap.put(_Fields._MAP_MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("_map_message", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
-        new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
-            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
-            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT            , "ThriftMessage"))));
     tmpMap.put(_Fields._LIST_BOOL, new org.apache.thrift.meta_data.FieldMetaData("_list_bool", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
             new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL))));
@@ -310,6 +300,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
         new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
             new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
             new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
+    tmpMap.put(_Fields._LIST_MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("_list_message", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT            , "ThriftMessage"))));
+    tmpMap.put(_Fields._SET_MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("_set_message", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.SetMetaData(org.apache.thrift.protocol.TType.SET, 
+            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT            , "ThriftMessage"))));
+    tmpMap.put(_Fields._MAP_MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("_map_message", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.MapMetaData(org.apache.thrift.protocol.TType.MAP, 
+            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING), 
+            new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT            , "ThriftMessage"))));
     metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftMessage.class, metaDataMap);
   }
@@ -348,35 +348,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     }
     if (other.isSet_payload()) {
       this._payload = other._payload;
-    }
-    if (other.isSet_list_message()) {
-      java.util.List<ThriftMessage> __this___list_message = new java.util.ArrayList<ThriftMessage>(other._list_message.size());
-      for (ThriftMessage other_element : other._list_message) {
-        __this___list_message.add(new ThriftMessage(other_element));
-      }
-      this._list_message = __this___list_message;
-    }
-    if (other.isSet_set_message()) {
-      java.util.Set<ThriftMessage> __this___set_message = new java.util.HashSet<ThriftMessage>(other._set_message.size());
-      for (ThriftMessage other_element : other._set_message) {
-        __this___set_message.add(new ThriftMessage(other_element));
-      }
-      this._set_message = __this___set_message;
-    }
-    if (other.isSet_map_message()) {
-      java.util.Map<java.lang.String,ThriftMessage> __this___map_message = new java.util.HashMap<java.lang.String,ThriftMessage>(other._map_message.size());
-      for (java.util.Map.Entry<java.lang.String, ThriftMessage> other_element : other._map_message.entrySet()) {
-
-        java.lang.String other_element_key = other_element.getKey();
-        ThriftMessage other_element_value = other_element.getValue();
-
-        java.lang.String __this___map_message_copy_key = other_element_key;
-
-        ThriftMessage __this___map_message_copy_value = new ThriftMessage(other_element_value);
-
-        __this___map_message.put(__this___map_message_copy_key, __this___map_message_copy_value);
-      }
-      this._map_message = __this___map_message;
     }
     if (other.isSet_list_bool()) {
       java.util.List<java.lang.Boolean> __this___list_bool = new java.util.ArrayList<java.lang.Boolean>(other._list_bool);
@@ -450,6 +421,35 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       java.util.Map<java.lang.String,java.lang.String> __this___map_string = new java.util.HashMap<java.lang.String,java.lang.String>(other._map_string);
       this._map_string = __this___map_string;
     }
+    if (other.isSet_list_message()) {
+      java.util.List<ThriftMessage> __this___list_message = new java.util.ArrayList<ThriftMessage>(other._list_message.size());
+      for (ThriftMessage other_element : other._list_message) {
+        __this___list_message.add(new ThriftMessage(other_element));
+      }
+      this._list_message = __this___list_message;
+    }
+    if (other.isSet_set_message()) {
+      java.util.Set<ThriftMessage> __this___set_message = new java.util.HashSet<ThriftMessage>(other._set_message.size());
+      for (ThriftMessage other_element : other._set_message) {
+        __this___set_message.add(new ThriftMessage(other_element));
+      }
+      this._set_message = __this___set_message;
+    }
+    if (other.isSet_map_message()) {
+      java.util.Map<java.lang.String,ThriftMessage> __this___map_message = new java.util.HashMap<java.lang.String,ThriftMessage>(other._map_message.size());
+      for (java.util.Map.Entry<java.lang.String, ThriftMessage> other_element : other._map_message.entrySet()) {
+
+        java.lang.String other_element_key = other_element.getKey();
+        ThriftMessage other_element_value = other_element.getValue();
+
+        java.lang.String __this___map_message_copy_key = other_element_key;
+
+        ThriftMessage __this___map_message_copy_value = new ThriftMessage(other_element_value);
+
+        __this___map_message.put(__this___map_message_copy_key, __this___map_message_copy_value);
+      }
+      this._map_message = __this___map_message;
+    }
   }
 
   public ThriftMessage deepCopy() {
@@ -468,9 +468,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     this._total_count = 0;
     this._binary = null;
     this._payload = null;
-    this._list_message = null;
-    this._set_message = null;
-    this._map_message = null;
     this._list_bool = null;
     this._list_i16 = null;
     this._list_i32 = null;
@@ -489,6 +486,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     this._map_i64 = null;
     this._map_double = null;
     this._map_string = null;
+    this._list_message = null;
+    this._set_message = null;
+    this._map_message = null;
   }
 
   public java.lang.String get_sender_id() {
@@ -688,119 +688,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
   public void set_payloadIsSet(boolean value) {
     if (!value) {
       this._payload = null;
-    }
-  }
-
-  public int get_list_messageSize() {
-    return (this._list_message == null) ? 0 : this._list_message.size();
-  }
-
-  public java.util.Iterator<ThriftMessage> get_list_messageIterator() {
-    return (this._list_message == null) ? null : this._list_message.iterator();
-  }
-
-  public void addTo_list_message(ThriftMessage elem) {
-    if (this._list_message == null) {
-      this._list_message = new java.util.ArrayList<ThriftMessage>();
-    }
-    this._list_message.add(elem);
-  }
-
-  public java.util.List<ThriftMessage> get_list_message() {
-    return this._list_message;
-  }
-
-  public ThriftMessage set_list_message(java.util.List<ThriftMessage> _list_message) {
-    this._list_message = _list_message;
-    return this;
-  }
-
-  public void unset_list_message() {
-    this._list_message = null;
-  }
-
-  /** Returns true if field _list_message is set (has been assigned a value) and false otherwise */
-  public boolean isSet_list_message() {
-    return this._list_message != null;
-  }
-
-  public void set_list_messageIsSet(boolean value) {
-    if (!value) {
-      this._list_message = null;
-    }
-  }
-
-  public int get_set_messageSize() {
-    return (this._set_message == null) ? 0 : this._set_message.size();
-  }
-
-  public java.util.Iterator<ThriftMessage> get_set_messageIterator() {
-    return (this._set_message == null) ? null : this._set_message.iterator();
-  }
-
-  public void addTo_set_message(ThriftMessage elem) {
-    if (this._set_message == null) {
-      this._set_message = new java.util.HashSet<ThriftMessage>();
-    }
-    this._set_message.add(elem);
-  }
-
-  public java.util.Set<ThriftMessage> get_set_message() {
-    return this._set_message;
-  }
-
-  public ThriftMessage set_set_message(java.util.Set<ThriftMessage> _set_message) {
-    this._set_message = _set_message;
-    return this;
-  }
-
-  public void unset_set_message() {
-    this._set_message = null;
-  }
-
-  /** Returns true if field _set_message is set (has been assigned a value) and false otherwise */
-  public boolean isSet_set_message() {
-    return this._set_message != null;
-  }
-
-  public void set_set_messageIsSet(boolean value) {
-    if (!value) {
-      this._set_message = null;
-    }
-  }
-
-  public int get_map_messageSize() {
-    return (this._map_message == null) ? 0 : this._map_message.size();
-  }
-
-  public void putTo_map_message(java.lang.String key, ThriftMessage val) {
-    if (this._map_message == null) {
-      this._map_message = new java.util.HashMap<java.lang.String,ThriftMessage>();
-    }
-    this._map_message.put(key, val);
-  }
-
-  public java.util.Map<java.lang.String,ThriftMessage> get_map_message() {
-    return this._map_message;
-  }
-
-  public ThriftMessage set_map_message(java.util.Map<java.lang.String,ThriftMessage> _map_message) {
-    this._map_message = _map_message;
-    return this;
-  }
-
-  public void unset_map_message() {
-    this._map_message = null;
-  }
-
-  /** Returns true if field _map_message is set (has been assigned a value) and false otherwise */
-  public boolean isSet_map_message() {
-    return this._map_message != null;
-  }
-
-  public void set_map_messageIsSet(boolean value) {
-    if (!value) {
-      this._map_message = null;
     }
   }
 
@@ -1482,6 +1369,119 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     }
   }
 
+  public int get_list_messageSize() {
+    return (this._list_message == null) ? 0 : this._list_message.size();
+  }
+
+  public java.util.Iterator<ThriftMessage> get_list_messageIterator() {
+    return (this._list_message == null) ? null : this._list_message.iterator();
+  }
+
+  public void addTo_list_message(ThriftMessage elem) {
+    if (this._list_message == null) {
+      this._list_message = new java.util.ArrayList<ThriftMessage>();
+    }
+    this._list_message.add(elem);
+  }
+
+  public java.util.List<ThriftMessage> get_list_message() {
+    return this._list_message;
+  }
+
+  public ThriftMessage set_list_message(java.util.List<ThriftMessage> _list_message) {
+    this._list_message = _list_message;
+    return this;
+  }
+
+  public void unset_list_message() {
+    this._list_message = null;
+  }
+
+  /** Returns true if field _list_message is set (has been assigned a value) and false otherwise */
+  public boolean isSet_list_message() {
+    return this._list_message != null;
+  }
+
+  public void set_list_messageIsSet(boolean value) {
+    if (!value) {
+      this._list_message = null;
+    }
+  }
+
+  public int get_set_messageSize() {
+    return (this._set_message == null) ? 0 : this._set_message.size();
+  }
+
+  public java.util.Iterator<ThriftMessage> get_set_messageIterator() {
+    return (this._set_message == null) ? null : this._set_message.iterator();
+  }
+
+  public void addTo_set_message(ThriftMessage elem) {
+    if (this._set_message == null) {
+      this._set_message = new java.util.HashSet<ThriftMessage>();
+    }
+    this._set_message.add(elem);
+  }
+
+  public java.util.Set<ThriftMessage> get_set_message() {
+    return this._set_message;
+  }
+
+  public ThriftMessage set_set_message(java.util.Set<ThriftMessage> _set_message) {
+    this._set_message = _set_message;
+    return this;
+  }
+
+  public void unset_set_message() {
+    this._set_message = null;
+  }
+
+  /** Returns true if field _set_message is set (has been assigned a value) and false otherwise */
+  public boolean isSet_set_message() {
+    return this._set_message != null;
+  }
+
+  public void set_set_messageIsSet(boolean value) {
+    if (!value) {
+      this._set_message = null;
+    }
+  }
+
+  public int get_map_messageSize() {
+    return (this._map_message == null) ? 0 : this._map_message.size();
+  }
+
+  public void putTo_map_message(java.lang.String key, ThriftMessage val) {
+    if (this._map_message == null) {
+      this._map_message = new java.util.HashMap<java.lang.String,ThriftMessage>();
+    }
+    this._map_message.put(key, val);
+  }
+
+  public java.util.Map<java.lang.String,ThriftMessage> get_map_message() {
+    return this._map_message;
+  }
+
+  public ThriftMessage set_map_message(java.util.Map<java.lang.String,ThriftMessage> _map_message) {
+    this._map_message = _map_message;
+    return this;
+  }
+
+  public void unset_map_message() {
+    this._map_message = null;
+  }
+
+  /** Returns true if field _map_message is set (has been assigned a value) and false otherwise */
+  public boolean isSet_map_message() {
+    return this._map_message != null;
+  }
+
+  public void set_map_messageIsSet(boolean value) {
+    if (!value) {
+      this._map_message = null;
+    }
+  }
+
   public void setFieldValue(_Fields field, java.lang.Object value) {
     switch (field) {
     case _SENDER_ID:
@@ -1549,30 +1549,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
         unset_payload();
       } else {
         set_payload((java.lang.String)value);
-      }
-      break;
-
-    case _LIST_MESSAGE:
-      if (value == null) {
-        unset_list_message();
-      } else {
-        set_list_message((java.util.List<ThriftMessage>)value);
-      }
-      break;
-
-    case _SET_MESSAGE:
-      if (value == null) {
-        unset_set_message();
-      } else {
-        set_set_message((java.util.Set<ThriftMessage>)value);
-      }
-      break;
-
-    case _MAP_MESSAGE:
-      if (value == null) {
-        unset_map_message();
-      } else {
-        set_map_message((java.util.Map<java.lang.String,ThriftMessage>)value);
       }
       break;
 
@@ -1720,6 +1696,30 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       }
       break;
 
+    case _LIST_MESSAGE:
+      if (value == null) {
+        unset_list_message();
+      } else {
+        set_list_message((java.util.List<ThriftMessage>)value);
+      }
+      break;
+
+    case _SET_MESSAGE:
+      if (value == null) {
+        unset_set_message();
+      } else {
+        set_set_message((java.util.Set<ThriftMessage>)value);
+      }
+      break;
+
+    case _MAP_MESSAGE:
+      if (value == null) {
+        unset_map_message();
+      } else {
+        set_map_message((java.util.Map<java.lang.String,ThriftMessage>)value);
+      }
+      break;
+
     }
   }
 
@@ -1748,15 +1748,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
 
     case _PAYLOAD:
       return get_payload();
-
-    case _LIST_MESSAGE:
-      return get_list_message();
-
-    case _SET_MESSAGE:
-      return get_set_message();
-
-    case _MAP_MESSAGE:
-      return get_map_message();
 
     case _LIST_BOOL:
       return get_list_bool();
@@ -1812,6 +1803,15 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     case _MAP_STRING:
       return get_map_string();
 
+    case _LIST_MESSAGE:
+      return get_list_message();
+
+    case _SET_MESSAGE:
+      return get_set_message();
+
+    case _MAP_MESSAGE:
+      return get_map_message();
+
     }
     throw new java.lang.IllegalStateException();
   }
@@ -1839,12 +1839,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       return isSet_binary();
     case _PAYLOAD:
       return isSet_payload();
-    case _LIST_MESSAGE:
-      return isSet_list_message();
-    case _SET_MESSAGE:
-      return isSet_set_message();
-    case _MAP_MESSAGE:
-      return isSet_map_message();
     case _LIST_BOOL:
       return isSet_list_bool();
     case _LIST_I16:
@@ -1881,6 +1875,12 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       return isSet_map_double();
     case _MAP_STRING:
       return isSet_map_string();
+    case _LIST_MESSAGE:
+      return isSet_list_message();
+    case _SET_MESSAGE:
+      return isSet_set_message();
+    case _MAP_MESSAGE:
+      return isSet_map_message();
     }
     throw new java.lang.IllegalStateException();
   }
@@ -1969,33 +1969,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       if (!(this_present__payload && that_present__payload))
         return false;
       if (!this._payload.equals(that._payload))
-        return false;
-    }
-
-    boolean this_present__list_message = true && this.isSet_list_message();
-    boolean that_present__list_message = true && that.isSet_list_message();
-    if (this_present__list_message || that_present__list_message) {
-      if (!(this_present__list_message && that_present__list_message))
-        return false;
-      if (!this._list_message.equals(that._list_message))
-        return false;
-    }
-
-    boolean this_present__set_message = true && this.isSet_set_message();
-    boolean that_present__set_message = true && that.isSet_set_message();
-    if (this_present__set_message || that_present__set_message) {
-      if (!(this_present__set_message && that_present__set_message))
-        return false;
-      if (!this._set_message.equals(that._set_message))
-        return false;
-    }
-
-    boolean this_present__map_message = true && this.isSet_map_message();
-    boolean that_present__map_message = true && that.isSet_map_message();
-    if (this_present__map_message || that_present__map_message) {
-      if (!(this_present__map_message && that_present__map_message))
-        return false;
-      if (!this._map_message.equals(that._map_message))
         return false;
     }
 
@@ -2161,6 +2134,33 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
         return false;
     }
 
+    boolean this_present__list_message = true && this.isSet_list_message();
+    boolean that_present__list_message = true && that.isSet_list_message();
+    if (this_present__list_message || that_present__list_message) {
+      if (!(this_present__list_message && that_present__list_message))
+        return false;
+      if (!this._list_message.equals(that._list_message))
+        return false;
+    }
+
+    boolean this_present__set_message = true && this.isSet_set_message();
+    boolean that_present__set_message = true && that.isSet_set_message();
+    if (this_present__set_message || that_present__set_message) {
+      if (!(this_present__set_message && that_present__set_message))
+        return false;
+      if (!this._set_message.equals(that._set_message))
+        return false;
+    }
+
+    boolean this_present__map_message = true && this.isSet_map_message();
+    boolean that_present__map_message = true && that.isSet_map_message();
+    if (this_present__map_message || that_present__map_message) {
+      if (!(this_present__map_message && that_present__map_message))
+        return false;
+      if (!this._map_message.equals(that._map_message))
+        return false;
+    }
+
     return true;
   }
 
@@ -2199,18 +2199,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     hashCode = hashCode * 8191 + ((isSet_payload()) ? 131071 : 524287);
     if (isSet_payload())
       hashCode = hashCode * 8191 + _payload.hashCode();
-
-    hashCode = hashCode * 8191 + ((isSet_list_message()) ? 131071 : 524287);
-    if (isSet_list_message())
-      hashCode = hashCode * 8191 + _list_message.hashCode();
-
-    hashCode = hashCode * 8191 + ((isSet_set_message()) ? 131071 : 524287);
-    if (isSet_set_message())
-      hashCode = hashCode * 8191 + _set_message.hashCode();
-
-    hashCode = hashCode * 8191 + ((isSet_map_message()) ? 131071 : 524287);
-    if (isSet_map_message())
-      hashCode = hashCode * 8191 + _map_message.hashCode();
 
     hashCode = hashCode * 8191 + ((isSet_list_bool()) ? 131071 : 524287);
     if (isSet_list_bool())
@@ -2283,6 +2271,18 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     hashCode = hashCode * 8191 + ((isSet_map_string()) ? 131071 : 524287);
     if (isSet_map_string())
       hashCode = hashCode * 8191 + _map_string.hashCode();
+
+    hashCode = hashCode * 8191 + ((isSet_list_message()) ? 131071 : 524287);
+    if (isSet_list_message())
+      hashCode = hashCode * 8191 + _list_message.hashCode();
+
+    hashCode = hashCode * 8191 + ((isSet_set_message()) ? 131071 : 524287);
+    if (isSet_set_message())
+      hashCode = hashCode * 8191 + _set_message.hashCode();
+
+    hashCode = hashCode * 8191 + ((isSet_map_message()) ? 131071 : 524287);
+    if (isSet_map_message())
+      hashCode = hashCode * 8191 + _map_message.hashCode();
 
     return hashCode;
   }
@@ -2371,36 +2371,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
     }
     if (isSet_payload()) {
       lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._payload, other._payload);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = java.lang.Boolean.valueOf(isSet_list_message()).compareTo(other.isSet_list_message());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSet_list_message()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._list_message, other._list_message);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = java.lang.Boolean.valueOf(isSet_set_message()).compareTo(other.isSet_set_message());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSet_set_message()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._set_message, other._set_message);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-    }
-    lastComparison = java.lang.Boolean.valueOf(isSet_map_message()).compareTo(other.isSet_map_message());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    if (isSet_map_message()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._map_message, other._map_message);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -2585,6 +2555,36 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
         return lastComparison;
       }
     }
+    lastComparison = java.lang.Boolean.valueOf(isSet_list_message()).compareTo(other.isSet_list_message());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSet_list_message()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._list_message, other._list_message);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = java.lang.Boolean.valueOf(isSet_set_message()).compareTo(other.isSet_set_message());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSet_set_message()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._set_message, other._set_message);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = java.lang.Boolean.valueOf(isSet_map_message()).compareTo(other.isSet_map_message());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSet_map_message()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this._map_message, other._map_message);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     return 0;
   }
 
@@ -2671,36 +2671,6 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
         sb.append("null");
       } else {
         sb.append(this._payload);
-      }
-      first = false;
-    }
-    if (isSet_list_message()) {
-      if (!first) sb.append(", ");
-      sb.append("_list_message:");
-      if (this._list_message == null) {
-        sb.append("null");
-      } else {
-        sb.append(this._list_message);
-      }
-      first = false;
-    }
-    if (isSet_set_message()) {
-      if (!first) sb.append(", ");
-      sb.append("_set_message:");
-      if (this._set_message == null) {
-        sb.append("null");
-      } else {
-        sb.append(this._set_message);
-      }
-      first = false;
-    }
-    if (isSet_map_message()) {
-      if (!first) sb.append(", ");
-      sb.append("_map_message:");
-      if (this._map_message == null) {
-        sb.append("null");
-      } else {
-        sb.append(this._map_message);
       }
       first = false;
     }
@@ -2884,6 +2854,36 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       }
       first = false;
     }
+    if (isSet_list_message()) {
+      if (!first) sb.append(", ");
+      sb.append("_list_message:");
+      if (this._list_message == null) {
+        sb.append("null");
+      } else {
+        sb.append(this._list_message);
+      }
+      first = false;
+    }
+    if (isSet_set_message()) {
+      if (!first) sb.append(", ");
+      sb.append("_set_message:");
+      if (this._set_message == null) {
+        sb.append("null");
+      } else {
+        sb.append(this._set_message);
+      }
+      first = false;
+    }
+    if (isSet_map_message()) {
+      if (!first) sb.append(", ");
+      sb.append("_map_message:");
+      if (this._map_message == null) {
+        sb.append("null");
+      } else {
+        sb.append(this._map_message);
+      }
+      first = false;
+    }
     sb.append(")");
     return sb.toString();
   }
@@ -2996,75 +2996,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 9: // _LIST_MESSAGE
+          case 9: // _LIST_BOOL
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
                 org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
-                struct._list_message = new java.util.ArrayList<ThriftMessage>(_list0.size);
-                ThriftMessage _elem1;
+                struct._list_bool = new java.util.ArrayList<java.lang.Boolean>(_list0.size);
+                boolean _elem1;
                 for (int _i2 = 0; _i2 < _list0.size; ++_i2)
                 {
-                  _elem1 = new ThriftMessage();
-                  _elem1.read(iprot);
-                  struct._list_message.add(_elem1);
-                }
-                iprot.readListEnd();
-              }
-              struct.set_list_messageIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 10: // _SET_MESSAGE
-            if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
-              {
-                org.apache.thrift.protocol.TSet _set3 = iprot.readSetBegin();
-                struct._set_message = new java.util.HashSet<ThriftMessage>(2*_set3.size);
-                ThriftMessage _elem4;
-                for (int _i5 = 0; _i5 < _set3.size; ++_i5)
-                {
-                  _elem4 = new ThriftMessage();
-                  _elem4.read(iprot);
-                  struct._set_message.add(_elem4);
-                }
-                iprot.readSetEnd();
-              }
-              struct.set_set_messageIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 11: // _MAP_MESSAGE
-            if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
-              {
-                org.apache.thrift.protocol.TMap _map6 = iprot.readMapBegin();
-                struct._map_message = new java.util.HashMap<java.lang.String,ThriftMessage>(2*_map6.size);
-                java.lang.String _key7;
-                ThriftMessage _val8;
-                for (int _i9 = 0; _i9 < _map6.size; ++_i9)
-                {
-                  _key7 = iprot.readString();
-                  _val8 = new ThriftMessage();
-                  _val8.read(iprot);
-                  struct._map_message.put(_key7, _val8);
-                }
-                iprot.readMapEnd();
-              }
-              struct.set_map_messageIsSet(true);
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-            }
-            break;
-          case 12: // _LIST_BOOL
-            if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
-              {
-                org.apache.thrift.protocol.TList _list10 = iprot.readListBegin();
-                struct._list_bool = new java.util.ArrayList<java.lang.Boolean>(_list10.size);
-                boolean _elem11;
-                for (int _i12 = 0; _i12 < _list10.size; ++_i12)
-                {
-                  _elem11 = iprot.readBool();
-                  struct._list_bool.add(_elem11);
+                  _elem1 = iprot.readBool();
+                  struct._list_bool.add(_elem1);
                 }
                 iprot.readListEnd();
               }
@@ -3073,16 +3014,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 13: // _LIST_I16
+          case 10: // _LIST_I16
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list13 = iprot.readListBegin();
-                struct._list_i16 = new java.util.ArrayList<java.lang.Short>(_list13.size);
-                short _elem14;
-                for (int _i15 = 0; _i15 < _list13.size; ++_i15)
+                org.apache.thrift.protocol.TList _list3 = iprot.readListBegin();
+                struct._list_i16 = new java.util.ArrayList<java.lang.Short>(_list3.size);
+                short _elem4;
+                for (int _i5 = 0; _i5 < _list3.size; ++_i5)
                 {
-                  _elem14 = iprot.readI16();
-                  struct._list_i16.add(_elem14);
+                  _elem4 = iprot.readI16();
+                  struct._list_i16.add(_elem4);
                 }
                 iprot.readListEnd();
               }
@@ -3091,16 +3032,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 14: // _LIST_I32
+          case 11: // _LIST_I32
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list16 = iprot.readListBegin();
-                struct._list_i32 = new java.util.ArrayList<java.lang.Integer>(_list16.size);
-                int _elem17;
-                for (int _i18 = 0; _i18 < _list16.size; ++_i18)
+                org.apache.thrift.protocol.TList _list6 = iprot.readListBegin();
+                struct._list_i32 = new java.util.ArrayList<java.lang.Integer>(_list6.size);
+                int _elem7;
+                for (int _i8 = 0; _i8 < _list6.size; ++_i8)
                 {
-                  _elem17 = iprot.readI32();
-                  struct._list_i32.add(_elem17);
+                  _elem7 = iprot.readI32();
+                  struct._list_i32.add(_elem7);
                 }
                 iprot.readListEnd();
               }
@@ -3109,16 +3050,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 15: // _LIST_I64
+          case 12: // _LIST_I64
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list19 = iprot.readListBegin();
-                struct._list_i64 = new java.util.ArrayList<java.lang.Long>(_list19.size);
-                long _elem20;
-                for (int _i21 = 0; _i21 < _list19.size; ++_i21)
+                org.apache.thrift.protocol.TList _list9 = iprot.readListBegin();
+                struct._list_i64 = new java.util.ArrayList<java.lang.Long>(_list9.size);
+                long _elem10;
+                for (int _i11 = 0; _i11 < _list9.size; ++_i11)
                 {
-                  _elem20 = iprot.readI64();
-                  struct._list_i64.add(_elem20);
+                  _elem10 = iprot.readI64();
+                  struct._list_i64.add(_elem10);
                 }
                 iprot.readListEnd();
               }
@@ -3127,16 +3068,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 16: // _LIST_DOUBLE
+          case 13: // _LIST_DOUBLE
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list22 = iprot.readListBegin();
-                struct._list_double = new java.util.ArrayList<java.lang.Double>(_list22.size);
-                double _elem23;
-                for (int _i24 = 0; _i24 < _list22.size; ++_i24)
+                org.apache.thrift.protocol.TList _list12 = iprot.readListBegin();
+                struct._list_double = new java.util.ArrayList<java.lang.Double>(_list12.size);
+                double _elem13;
+                for (int _i14 = 0; _i14 < _list12.size; ++_i14)
                 {
-                  _elem23 = iprot.readDouble();
-                  struct._list_double.add(_elem23);
+                  _elem13 = iprot.readDouble();
+                  struct._list_double.add(_elem13);
                 }
                 iprot.readListEnd();
               }
@@ -3145,16 +3086,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 17: // _LIST_STRING
+          case 14: // _LIST_STRING
             if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
               {
-                org.apache.thrift.protocol.TList _list25 = iprot.readListBegin();
-                struct._list_string = new java.util.ArrayList<java.lang.String>(_list25.size);
-                java.lang.String _elem26;
-                for (int _i27 = 0; _i27 < _list25.size; ++_i27)
+                org.apache.thrift.protocol.TList _list15 = iprot.readListBegin();
+                struct._list_string = new java.util.ArrayList<java.lang.String>(_list15.size);
+                java.lang.String _elem16;
+                for (int _i17 = 0; _i17 < _list15.size; ++_i17)
                 {
-                  _elem26 = iprot.readString();
-                  struct._list_string.add(_elem26);
+                  _elem16 = iprot.readString();
+                  struct._list_string.add(_elem16);
                 }
                 iprot.readListEnd();
               }
@@ -3163,16 +3104,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 18: // _SET_BOOL
+          case 15: // _SET_BOOL
             if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
               {
-                org.apache.thrift.protocol.TSet _set28 = iprot.readSetBegin();
-                struct._set_bool = new java.util.HashSet<java.lang.Boolean>(2*_set28.size);
-                boolean _elem29;
-                for (int _i30 = 0; _i30 < _set28.size; ++_i30)
+                org.apache.thrift.protocol.TSet _set18 = iprot.readSetBegin();
+                struct._set_bool = new java.util.HashSet<java.lang.Boolean>(2*_set18.size);
+                boolean _elem19;
+                for (int _i20 = 0; _i20 < _set18.size; ++_i20)
                 {
-                  _elem29 = iprot.readBool();
-                  struct._set_bool.add(_elem29);
+                  _elem19 = iprot.readBool();
+                  struct._set_bool.add(_elem19);
                 }
                 iprot.readSetEnd();
               }
@@ -3181,16 +3122,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 19: // _SET_I16
+          case 16: // _SET_I16
             if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
               {
-                org.apache.thrift.protocol.TSet _set31 = iprot.readSetBegin();
-                struct._set_i16 = new java.util.HashSet<java.lang.Short>(2*_set31.size);
-                short _elem32;
-                for (int _i33 = 0; _i33 < _set31.size; ++_i33)
+                org.apache.thrift.protocol.TSet _set21 = iprot.readSetBegin();
+                struct._set_i16 = new java.util.HashSet<java.lang.Short>(2*_set21.size);
+                short _elem22;
+                for (int _i23 = 0; _i23 < _set21.size; ++_i23)
                 {
-                  _elem32 = iprot.readI16();
-                  struct._set_i16.add(_elem32);
+                  _elem22 = iprot.readI16();
+                  struct._set_i16.add(_elem22);
                 }
                 iprot.readSetEnd();
               }
@@ -3199,16 +3140,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 20: // _SET_I32
+          case 17: // _SET_I32
             if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
               {
-                org.apache.thrift.protocol.TSet _set34 = iprot.readSetBegin();
-                struct._set_i32 = new java.util.HashSet<java.lang.Integer>(2*_set34.size);
-                int _elem35;
-                for (int _i36 = 0; _i36 < _set34.size; ++_i36)
+                org.apache.thrift.protocol.TSet _set24 = iprot.readSetBegin();
+                struct._set_i32 = new java.util.HashSet<java.lang.Integer>(2*_set24.size);
+                int _elem25;
+                for (int _i26 = 0; _i26 < _set24.size; ++_i26)
                 {
-                  _elem35 = iprot.readI32();
-                  struct._set_i32.add(_elem35);
+                  _elem25 = iprot.readI32();
+                  struct._set_i32.add(_elem25);
                 }
                 iprot.readSetEnd();
               }
@@ -3217,16 +3158,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 21: // _SET_I64
+          case 18: // _SET_I64
             if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
               {
-                org.apache.thrift.protocol.TSet _set37 = iprot.readSetBegin();
-                struct._set_i64 = new java.util.HashSet<java.lang.Long>(2*_set37.size);
-                long _elem38;
-                for (int _i39 = 0; _i39 < _set37.size; ++_i39)
+                org.apache.thrift.protocol.TSet _set27 = iprot.readSetBegin();
+                struct._set_i64 = new java.util.HashSet<java.lang.Long>(2*_set27.size);
+                long _elem28;
+                for (int _i29 = 0; _i29 < _set27.size; ++_i29)
                 {
-                  _elem38 = iprot.readI64();
-                  struct._set_i64.add(_elem38);
+                  _elem28 = iprot.readI64();
+                  struct._set_i64.add(_elem28);
                 }
                 iprot.readSetEnd();
               }
@@ -3235,16 +3176,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 22: // _SET_DOUBLE
+          case 19: // _SET_DOUBLE
             if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
               {
-                org.apache.thrift.protocol.TSet _set40 = iprot.readSetBegin();
-                struct._set_double = new java.util.HashSet<java.lang.Double>(2*_set40.size);
-                double _elem41;
-                for (int _i42 = 0; _i42 < _set40.size; ++_i42)
+                org.apache.thrift.protocol.TSet _set30 = iprot.readSetBegin();
+                struct._set_double = new java.util.HashSet<java.lang.Double>(2*_set30.size);
+                double _elem31;
+                for (int _i32 = 0; _i32 < _set30.size; ++_i32)
                 {
-                  _elem41 = iprot.readDouble();
-                  struct._set_double.add(_elem41);
+                  _elem31 = iprot.readDouble();
+                  struct._set_double.add(_elem31);
                 }
                 iprot.readSetEnd();
               }
@@ -3253,16 +3194,16 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 23: // _SET_STRING
+          case 20: // _SET_STRING
             if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
               {
-                org.apache.thrift.protocol.TSet _set43 = iprot.readSetBegin();
-                struct._set_string = new java.util.HashSet<java.lang.String>(2*_set43.size);
-                java.lang.String _elem44;
-                for (int _i45 = 0; _i45 < _set43.size; ++_i45)
+                org.apache.thrift.protocol.TSet _set33 = iprot.readSetBegin();
+                struct._set_string = new java.util.HashSet<java.lang.String>(2*_set33.size);
+                java.lang.String _elem34;
+                for (int _i35 = 0; _i35 < _set33.size; ++_i35)
                 {
-                  _elem44 = iprot.readString();
-                  struct._set_string.add(_elem44);
+                  _elem34 = iprot.readString();
+                  struct._set_string.add(_elem34);
                 }
                 iprot.readSetEnd();
               }
@@ -3271,18 +3212,18 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 24: // _MAP_BOOL
+          case 21: // _MAP_BOOL
             if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
               {
-                org.apache.thrift.protocol.TMap _map46 = iprot.readMapBegin();
-                struct._map_bool = new java.util.HashMap<java.lang.String,java.lang.Boolean>(2*_map46.size);
-                java.lang.String _key47;
-                boolean _val48;
-                for (int _i49 = 0; _i49 < _map46.size; ++_i49)
+                org.apache.thrift.protocol.TMap _map36 = iprot.readMapBegin();
+                struct._map_bool = new java.util.HashMap<java.lang.String,java.lang.Boolean>(2*_map36.size);
+                java.lang.String _key37;
+                boolean _val38;
+                for (int _i39 = 0; _i39 < _map36.size; ++_i39)
                 {
-                  _key47 = iprot.readString();
-                  _val48 = iprot.readBool();
-                  struct._map_bool.put(_key47, _val48);
+                  _key37 = iprot.readString();
+                  _val38 = iprot.readBool();
+                  struct._map_bool.put(_key37, _val38);
                 }
                 iprot.readMapEnd();
               }
@@ -3291,18 +3232,18 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 25: // _MAP_I16
+          case 22: // _MAP_I16
             if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
               {
-                org.apache.thrift.protocol.TMap _map50 = iprot.readMapBegin();
-                struct._map_i16 = new java.util.HashMap<java.lang.String,java.lang.Short>(2*_map50.size);
-                java.lang.String _key51;
-                short _val52;
-                for (int _i53 = 0; _i53 < _map50.size; ++_i53)
+                org.apache.thrift.protocol.TMap _map40 = iprot.readMapBegin();
+                struct._map_i16 = new java.util.HashMap<java.lang.String,java.lang.Short>(2*_map40.size);
+                java.lang.String _key41;
+                short _val42;
+                for (int _i43 = 0; _i43 < _map40.size; ++_i43)
                 {
-                  _key51 = iprot.readString();
-                  _val52 = iprot.readI16();
-                  struct._map_i16.put(_key51, _val52);
+                  _key41 = iprot.readString();
+                  _val42 = iprot.readI16();
+                  struct._map_i16.put(_key41, _val42);
                 }
                 iprot.readMapEnd();
               }
@@ -3311,18 +3252,18 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 26: // _MAP_I32
+          case 23: // _MAP_I32
             if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
               {
-                org.apache.thrift.protocol.TMap _map54 = iprot.readMapBegin();
-                struct._map_i32 = new java.util.HashMap<java.lang.String,java.lang.Integer>(2*_map54.size);
-                java.lang.String _key55;
-                int _val56;
-                for (int _i57 = 0; _i57 < _map54.size; ++_i57)
+                org.apache.thrift.protocol.TMap _map44 = iprot.readMapBegin();
+                struct._map_i32 = new java.util.HashMap<java.lang.String,java.lang.Integer>(2*_map44.size);
+                java.lang.String _key45;
+                int _val46;
+                for (int _i47 = 0; _i47 < _map44.size; ++_i47)
                 {
-                  _key55 = iprot.readString();
-                  _val56 = iprot.readI32();
-                  struct._map_i32.put(_key55, _val56);
+                  _key45 = iprot.readString();
+                  _val46 = iprot.readI32();
+                  struct._map_i32.put(_key45, _val46);
                 }
                 iprot.readMapEnd();
               }
@@ -3331,18 +3272,18 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 27: // _MAP_I64
+          case 24: // _MAP_I64
             if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
               {
-                org.apache.thrift.protocol.TMap _map58 = iprot.readMapBegin();
-                struct._map_i64 = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map58.size);
-                java.lang.String _key59;
-                long _val60;
-                for (int _i61 = 0; _i61 < _map58.size; ++_i61)
+                org.apache.thrift.protocol.TMap _map48 = iprot.readMapBegin();
+                struct._map_i64 = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map48.size);
+                java.lang.String _key49;
+                long _val50;
+                for (int _i51 = 0; _i51 < _map48.size; ++_i51)
                 {
-                  _key59 = iprot.readString();
-                  _val60 = iprot.readI64();
-                  struct._map_i64.put(_key59, _val60);
+                  _key49 = iprot.readString();
+                  _val50 = iprot.readI64();
+                  struct._map_i64.put(_key49, _val50);
                 }
                 iprot.readMapEnd();
               }
@@ -3351,18 +3292,18 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 28: // _MAP_DOUBLE
+          case 25: // _MAP_DOUBLE
             if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
               {
-                org.apache.thrift.protocol.TMap _map62 = iprot.readMapBegin();
-                struct._map_double = new java.util.HashMap<java.lang.String,java.lang.Double>(2*_map62.size);
-                java.lang.String _key63;
-                double _val64;
-                for (int _i65 = 0; _i65 < _map62.size; ++_i65)
+                org.apache.thrift.protocol.TMap _map52 = iprot.readMapBegin();
+                struct._map_double = new java.util.HashMap<java.lang.String,java.lang.Double>(2*_map52.size);
+                java.lang.String _key53;
+                double _val54;
+                for (int _i55 = 0; _i55 < _map52.size; ++_i55)
                 {
-                  _key63 = iprot.readString();
-                  _val64 = iprot.readDouble();
-                  struct._map_double.put(_key63, _val64);
+                  _key53 = iprot.readString();
+                  _val54 = iprot.readDouble();
+                  struct._map_double.put(_key53, _val54);
                 }
                 iprot.readMapEnd();
               }
@@ -3371,22 +3312,81 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 29: // _MAP_STRING
+          case 26: // _MAP_STRING
             if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
               {
-                org.apache.thrift.protocol.TMap _map66 = iprot.readMapBegin();
-                struct._map_string = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map66.size);
-                java.lang.String _key67;
-                java.lang.String _val68;
-                for (int _i69 = 0; _i69 < _map66.size; ++_i69)
+                org.apache.thrift.protocol.TMap _map56 = iprot.readMapBegin();
+                struct._map_string = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map56.size);
+                java.lang.String _key57;
+                java.lang.String _val58;
+                for (int _i59 = 0; _i59 < _map56.size; ++_i59)
                 {
-                  _key67 = iprot.readString();
-                  _val68 = iprot.readString();
-                  struct._map_string.put(_key67, _val68);
+                  _key57 = iprot.readString();
+                  _val58 = iprot.readString();
+                  struct._map_string.put(_key57, _val58);
                 }
                 iprot.readMapEnd();
               }
               struct.set_map_stringIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 27: // _LIST_MESSAGE
+            if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+              {
+                org.apache.thrift.protocol.TList _list60 = iprot.readListBegin();
+                struct._list_message = new java.util.ArrayList<ThriftMessage>(_list60.size);
+                ThriftMessage _elem61;
+                for (int _i62 = 0; _i62 < _list60.size; ++_i62)
+                {
+                  _elem61 = new ThriftMessage();
+                  _elem61.read(iprot);
+                  struct._list_message.add(_elem61);
+                }
+                iprot.readListEnd();
+              }
+              struct.set_list_messageIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 28: // _SET_MESSAGE
+            if (schemeField.type == org.apache.thrift.protocol.TType.SET) {
+              {
+                org.apache.thrift.protocol.TSet _set63 = iprot.readSetBegin();
+                struct._set_message = new java.util.HashSet<ThriftMessage>(2*_set63.size);
+                ThriftMessage _elem64;
+                for (int _i65 = 0; _i65 < _set63.size; ++_i65)
+                {
+                  _elem64 = new ThriftMessage();
+                  _elem64.read(iprot);
+                  struct._set_message.add(_elem64);
+                }
+                iprot.readSetEnd();
+              }
+              struct.set_set_messageIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 29: // _MAP_MESSAGE
+            if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
+              {
+                org.apache.thrift.protocol.TMap _map66 = iprot.readMapBegin();
+                struct._map_message = new java.util.HashMap<java.lang.String,ThriftMessage>(2*_map66.size);
+                java.lang.String _key67;
+                ThriftMessage _val68;
+                for (int _i69 = 0; _i69 < _map66.size; ++_i69)
+                {
+                  _key67 = iprot.readString();
+                  _val68 = new ThriftMessage();
+                  _val68.read(iprot);
+                  struct._map_message.put(_key67, _val68);
+                }
+                iprot.readMapEnd();
+              }
+              struct.set_map_messageIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -3456,57 +3456,14 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldEnd();
         }
       }
-      if (struct._list_message != null) {
-        if (struct.isSet_list_message()) {
-          oprot.writeFieldBegin(_LIST_MESSAGE_FIELD_DESC);
-          {
-            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct._list_message.size()));
-            for (ThriftMessage _iter70 : struct._list_message)
-            {
-              _iter70.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct._set_message != null) {
-        if (struct.isSet_set_message()) {
-          oprot.writeFieldBegin(_SET_MESSAGE_FIELD_DESC);
-          {
-            oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRUCT, struct._set_message.size()));
-            for (ThriftMessage _iter71 : struct._set_message)
-            {
-              _iter71.write(oprot);
-            }
-            oprot.writeSetEnd();
-          }
-          oprot.writeFieldEnd();
-        }
-      }
-      if (struct._map_message != null) {
-        if (struct.isSet_map_message()) {
-          oprot.writeFieldBegin(_MAP_MESSAGE_FIELD_DESC);
-          {
-            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRUCT, struct._map_message.size()));
-            for (java.util.Map.Entry<java.lang.String, ThriftMessage> _iter72 : struct._map_message.entrySet())
-            {
-              oprot.writeString(_iter72.getKey());
-              _iter72.getValue().write(oprot);
-            }
-            oprot.writeMapEnd();
-          }
-          oprot.writeFieldEnd();
-        }
-      }
       if (struct._list_bool != null) {
         if (struct.isSet_list_bool()) {
           oprot.writeFieldBegin(_LIST_BOOL_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.BOOL, struct._list_bool.size()));
-            for (boolean _iter73 : struct._list_bool)
+            for (boolean _iter70 : struct._list_bool)
             {
-              oprot.writeBool(_iter73);
+              oprot.writeBool(_iter70);
             }
             oprot.writeListEnd();
           }
@@ -3518,9 +3475,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_LIST_I16_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I16, struct._list_i16.size()));
-            for (short _iter74 : struct._list_i16)
+            for (short _iter71 : struct._list_i16)
             {
-              oprot.writeI16(_iter74);
+              oprot.writeI16(_iter71);
             }
             oprot.writeListEnd();
           }
@@ -3532,9 +3489,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_LIST_I32_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I32, struct._list_i32.size()));
-            for (int _iter75 : struct._list_i32)
+            for (int _iter72 : struct._list_i32)
             {
-              oprot.writeI32(_iter75);
+              oprot.writeI32(_iter72);
             }
             oprot.writeListEnd();
           }
@@ -3546,9 +3503,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_LIST_I64_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, struct._list_i64.size()));
-            for (long _iter76 : struct._list_i64)
+            for (long _iter73 : struct._list_i64)
             {
-              oprot.writeI64(_iter76);
+              oprot.writeI64(_iter73);
             }
             oprot.writeListEnd();
           }
@@ -3560,9 +3517,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_LIST_DOUBLE_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.DOUBLE, struct._list_double.size()));
-            for (double _iter77 : struct._list_double)
+            for (double _iter74 : struct._list_double)
             {
-              oprot.writeDouble(_iter77);
+              oprot.writeDouble(_iter74);
             }
             oprot.writeListEnd();
           }
@@ -3574,9 +3531,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_LIST_STRING_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct._list_string.size()));
-            for (java.lang.String _iter78 : struct._list_string)
+            for (java.lang.String _iter75 : struct._list_string)
             {
-              oprot.writeString(_iter78);
+              oprot.writeString(_iter75);
             }
             oprot.writeListEnd();
           }
@@ -3588,9 +3545,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_SET_BOOL_FIELD_DESC);
           {
             oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.BOOL, struct._set_bool.size()));
-            for (boolean _iter79 : struct._set_bool)
+            for (boolean _iter76 : struct._set_bool)
             {
-              oprot.writeBool(_iter79);
+              oprot.writeBool(_iter76);
             }
             oprot.writeSetEnd();
           }
@@ -3602,9 +3559,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_SET_I16_FIELD_DESC);
           {
             oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I16, struct._set_i16.size()));
-            for (short _iter80 : struct._set_i16)
+            for (short _iter77 : struct._set_i16)
             {
-              oprot.writeI16(_iter80);
+              oprot.writeI16(_iter77);
             }
             oprot.writeSetEnd();
           }
@@ -3616,9 +3573,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_SET_I32_FIELD_DESC);
           {
             oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I32, struct._set_i32.size()));
-            for (int _iter81 : struct._set_i32)
+            for (int _iter78 : struct._set_i32)
             {
-              oprot.writeI32(_iter81);
+              oprot.writeI32(_iter78);
             }
             oprot.writeSetEnd();
           }
@@ -3630,9 +3587,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_SET_I64_FIELD_DESC);
           {
             oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I64, struct._set_i64.size()));
-            for (long _iter82 : struct._set_i64)
+            for (long _iter79 : struct._set_i64)
             {
-              oprot.writeI64(_iter82);
+              oprot.writeI64(_iter79);
             }
             oprot.writeSetEnd();
           }
@@ -3644,9 +3601,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_SET_DOUBLE_FIELD_DESC);
           {
             oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.DOUBLE, struct._set_double.size()));
-            for (double _iter83 : struct._set_double)
+            for (double _iter80 : struct._set_double)
             {
-              oprot.writeDouble(_iter83);
+              oprot.writeDouble(_iter80);
             }
             oprot.writeSetEnd();
           }
@@ -3658,9 +3615,9 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_SET_STRING_FIELD_DESC);
           {
             oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRING, struct._set_string.size()));
-            for (java.lang.String _iter84 : struct._set_string)
+            for (java.lang.String _iter81 : struct._set_string)
             {
-              oprot.writeString(_iter84);
+              oprot.writeString(_iter81);
             }
             oprot.writeSetEnd();
           }
@@ -3672,10 +3629,10 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_MAP_BOOL_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.BOOL, struct._map_bool.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.Boolean> _iter85 : struct._map_bool.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Boolean> _iter82 : struct._map_bool.entrySet())
             {
-              oprot.writeString(_iter85.getKey());
-              oprot.writeBool(_iter85.getValue());
+              oprot.writeString(_iter82.getKey());
+              oprot.writeBool(_iter82.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -3687,10 +3644,10 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_MAP_I16_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I16, struct._map_i16.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.Short> _iter86 : struct._map_i16.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Short> _iter83 : struct._map_i16.entrySet())
             {
-              oprot.writeString(_iter86.getKey());
-              oprot.writeI16(_iter86.getValue());
+              oprot.writeString(_iter83.getKey());
+              oprot.writeI16(_iter83.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -3702,10 +3659,10 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_MAP_I32_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I32, struct._map_i32.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.Integer> _iter87 : struct._map_i32.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Integer> _iter84 : struct._map_i32.entrySet())
             {
-              oprot.writeString(_iter87.getKey());
-              oprot.writeI32(_iter87.getValue());
+              oprot.writeString(_iter84.getKey());
+              oprot.writeI32(_iter84.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -3717,10 +3674,10 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_MAP_I64_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I64, struct._map_i64.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter88 : struct._map_i64.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter85 : struct._map_i64.entrySet())
             {
-              oprot.writeString(_iter88.getKey());
-              oprot.writeI64(_iter88.getValue());
+              oprot.writeString(_iter85.getKey());
+              oprot.writeI64(_iter85.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -3732,10 +3689,10 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_MAP_DOUBLE_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.DOUBLE, struct._map_double.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.Double> _iter89 : struct._map_double.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Double> _iter86 : struct._map_double.entrySet())
             {
-              oprot.writeString(_iter89.getKey());
-              oprot.writeDouble(_iter89.getValue());
+              oprot.writeString(_iter86.getKey());
+              oprot.writeDouble(_iter86.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -3747,10 +3704,53 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
           oprot.writeFieldBegin(_MAP_STRING_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct._map_string.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter90 : struct._map_string.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter87 : struct._map_string.entrySet())
+            {
+              oprot.writeString(_iter87.getKey());
+              oprot.writeString(_iter87.getValue());
+            }
+            oprot.writeMapEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct._list_message != null) {
+        if (struct.isSet_list_message()) {
+          oprot.writeFieldBegin(_LIST_MESSAGE_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct._list_message.size()));
+            for (ThriftMessage _iter88 : struct._list_message)
+            {
+              _iter88.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct._set_message != null) {
+        if (struct.isSet_set_message()) {
+          oprot.writeFieldBegin(_SET_MESSAGE_FIELD_DESC);
+          {
+            oprot.writeSetBegin(new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRUCT, struct._set_message.size()));
+            for (ThriftMessage _iter89 : struct._set_message)
+            {
+              _iter89.write(oprot);
+            }
+            oprot.writeSetEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+      }
+      if (struct._map_message != null) {
+        if (struct.isSet_map_message()) {
+          oprot.writeFieldBegin(_MAP_MESSAGE_FIELD_DESC);
+          {
+            oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRUCT, struct._map_message.size()));
+            for (java.util.Map.Entry<java.lang.String, ThriftMessage> _iter90 : struct._map_message.entrySet())
             {
               oprot.writeString(_iter90.getKey());
-              oprot.writeString(_iter90.getValue());
+              _iter90.getValue().write(oprot);
             }
             oprot.writeMapEnd();
           }
@@ -3797,67 +3797,67 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       if (struct.isSet_payload()) {
         optionals.set(6);
       }
-      if (struct.isSet_list_message()) {
+      if (struct.isSet_list_bool()) {
         optionals.set(7);
       }
-      if (struct.isSet_set_message()) {
+      if (struct.isSet_list_i16()) {
         optionals.set(8);
       }
-      if (struct.isSet_map_message()) {
+      if (struct.isSet_list_i32()) {
         optionals.set(9);
       }
-      if (struct.isSet_list_bool()) {
+      if (struct.isSet_list_i64()) {
         optionals.set(10);
       }
-      if (struct.isSet_list_i16()) {
+      if (struct.isSet_list_double()) {
         optionals.set(11);
       }
-      if (struct.isSet_list_i32()) {
+      if (struct.isSet_list_string()) {
         optionals.set(12);
       }
-      if (struct.isSet_list_i64()) {
+      if (struct.isSet_set_bool()) {
         optionals.set(13);
       }
-      if (struct.isSet_list_double()) {
+      if (struct.isSet_set_i16()) {
         optionals.set(14);
       }
-      if (struct.isSet_list_string()) {
+      if (struct.isSet_set_i32()) {
         optionals.set(15);
       }
-      if (struct.isSet_set_bool()) {
+      if (struct.isSet_set_i64()) {
         optionals.set(16);
       }
-      if (struct.isSet_set_i16()) {
+      if (struct.isSet_set_double()) {
         optionals.set(17);
       }
-      if (struct.isSet_set_i32()) {
+      if (struct.isSet_set_string()) {
         optionals.set(18);
       }
-      if (struct.isSet_set_i64()) {
+      if (struct.isSet_map_bool()) {
         optionals.set(19);
       }
-      if (struct.isSet_set_double()) {
+      if (struct.isSet_map_i16()) {
         optionals.set(20);
       }
-      if (struct.isSet_set_string()) {
+      if (struct.isSet_map_i32()) {
         optionals.set(21);
       }
-      if (struct.isSet_map_bool()) {
+      if (struct.isSet_map_i64()) {
         optionals.set(22);
       }
-      if (struct.isSet_map_i16()) {
+      if (struct.isSet_map_double()) {
         optionals.set(23);
       }
-      if (struct.isSet_map_i32()) {
+      if (struct.isSet_map_string()) {
         optionals.set(24);
       }
-      if (struct.isSet_map_i64()) {
+      if (struct.isSet_list_message()) {
         optionals.set(25);
       }
-      if (struct.isSet_map_double()) {
+      if (struct.isSet_set_message()) {
         optionals.set(26);
       }
-      if (struct.isSet_map_string()) {
+      if (struct.isSet_map_message()) {
         optionals.set(27);
       }
       oprot.writeBitSet(optionals, 28);
@@ -3882,199 +3882,199 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       if (struct.isSet_payload()) {
         oprot.writeString(struct._payload);
       }
-      if (struct.isSet_list_message()) {
-        {
-          oprot.writeI32(struct._list_message.size());
-          for (ThriftMessage _iter91 : struct._list_message)
-          {
-            _iter91.write(oprot);
-          }
-        }
-      }
-      if (struct.isSet_set_message()) {
-        {
-          oprot.writeI32(struct._set_message.size());
-          for (ThriftMessage _iter92 : struct._set_message)
-          {
-            _iter92.write(oprot);
-          }
-        }
-      }
-      if (struct.isSet_map_message()) {
-        {
-          oprot.writeI32(struct._map_message.size());
-          for (java.util.Map.Entry<java.lang.String, ThriftMessage> _iter93 : struct._map_message.entrySet())
-          {
-            oprot.writeString(_iter93.getKey());
-            _iter93.getValue().write(oprot);
-          }
-        }
-      }
       if (struct.isSet_list_bool()) {
         {
           oprot.writeI32(struct._list_bool.size());
-          for (boolean _iter94 : struct._list_bool)
+          for (boolean _iter91 : struct._list_bool)
           {
-            oprot.writeBool(_iter94);
+            oprot.writeBool(_iter91);
           }
         }
       }
       if (struct.isSet_list_i16()) {
         {
           oprot.writeI32(struct._list_i16.size());
-          for (short _iter95 : struct._list_i16)
+          for (short _iter92 : struct._list_i16)
           {
-            oprot.writeI16(_iter95);
+            oprot.writeI16(_iter92);
           }
         }
       }
       if (struct.isSet_list_i32()) {
         {
           oprot.writeI32(struct._list_i32.size());
-          for (int _iter96 : struct._list_i32)
+          for (int _iter93 : struct._list_i32)
           {
-            oprot.writeI32(_iter96);
+            oprot.writeI32(_iter93);
           }
         }
       }
       if (struct.isSet_list_i64()) {
         {
           oprot.writeI32(struct._list_i64.size());
-          for (long _iter97 : struct._list_i64)
+          for (long _iter94 : struct._list_i64)
           {
-            oprot.writeI64(_iter97);
+            oprot.writeI64(_iter94);
           }
         }
       }
       if (struct.isSet_list_double()) {
         {
           oprot.writeI32(struct._list_double.size());
-          for (double _iter98 : struct._list_double)
+          for (double _iter95 : struct._list_double)
           {
-            oprot.writeDouble(_iter98);
+            oprot.writeDouble(_iter95);
           }
         }
       }
       if (struct.isSet_list_string()) {
         {
           oprot.writeI32(struct._list_string.size());
-          for (java.lang.String _iter99 : struct._list_string)
+          for (java.lang.String _iter96 : struct._list_string)
           {
-            oprot.writeString(_iter99);
+            oprot.writeString(_iter96);
           }
         }
       }
       if (struct.isSet_set_bool()) {
         {
           oprot.writeI32(struct._set_bool.size());
-          for (boolean _iter100 : struct._set_bool)
+          for (boolean _iter97 : struct._set_bool)
           {
-            oprot.writeBool(_iter100);
+            oprot.writeBool(_iter97);
           }
         }
       }
       if (struct.isSet_set_i16()) {
         {
           oprot.writeI32(struct._set_i16.size());
-          for (short _iter101 : struct._set_i16)
+          for (short _iter98 : struct._set_i16)
           {
-            oprot.writeI16(_iter101);
+            oprot.writeI16(_iter98);
           }
         }
       }
       if (struct.isSet_set_i32()) {
         {
           oprot.writeI32(struct._set_i32.size());
-          for (int _iter102 : struct._set_i32)
+          for (int _iter99 : struct._set_i32)
           {
-            oprot.writeI32(_iter102);
+            oprot.writeI32(_iter99);
           }
         }
       }
       if (struct.isSet_set_i64()) {
         {
           oprot.writeI32(struct._set_i64.size());
-          for (long _iter103 : struct._set_i64)
+          for (long _iter100 : struct._set_i64)
           {
-            oprot.writeI64(_iter103);
+            oprot.writeI64(_iter100);
           }
         }
       }
       if (struct.isSet_set_double()) {
         {
           oprot.writeI32(struct._set_double.size());
-          for (double _iter104 : struct._set_double)
+          for (double _iter101 : struct._set_double)
           {
-            oprot.writeDouble(_iter104);
+            oprot.writeDouble(_iter101);
           }
         }
       }
       if (struct.isSet_set_string()) {
         {
           oprot.writeI32(struct._set_string.size());
-          for (java.lang.String _iter105 : struct._set_string)
+          for (java.lang.String _iter102 : struct._set_string)
           {
-            oprot.writeString(_iter105);
+            oprot.writeString(_iter102);
           }
         }
       }
       if (struct.isSet_map_bool()) {
         {
           oprot.writeI32(struct._map_bool.size());
-          for (java.util.Map.Entry<java.lang.String, java.lang.Boolean> _iter106 : struct._map_bool.entrySet())
+          for (java.util.Map.Entry<java.lang.String, java.lang.Boolean> _iter103 : struct._map_bool.entrySet())
           {
-            oprot.writeString(_iter106.getKey());
-            oprot.writeBool(_iter106.getValue());
+            oprot.writeString(_iter103.getKey());
+            oprot.writeBool(_iter103.getValue());
           }
         }
       }
       if (struct.isSet_map_i16()) {
         {
           oprot.writeI32(struct._map_i16.size());
-          for (java.util.Map.Entry<java.lang.String, java.lang.Short> _iter107 : struct._map_i16.entrySet())
+          for (java.util.Map.Entry<java.lang.String, java.lang.Short> _iter104 : struct._map_i16.entrySet())
           {
-            oprot.writeString(_iter107.getKey());
-            oprot.writeI16(_iter107.getValue());
+            oprot.writeString(_iter104.getKey());
+            oprot.writeI16(_iter104.getValue());
           }
         }
       }
       if (struct.isSet_map_i32()) {
         {
           oprot.writeI32(struct._map_i32.size());
-          for (java.util.Map.Entry<java.lang.String, java.lang.Integer> _iter108 : struct._map_i32.entrySet())
+          for (java.util.Map.Entry<java.lang.String, java.lang.Integer> _iter105 : struct._map_i32.entrySet())
           {
-            oprot.writeString(_iter108.getKey());
-            oprot.writeI32(_iter108.getValue());
+            oprot.writeString(_iter105.getKey());
+            oprot.writeI32(_iter105.getValue());
           }
         }
       }
       if (struct.isSet_map_i64()) {
         {
           oprot.writeI32(struct._map_i64.size());
-          for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter109 : struct._map_i64.entrySet())
+          for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter106 : struct._map_i64.entrySet())
           {
-            oprot.writeString(_iter109.getKey());
-            oprot.writeI64(_iter109.getValue());
+            oprot.writeString(_iter106.getKey());
+            oprot.writeI64(_iter106.getValue());
           }
         }
       }
       if (struct.isSet_map_double()) {
         {
           oprot.writeI32(struct._map_double.size());
-          for (java.util.Map.Entry<java.lang.String, java.lang.Double> _iter110 : struct._map_double.entrySet())
+          for (java.util.Map.Entry<java.lang.String, java.lang.Double> _iter107 : struct._map_double.entrySet())
           {
-            oprot.writeString(_iter110.getKey());
-            oprot.writeDouble(_iter110.getValue());
+            oprot.writeString(_iter107.getKey());
+            oprot.writeDouble(_iter107.getValue());
           }
         }
       }
       if (struct.isSet_map_string()) {
         {
           oprot.writeI32(struct._map_string.size());
-          for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter111 : struct._map_string.entrySet())
+          for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter108 : struct._map_string.entrySet())
+          {
+            oprot.writeString(_iter108.getKey());
+            oprot.writeString(_iter108.getValue());
+          }
+        }
+      }
+      if (struct.isSet_list_message()) {
+        {
+          oprot.writeI32(struct._list_message.size());
+          for (ThriftMessage _iter109 : struct._list_message)
+          {
+            _iter109.write(oprot);
+          }
+        }
+      }
+      if (struct.isSet_set_message()) {
+        {
+          oprot.writeI32(struct._set_message.size());
+          for (ThriftMessage _iter110 : struct._set_message)
+          {
+            _iter110.write(oprot);
+          }
+        }
+      }
+      if (struct.isSet_map_message()) {
+        {
+          oprot.writeI32(struct._map_message.size());
+          for (java.util.Map.Entry<java.lang.String, ThriftMessage> _iter111 : struct._map_message.entrySet())
           {
             oprot.writeString(_iter111.getKey());
-            oprot.writeString(_iter111.getValue());
+            _iter111.getValue().write(oprot);
           }
         }
       }
@@ -4116,293 +4116,293 @@ public class ThriftMessage implements org.apache.thrift.TBase<ThriftMessage, Thr
       }
       if (incoming.get(7)) {
         {
-          org.apache.thrift.protocol.TList _list112 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-          struct._list_message = new java.util.ArrayList<ThriftMessage>(_list112.size);
-          ThriftMessage _elem113;
+          org.apache.thrift.protocol.TList _list112 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.BOOL, iprot.readI32());
+          struct._list_bool = new java.util.ArrayList<java.lang.Boolean>(_list112.size);
+          boolean _elem113;
           for (int _i114 = 0; _i114 < _list112.size; ++_i114)
           {
-            _elem113 = new ThriftMessage();
-            _elem113.read(iprot);
-            struct._list_message.add(_elem113);
-          }
-        }
-        struct.set_list_messageIsSet(true);
-      }
-      if (incoming.get(8)) {
-        {
-          org.apache.thrift.protocol.TSet _set115 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-          struct._set_message = new java.util.HashSet<ThriftMessage>(2*_set115.size);
-          ThriftMessage _elem116;
-          for (int _i117 = 0; _i117 < _set115.size; ++_i117)
-          {
-            _elem116 = new ThriftMessage();
-            _elem116.read(iprot);
-            struct._set_message.add(_elem116);
-          }
-        }
-        struct.set_set_messageIsSet(true);
-      }
-      if (incoming.get(9)) {
-        {
-          org.apache.thrift.protocol.TMap _map118 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-          struct._map_message = new java.util.HashMap<java.lang.String,ThriftMessage>(2*_map118.size);
-          java.lang.String _key119;
-          ThriftMessage _val120;
-          for (int _i121 = 0; _i121 < _map118.size; ++_i121)
-          {
-            _key119 = iprot.readString();
-            _val120 = new ThriftMessage();
-            _val120.read(iprot);
-            struct._map_message.put(_key119, _val120);
-          }
-        }
-        struct.set_map_messageIsSet(true);
-      }
-      if (incoming.get(10)) {
-        {
-          org.apache.thrift.protocol.TList _list122 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.BOOL, iprot.readI32());
-          struct._list_bool = new java.util.ArrayList<java.lang.Boolean>(_list122.size);
-          boolean _elem123;
-          for (int _i124 = 0; _i124 < _list122.size; ++_i124)
-          {
-            _elem123 = iprot.readBool();
-            struct._list_bool.add(_elem123);
+            _elem113 = iprot.readBool();
+            struct._list_bool.add(_elem113);
           }
         }
         struct.set_list_boolIsSet(true);
       }
-      if (incoming.get(11)) {
+      if (incoming.get(8)) {
         {
-          org.apache.thrift.protocol.TList _list125 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I16, iprot.readI32());
-          struct._list_i16 = new java.util.ArrayList<java.lang.Short>(_list125.size);
-          short _elem126;
-          for (int _i127 = 0; _i127 < _list125.size; ++_i127)
+          org.apache.thrift.protocol.TList _list115 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I16, iprot.readI32());
+          struct._list_i16 = new java.util.ArrayList<java.lang.Short>(_list115.size);
+          short _elem116;
+          for (int _i117 = 0; _i117 < _list115.size; ++_i117)
           {
-            _elem126 = iprot.readI16();
-            struct._list_i16.add(_elem126);
+            _elem116 = iprot.readI16();
+            struct._list_i16.add(_elem116);
           }
         }
         struct.set_list_i16IsSet(true);
       }
-      if (incoming.get(12)) {
+      if (incoming.get(9)) {
         {
-          org.apache.thrift.protocol.TList _list128 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I32, iprot.readI32());
-          struct._list_i32 = new java.util.ArrayList<java.lang.Integer>(_list128.size);
-          int _elem129;
-          for (int _i130 = 0; _i130 < _list128.size; ++_i130)
+          org.apache.thrift.protocol.TList _list118 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I32, iprot.readI32());
+          struct._list_i32 = new java.util.ArrayList<java.lang.Integer>(_list118.size);
+          int _elem119;
+          for (int _i120 = 0; _i120 < _list118.size; ++_i120)
           {
-            _elem129 = iprot.readI32();
-            struct._list_i32.add(_elem129);
+            _elem119 = iprot.readI32();
+            struct._list_i32.add(_elem119);
           }
         }
         struct.set_list_i32IsSet(true);
       }
-      if (incoming.get(13)) {
+      if (incoming.get(10)) {
         {
-          org.apache.thrift.protocol.TList _list131 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-          struct._list_i64 = new java.util.ArrayList<java.lang.Long>(_list131.size);
-          long _elem132;
-          for (int _i133 = 0; _i133 < _list131.size; ++_i133)
+          org.apache.thrift.protocol.TList _list121 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.I64, iprot.readI32());
+          struct._list_i64 = new java.util.ArrayList<java.lang.Long>(_list121.size);
+          long _elem122;
+          for (int _i123 = 0; _i123 < _list121.size; ++_i123)
           {
-            _elem132 = iprot.readI64();
-            struct._list_i64.add(_elem132);
+            _elem122 = iprot.readI64();
+            struct._list_i64.add(_elem122);
           }
         }
         struct.set_list_i64IsSet(true);
       }
-      if (incoming.get(14)) {
+      if (incoming.get(11)) {
         {
-          org.apache.thrift.protocol.TList _list134 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.DOUBLE, iprot.readI32());
-          struct._list_double = new java.util.ArrayList<java.lang.Double>(_list134.size);
-          double _elem135;
-          for (int _i136 = 0; _i136 < _list134.size; ++_i136)
+          org.apache.thrift.protocol.TList _list124 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.DOUBLE, iprot.readI32());
+          struct._list_double = new java.util.ArrayList<java.lang.Double>(_list124.size);
+          double _elem125;
+          for (int _i126 = 0; _i126 < _list124.size; ++_i126)
           {
-            _elem135 = iprot.readDouble();
-            struct._list_double.add(_elem135);
+            _elem125 = iprot.readDouble();
+            struct._list_double.add(_elem125);
           }
         }
         struct.set_list_doubleIsSet(true);
       }
-      if (incoming.get(15)) {
+      if (incoming.get(12)) {
         {
-          org.apache.thrift.protocol.TList _list137 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
-          struct._list_string = new java.util.ArrayList<java.lang.String>(_list137.size);
-          java.lang.String _elem138;
-          for (int _i139 = 0; _i139 < _list137.size; ++_i139)
+          org.apache.thrift.protocol.TList _list127 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+          struct._list_string = new java.util.ArrayList<java.lang.String>(_list127.size);
+          java.lang.String _elem128;
+          for (int _i129 = 0; _i129 < _list127.size; ++_i129)
           {
-            _elem138 = iprot.readString();
-            struct._list_string.add(_elem138);
+            _elem128 = iprot.readString();
+            struct._list_string.add(_elem128);
           }
         }
         struct.set_list_stringIsSet(true);
       }
-      if (incoming.get(16)) {
+      if (incoming.get(13)) {
         {
-          org.apache.thrift.protocol.TSet _set140 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.BOOL, iprot.readI32());
-          struct._set_bool = new java.util.HashSet<java.lang.Boolean>(2*_set140.size);
-          boolean _elem141;
-          for (int _i142 = 0; _i142 < _set140.size; ++_i142)
+          org.apache.thrift.protocol.TSet _set130 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.BOOL, iprot.readI32());
+          struct._set_bool = new java.util.HashSet<java.lang.Boolean>(2*_set130.size);
+          boolean _elem131;
+          for (int _i132 = 0; _i132 < _set130.size; ++_i132)
           {
-            _elem141 = iprot.readBool();
-            struct._set_bool.add(_elem141);
+            _elem131 = iprot.readBool();
+            struct._set_bool.add(_elem131);
           }
         }
         struct.set_set_boolIsSet(true);
       }
-      if (incoming.get(17)) {
+      if (incoming.get(14)) {
         {
-          org.apache.thrift.protocol.TSet _set143 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I16, iprot.readI32());
-          struct._set_i16 = new java.util.HashSet<java.lang.Short>(2*_set143.size);
-          short _elem144;
-          for (int _i145 = 0; _i145 < _set143.size; ++_i145)
+          org.apache.thrift.protocol.TSet _set133 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I16, iprot.readI32());
+          struct._set_i16 = new java.util.HashSet<java.lang.Short>(2*_set133.size);
+          short _elem134;
+          for (int _i135 = 0; _i135 < _set133.size; ++_i135)
           {
-            _elem144 = iprot.readI16();
-            struct._set_i16.add(_elem144);
+            _elem134 = iprot.readI16();
+            struct._set_i16.add(_elem134);
           }
         }
         struct.set_set_i16IsSet(true);
       }
-      if (incoming.get(18)) {
+      if (incoming.get(15)) {
         {
-          org.apache.thrift.protocol.TSet _set146 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I32, iprot.readI32());
-          struct._set_i32 = new java.util.HashSet<java.lang.Integer>(2*_set146.size);
-          int _elem147;
-          for (int _i148 = 0; _i148 < _set146.size; ++_i148)
+          org.apache.thrift.protocol.TSet _set136 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I32, iprot.readI32());
+          struct._set_i32 = new java.util.HashSet<java.lang.Integer>(2*_set136.size);
+          int _elem137;
+          for (int _i138 = 0; _i138 < _set136.size; ++_i138)
           {
-            _elem147 = iprot.readI32();
-            struct._set_i32.add(_elem147);
+            _elem137 = iprot.readI32();
+            struct._set_i32.add(_elem137);
           }
         }
         struct.set_set_i32IsSet(true);
       }
-      if (incoming.get(19)) {
+      if (incoming.get(16)) {
         {
-          org.apache.thrift.protocol.TSet _set149 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I64, iprot.readI32());
-          struct._set_i64 = new java.util.HashSet<java.lang.Long>(2*_set149.size);
-          long _elem150;
-          for (int _i151 = 0; _i151 < _set149.size; ++_i151)
+          org.apache.thrift.protocol.TSet _set139 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.I64, iprot.readI32());
+          struct._set_i64 = new java.util.HashSet<java.lang.Long>(2*_set139.size);
+          long _elem140;
+          for (int _i141 = 0; _i141 < _set139.size; ++_i141)
           {
-            _elem150 = iprot.readI64();
-            struct._set_i64.add(_elem150);
+            _elem140 = iprot.readI64();
+            struct._set_i64.add(_elem140);
           }
         }
         struct.set_set_i64IsSet(true);
       }
-      if (incoming.get(20)) {
+      if (incoming.get(17)) {
         {
-          org.apache.thrift.protocol.TSet _set152 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.DOUBLE, iprot.readI32());
-          struct._set_double = new java.util.HashSet<java.lang.Double>(2*_set152.size);
-          double _elem153;
-          for (int _i154 = 0; _i154 < _set152.size; ++_i154)
+          org.apache.thrift.protocol.TSet _set142 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.DOUBLE, iprot.readI32());
+          struct._set_double = new java.util.HashSet<java.lang.Double>(2*_set142.size);
+          double _elem143;
+          for (int _i144 = 0; _i144 < _set142.size; ++_i144)
           {
-            _elem153 = iprot.readDouble();
-            struct._set_double.add(_elem153);
+            _elem143 = iprot.readDouble();
+            struct._set_double.add(_elem143);
           }
         }
         struct.set_set_doubleIsSet(true);
       }
-      if (incoming.get(21)) {
+      if (incoming.get(18)) {
         {
-          org.apache.thrift.protocol.TSet _set155 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
-          struct._set_string = new java.util.HashSet<java.lang.String>(2*_set155.size);
-          java.lang.String _elem156;
-          for (int _i157 = 0; _i157 < _set155.size; ++_i157)
+          org.apache.thrift.protocol.TSet _set145 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+          struct._set_string = new java.util.HashSet<java.lang.String>(2*_set145.size);
+          java.lang.String _elem146;
+          for (int _i147 = 0; _i147 < _set145.size; ++_i147)
           {
-            _elem156 = iprot.readString();
-            struct._set_string.add(_elem156);
+            _elem146 = iprot.readString();
+            struct._set_string.add(_elem146);
           }
         }
         struct.set_set_stringIsSet(true);
       }
-      if (incoming.get(22)) {
+      if (incoming.get(19)) {
         {
-          org.apache.thrift.protocol.TMap _map158 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.BOOL, iprot.readI32());
-          struct._map_bool = new java.util.HashMap<java.lang.String,java.lang.Boolean>(2*_map158.size);
-          java.lang.String _key159;
-          boolean _val160;
-          for (int _i161 = 0; _i161 < _map158.size; ++_i161)
+          org.apache.thrift.protocol.TMap _map148 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.BOOL, iprot.readI32());
+          struct._map_bool = new java.util.HashMap<java.lang.String,java.lang.Boolean>(2*_map148.size);
+          java.lang.String _key149;
+          boolean _val150;
+          for (int _i151 = 0; _i151 < _map148.size; ++_i151)
           {
-            _key159 = iprot.readString();
-            _val160 = iprot.readBool();
-            struct._map_bool.put(_key159, _val160);
+            _key149 = iprot.readString();
+            _val150 = iprot.readBool();
+            struct._map_bool.put(_key149, _val150);
           }
         }
         struct.set_map_boolIsSet(true);
       }
-      if (incoming.get(23)) {
+      if (incoming.get(20)) {
         {
-          org.apache.thrift.protocol.TMap _map162 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I16, iprot.readI32());
-          struct._map_i16 = new java.util.HashMap<java.lang.String,java.lang.Short>(2*_map162.size);
-          java.lang.String _key163;
-          short _val164;
-          for (int _i165 = 0; _i165 < _map162.size; ++_i165)
+          org.apache.thrift.protocol.TMap _map152 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I16, iprot.readI32());
+          struct._map_i16 = new java.util.HashMap<java.lang.String,java.lang.Short>(2*_map152.size);
+          java.lang.String _key153;
+          short _val154;
+          for (int _i155 = 0; _i155 < _map152.size; ++_i155)
           {
-            _key163 = iprot.readString();
-            _val164 = iprot.readI16();
-            struct._map_i16.put(_key163, _val164);
+            _key153 = iprot.readString();
+            _val154 = iprot.readI16();
+            struct._map_i16.put(_key153, _val154);
           }
         }
         struct.set_map_i16IsSet(true);
       }
-      if (incoming.get(24)) {
+      if (incoming.get(21)) {
         {
-          org.apache.thrift.protocol.TMap _map166 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I32, iprot.readI32());
-          struct._map_i32 = new java.util.HashMap<java.lang.String,java.lang.Integer>(2*_map166.size);
-          java.lang.String _key167;
-          int _val168;
-          for (int _i169 = 0; _i169 < _map166.size; ++_i169)
+          org.apache.thrift.protocol.TMap _map156 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I32, iprot.readI32());
+          struct._map_i32 = new java.util.HashMap<java.lang.String,java.lang.Integer>(2*_map156.size);
+          java.lang.String _key157;
+          int _val158;
+          for (int _i159 = 0; _i159 < _map156.size; ++_i159)
           {
-            _key167 = iprot.readString();
-            _val168 = iprot.readI32();
-            struct._map_i32.put(_key167, _val168);
+            _key157 = iprot.readString();
+            _val158 = iprot.readI32();
+            struct._map_i32.put(_key157, _val158);
           }
         }
         struct.set_map_i32IsSet(true);
       }
-      if (incoming.get(25)) {
+      if (incoming.get(22)) {
         {
-          org.apache.thrift.protocol.TMap _map170 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I64, iprot.readI32());
-          struct._map_i64 = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map170.size);
-          java.lang.String _key171;
-          long _val172;
-          for (int _i173 = 0; _i173 < _map170.size; ++_i173)
+          org.apache.thrift.protocol.TMap _map160 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I64, iprot.readI32());
+          struct._map_i64 = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map160.size);
+          java.lang.String _key161;
+          long _val162;
+          for (int _i163 = 0; _i163 < _map160.size; ++_i163)
           {
-            _key171 = iprot.readString();
-            _val172 = iprot.readI64();
-            struct._map_i64.put(_key171, _val172);
+            _key161 = iprot.readString();
+            _val162 = iprot.readI64();
+            struct._map_i64.put(_key161, _val162);
           }
         }
         struct.set_map_i64IsSet(true);
       }
-      if (incoming.get(26)) {
+      if (incoming.get(23)) {
         {
-          org.apache.thrift.protocol.TMap _map174 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.DOUBLE, iprot.readI32());
-          struct._map_double = new java.util.HashMap<java.lang.String,java.lang.Double>(2*_map174.size);
-          java.lang.String _key175;
-          double _val176;
-          for (int _i177 = 0; _i177 < _map174.size; ++_i177)
+          org.apache.thrift.protocol.TMap _map164 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.DOUBLE, iprot.readI32());
+          struct._map_double = new java.util.HashMap<java.lang.String,java.lang.Double>(2*_map164.size);
+          java.lang.String _key165;
+          double _val166;
+          for (int _i167 = 0; _i167 < _map164.size; ++_i167)
           {
-            _key175 = iprot.readString();
-            _val176 = iprot.readDouble();
-            struct._map_double.put(_key175, _val176);
+            _key165 = iprot.readString();
+            _val166 = iprot.readDouble();
+            struct._map_double.put(_key165, _val166);
           }
         }
         struct.set_map_doubleIsSet(true);
       }
-      if (incoming.get(27)) {
+      if (incoming.get(24)) {
         {
-          org.apache.thrift.protocol.TMap _map178 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, iprot.readI32());
-          struct._map_string = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map178.size);
-          java.lang.String _key179;
-          java.lang.String _val180;
-          for (int _i181 = 0; _i181 < _map178.size; ++_i181)
+          org.apache.thrift.protocol.TMap _map168 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+          struct._map_string = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map168.size);
+          java.lang.String _key169;
+          java.lang.String _val170;
+          for (int _i171 = 0; _i171 < _map168.size; ++_i171)
           {
-            _key179 = iprot.readString();
-            _val180 = iprot.readString();
-            struct._map_string.put(_key179, _val180);
+            _key169 = iprot.readString();
+            _val170 = iprot.readString();
+            struct._map_string.put(_key169, _val170);
           }
         }
         struct.set_map_stringIsSet(true);
+      }
+      if (incoming.get(25)) {
+        {
+          org.apache.thrift.protocol.TList _list172 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+          struct._list_message = new java.util.ArrayList<ThriftMessage>(_list172.size);
+          ThriftMessage _elem173;
+          for (int _i174 = 0; _i174 < _list172.size; ++_i174)
+          {
+            _elem173 = new ThriftMessage();
+            _elem173.read(iprot);
+            struct._list_message.add(_elem173);
+          }
+        }
+        struct.set_list_messageIsSet(true);
+      }
+      if (incoming.get(26)) {
+        {
+          org.apache.thrift.protocol.TSet _set175 = new org.apache.thrift.protocol.TSet(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+          struct._set_message = new java.util.HashSet<ThriftMessage>(2*_set175.size);
+          ThriftMessage _elem176;
+          for (int _i177 = 0; _i177 < _set175.size; ++_i177)
+          {
+            _elem176 = new ThriftMessage();
+            _elem176.read(iprot);
+            struct._set_message.add(_elem176);
+          }
+        }
+        struct.set_set_messageIsSet(true);
+      }
+      if (incoming.get(27)) {
+        {
+          org.apache.thrift.protocol.TMap _map178 = new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
+          struct._map_message = new java.util.HashMap<java.lang.String,ThriftMessage>(2*_map178.size);
+          java.lang.String _key179;
+          ThriftMessage _val180;
+          for (int _i181 = 0; _i181 < _map178.size; ++_i181)
+          {
+            _key179 = iprot.readString();
+            _val180 = new ThriftMessage();
+            _val180.read(iprot);
+            struct._map_message.put(_key179, _val180);
+          }
+        }
+        struct.set_map_messageIsSet(true);
       }
     }
   }
