@@ -57,51 +57,50 @@ public class CommandLineRunnerJettyWebSocketServer implements CommandLineRunner 
 		 * EachMQToAllSession
 		 * send messages on each MQ to all websocket clients
 		 */
-		Executors.newSingleThreadExecutor().execute( () -> {
-			if(server == null) {
-				server = new JettyServer(
-						Integer.valueOf(jettyWebSocketServerProperties.getPort()));
-				server.setContextHandler(
-						jettyWebSocketServerProperties.getContextPath(),
-						JettyServer.SESSIONS);
-				server.addWebSocketListener(
-						jettyWebSocketServerProperties.getContextPath(),
-						jettyWebSocketServerProperties.getTopicId(),
-						jettyWebSocketServerProperties.getTopicPath(),
+		Executors.newSingleThreadExecutor().execute(()-> {
+            if (server == null) {
+                server = new JettyServer(
+                        Integer.valueOf(jettyWebSocketServerProperties.getPort()));
+                server.setContextHandler(
+                        jettyWebSocketServerProperties.getContextPath(),
+                        JettyServer.SESSIONS);
+                server.addWebSocketListener(
+                        jettyWebSocketServerProperties.getContextPath(),
+                        jettyWebSocketServerProperties.getTopicId(),
+                        jettyWebSocketServerProperties.getTopicPath(),
 //						EachMQToAllSessionsReadOnly.class,
 //						null,
-						JettyListener.class,
-						(listener, session) -> {
-							String id = listener.getId();
-							assert(id != null && !id.equals(""));
-							MessageQueueMap mqMap = MessageQueueMap.getInstance();
-							MessageQueue<Object> mq = (MessageQueue<Object>) mqMap.get(id);
-							assert(mq==null);
-							// add observer
-							MQToClient taskExecutor =
-									new MQToClient(
-											MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS,
-                        false);
+                        JettyListener.class,
+                        (listener, session) -> {
+                            String id = listener.getId();
+                            assert (id != null && !id.equals(""));
+                            MessageQueueMap mqMap = MessageQueueMap.getInstance();
+                            MessageQueue<Object> mq = (MessageQueue<Object>) mqMap.get(id);
+                            assert (mq == null);
+                            // add observer
+                            MQToClient taskExecutor =
+                                    new MQToClient(
+                                            MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS,
+                                            false);
 //											true);
-							taskExecutor.putProperty(
-									MQToClient.PROPERTY_ID,
-									id);
-							taskExecutor.putProperty(
-									MQToClient.PROPERTY_JETTYSERVER,
-									listener.getServer());
+                            taskExecutor.putProperty(
+                                    MQToClient.PROPERTY_ID,
+                                    id);
+                            taskExecutor.putProperty(
+                                    MQToClient.PROPERTY_JETTYSERVER,
+                                    listener.getServer());
 //							this.observer = taskExecutor.getObserver();
-							mq.addObserver(taskExecutor.getObserver());
-						},
-						null,
-						null,
-						null,
-						null
-						);
-			}
-
-			if(server.isStopped()) {
-				server.start();
-			}
+                            mq.addObserver(taskExecutor.getObserver());
+                        },
+                        null,
+                        null,
+                        null,
+                        null
+                );
+            }
+            if (server.isStopped()) {
+                server.start();
+            }
 		});
 
 		logger.info("Jetty WebSocket server is started...");

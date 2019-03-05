@@ -53,7 +53,6 @@ public class JettyServer {
     public JettyServer(int _port) {
         setPort(_port);
         createServer();
-//        contextHandlerMap = new ConcurrentHashMap<>();
         contextHandlerMap = new HashMap<>();
 
         ServletContextHandler handler;
@@ -71,8 +70,8 @@ public class JettyServer {
         return stopTimeout;
     }
 
-    public void setStopTimeout(int _stopTimeout) {
-        stopTimeout = _stopTimeout;
+    public void setStopTimeout(int stopTimeout) {
+        this.stopTimeout = stopTimeout;
     }
 
     public void createServer() {
@@ -131,32 +130,32 @@ public class JettyServer {
         return server.isFailed();
     }
 
-    public void setContextHandler(String _contextPath, int _option) {
+    public void setContextHandler(String contextPath, int option) {
         synchronized (syncHandler) {
             assert (server != null);
             ServletContextHandler contextHandler =
-                    new ServletContextHandler(_option);
-            contextHandler.setContextPath(_contextPath);
+                    new ServletContextHandler(option);
+            contextHandler.setContextPath(contextPath);
             server.setHandler(contextHandler);
             contextHandlerMap.clear();
-            contextHandlerMap.put(_contextPath, contextHandler);
+            contextHandlerMap.put(contextPath, contextHandler);
         }
     }
 
-    public void setContextHandler(ServletContextHandler _contextHandler) {
+    public void setContextHandler(ServletContextHandler contextHandler) {
         synchronized (syncHandler) {
             assert (server != null);
-            server.setHandler(_contextHandler);
+            server.setHandler(contextHandler);
             contextHandlerMap.clear();
-            contextHandlerMap.put(_contextHandler.getContextPath(), _contextHandler);
+            contextHandlerMap.put(contextHandler.getContextPath(), contextHandler);
         }
     }
 
-    public void addContextHandler(ServletContextHandler _contextHandler)
+    public void addContextHandler(ServletContextHandler contextHandler)
             throws Exception {
         synchronized (syncHandler) {
             assert (server != null);
-            assert (_contextHandler != null);
+            assert (contextHandler != null);
 
             if (!server.getState().equals("STOPPED")) {
                 logger.error("You can not add ContextHandler during server's running");
@@ -190,9 +189,9 @@ public class JettyServer {
             // If you want to multiple handlers,
             // you have to use difference contextPath
             for (Handler handler : handlerArray) {
-                ServletContextHandler contextHandler =
+                ServletContextHandler h =
                         (ServletContextHandler) handler;
-                if (contextHandlerMap.get(contextHandler.getContextPath()) != null) {
+                if (contextHandlerMap.get(h.getContextPath()) != null) {
                     // recover
                     contextHandlerMap.clear();
                     contextHandlerMap.putAll(backupMap);
@@ -205,12 +204,12 @@ public class JettyServer {
                     //                break;
                 }
                 contextHandlerMap.put(
-                        contextHandler.getContextPath(),
-                        contextHandler);
+                        h.getContextPath(),
+                        h);
                 handlers.add(handler);
             }
 
-            if (contextHandlerMap.get(_contextHandler.getContextPath()) != null) {
+            if (contextHandlerMap.get(contextHandler.getContextPath()) != null) {
                 // recover
                 contextHandlerMap.clear();
                 contextHandlerMap.putAll(backupMap);
@@ -221,7 +220,7 @@ public class JettyServer {
                         "You can not add the ServletContext " +
                                 "of which contextPath already exists");
             }
-            handlers.add(_contextHandler);
+            handlers.add(contextHandler);
 
             HandlerList handlerList =
                     new HandlerList(handlers.stream()
@@ -250,26 +249,26 @@ public class JettyServer {
      * bind WebsocketListener to ServletContextHandler
      * URL will be like the below
      * /_contextPath/_listenerPathSpec
-     * @param _contextPath
+     * @param contextPath
      * path of ServletContextHandler
-     * @param _listenerId
+     * @param listenerId
      * _listenerId is used to create ServletHolder
-     * @param _listenerClass
+     * @param listenerClass
      * Class of WebSocketListener
-     * @param _listenerPathSpec
+     * @param listenerPathSpec
      * path of WebSocketListener
      * @return
      */
     public boolean addWebSocketListener(
-            String _contextPath,
-            String _listenerId,
-            String _listenerPathSpec,
-            Class _listenerClass,
-            JettyListenerAction _listenerConnectAction,
-            JettyListenerAction _listenerCloseAction,
-            JettyListenerAction _listenerErrorAction,
-            JettyListenerAction _listenerBinaryAction,
-            JettyListenerAction _listenerTextAction) {
+            String contextPath,
+            String listenerId,
+            String listenerPathSpec,
+            Class listenerClass,
+            JettyListenerAction listenerConnectAction,
+            JettyListenerAction listenerCloseAction,
+            JettyListenerAction listenerErrorAction,
+            JettyListenerAction listenerBinaryAction,
+            JettyListenerAction listenerTextAction) {
         synchronized (syncHandler) {
             if (!server.getState().equals("STOPPED")) {
                 logger.error("You can not add ContextHandler during server's running");
@@ -277,30 +276,30 @@ public class JettyServer {
             }
 
             ServletContextHandler contextHandler =
-                    this.contextHandlerMap.get(_contextPath);
+                    this.contextHandlerMap.get(contextPath);
             if (contextHandler == null) {
                 logger.error("can not find the ServletContextHandler with "
-                        + _contextPath);
+                        + contextPath);
                 return false;
             }
             contextHandler.addServlet(
                     new ServletHolder(
-                            _listenerId,
+                            listenerId,
                             new JettyWebSocketServlet(
                                     this,
-                                    _listenerClass,
-                                    _listenerConnectAction,
-                                    _listenerCloseAction,
-                                    _listenerErrorAction,
-                                    _listenerBinaryAction,
-                                    _listenerTextAction)),
-                    _listenerPathSpec);
+                                    listenerClass,
+                                    listenerConnectAction,
+                                    listenerCloseAction,
+                                    listenerErrorAction,
+                                    listenerBinaryAction,
+                                    listenerTextAction)),
+                                    listenerPathSpec);
             return true;
         }
     }
 
-    public boolean addSession(Session _session, String _groupId, String _id) {
-        if(_session == null) {
+    public boolean addSession(Session session, String groupId, String id) {
+        if(session == null) {
             logger.error("The session you want to add is null");
             return false;
         }
@@ -308,20 +307,20 @@ public class JettyServer {
             if(sessionSet == null) {
                 sessionSet = new HashSet<>();
             }
-            assert(!sessionSet.contains(_session));
-            if (sessionSet.contains(_session)) {
+            assert(!sessionSet.contains(session));
+            if (sessionSet.contains(session)) {
                 assert (false);
                 logger.error("duplicated session");
                 return false;
             }
-            sessionSet.add(_session);
+            sessionSet.add(session);
 
             // JettyServer must handle client's request without "id"
-            if(_id != null) {
+            if(id != null) {
                 if (sessionMap == null) {
                     sessionMap = new HashMap<>();
                 }
-                Session sessionM = sessionMap.put(_id, _session);
+                Session sessionM = sessionMap.put(id, session);
                 if (sessionM != null) {
                     logger.error("Session insertion failed, check duplicated id");
                     return false;
@@ -330,16 +329,16 @@ public class JettyServer {
 
             // GroupId can be null, if a group is not defined
             // In this case, by the way, sessionGroupMap do not create(put) group.
-            if(_groupId != null) {
+            if(groupId != null) {
                 if (sessionGroupMap == null) {
                     sessionGroupMap = new HashMap<>();
                 }
-                Map<String, Session> group = sessionGroupMap.get(_groupId);
+                Map<String, Session> group = sessionGroupMap.get(groupId);
                 if (group == null) {
                     group = new HashMap<>();
-                    sessionGroupMap.put(_groupId, group);
+                    sessionGroupMap.put(groupId, group);
                 }
-                Session sessionG = group.put(_id, _session);
+                Session sessionG = group.put(id, session);
                 if (sessionG != null) {
                     logger.error("Session insertion failed, check duplicated groupId");
                     if (group.isEmpty()) {
@@ -352,22 +351,22 @@ public class JettyServer {
         }
     }
 
-    public boolean removeSession(Session _session, String _groupId, String _id) {
+    public boolean removeSession(Session session, String groupId, String id) {
         synchronized (syncSessions) {
-            boolean ret = sessionSet.remove(_session);
+            boolean ret = sessionSet.remove(session);
             if (!ret) {
                 logger.error("failed to remove session");
             }
 
             if(sessionMap != null) {
-                Session session = sessionMap.remove(_id);
-                assert (session != null);
+                Session s = sessionMap.remove(id);
+                assert (s != null);
             }
 
             if(sessionGroupMap != null) {
-                Map<String, Session> group = sessionGroupMap.get(_groupId);
+                Map<String, Session> group = sessionGroupMap.get(groupId);
                 if (group != null) {
-                    Session V = group.remove(_id);
+                    Session V = group.remove(id);
                     if (V == null) {
                         logger.error("Session removal failed");
                         throw new NullPointerException(
@@ -378,7 +377,6 @@ public class JettyServer {
                     }
                 }
             }
-
             return ret;
         }
     }
@@ -389,16 +387,16 @@ public class JettyServer {
         }
     }
 
-    public Map<String, Session> getSessionGroupMap(String _groupId) {
+    public Map<String, Session> getSessionGroupMap(String groupId) {
         synchronized (syncSessions) {
             if(sessionGroupMap == null) {
                 throw new NullPointerException("sessionGroupMap is null");
             }
-            return sessionGroupMap.get(_groupId);
+            return sessionGroupMap.get(groupId);
         }
     }
 
-    public void sendMessageToAllClients(Object _value) {
+    public void sendMessageToAllClients(Object value) {
         Set<Session> copiedSessionSet;
         synchronized (syncSessions) {
             if (sessionSet == null) {
@@ -409,7 +407,7 @@ public class JettyServer {
         }
         for (Session session : copiedSessionSet) {
             Future<Void> future =
-                    JettySessionCommon.sendMessage(session, _value);
+                    JettySessionCommon.sendMessage(session, value);
             try {
                 future.get();
             } catch (InterruptedException e) {
@@ -420,7 +418,7 @@ public class JettyServer {
         }
     }
 
-    public void sendMessageToClient(Object _value, String _id) {
+    public void sendMessageToClient(Object value, String id) {
         Map<String, Session> copiedSessionMap;
         synchronized (syncSessions) {
             if(sessionMap == null) {
@@ -429,13 +427,13 @@ public class JettyServer {
             }
             copiedSessionMap = new HashMap<>(sessionMap);
         }
-        Session session = copiedSessionMap.get(_id);
+        Session session = copiedSessionMap.get(id);
         if(session == null) {
             logger.error("session not found");
             throw new NullPointerException("session not found");
         }
         Future<Void> future =
-                JettySessionCommon.sendMessage(session, _value);
+                JettySessionCommon.sendMessage(session, value);
         try {
             future.get();
         } catch (InterruptedException e) {
@@ -445,7 +443,7 @@ public class JettyServer {
         }
     }
 
-    public void sendMessageToGroup(Object _value, String _groupId) {
+    public void sendMessageToGroup(Object value, String groupId) {
         Map<String, Map<String, Session>> copiedSessionGroup;
         synchronized (syncSessions) {
             if(sessionGroupMap == null) {
@@ -454,14 +452,14 @@ public class JettyServer {
             }
             copiedSessionGroup = new HashMap<>(sessionGroupMap);
         }
-        Map<String, Session> group = copiedSessionGroup.get(_groupId);
+        Map<String, Session> group = copiedSessionGroup.get(groupId);
         if(group == null) {
             logger.error("group not found");
             throw new NullPointerException("group not found");
         }
         for (Map.Entry<String, Session> entry : group.entrySet()) {
             Future<Void> future =
-                    JettySessionCommon.sendMessage(entry.getValue(), _value);
+                    JettySessionCommon.sendMessage(entry.getValue(), value);
             try {
                 future.get();
             } catch (InterruptedException e) {

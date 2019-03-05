@@ -34,34 +34,34 @@ public class JettyWebSocketServlet extends WebSocketServlet {
     protected JettyListenerAction listenerErrorAction = null;
 
     public JettyWebSocketServlet(
-            JettyServer _server,
-            Class _listenerClass,
-            JettyListenerAction _listenerConnectAction,
-            JettyListenerAction _listenerCloseAction,
-            JettyListenerAction _listenerErrorAction,
-            JettyListenerAction _listenerBinaryAction,
-            JettyListenerAction _listenerTextAction) {
-        server = _server;
-        listnerClass = _listenerClass;
+            JettyServer server,
+            Class listenerClass,
+            JettyListenerAction listenerConnectAction,
+            JettyListenerAction listenerCloseAction,
+            JettyListenerAction listenerErrorAction,
+            JettyListenerAction listenerBinaryAction,
+            JettyListenerAction listenerTextAction) {
+        this.server = server;
+        this.listnerClass = listenerClass;
 
-        if(_listenerConnectAction!=null) {
-            listenerConnectAction = _listenerConnectAction;
+        if(listenerConnectAction!=null) {
+            this.listenerConnectAction = listenerConnectAction;
         }
 
-        if(_listenerCloseAction!=null) {
-            listenerCloseAction = _listenerCloseAction;
+        if(listenerCloseAction!=null) {
+            this.listenerCloseAction = listenerCloseAction;
         }
 
-        if(_listenerErrorAction!=null) {
-            listenerErrorAction = _listenerErrorAction;
+        if(listenerErrorAction!=null) {
+            this.listenerErrorAction = listenerErrorAction;
         }
 
-        if(_listenerBinaryAction!=null) {
-            listenerBinaryAction = _listenerBinaryAction;
+        if(listenerBinaryAction!=null) {
+            this.listenerBinaryAction = listenerBinaryAction;
         }
 
-        if(_listenerTextAction!=null) {
-            listenerTextAction = _listenerTextAction;
+        if(listenerTextAction!=null) {
+            this.listenerTextAction = listenerTextAction;
         }
     }
 

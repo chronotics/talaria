@@ -1,7 +1,7 @@
 package org.chronotics.talaria.thrift;
 
-import org.chronotics.talaria.common.ChainExecutor;
-import org.chronotics.talaria.common.chainexecutor.NullReturnExecutor;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
 import org.chronotics.talaria.thrift.thriftservicehandler.ThriftServiceWithMessageQueue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,8 +33,8 @@ public class ThriftServerTest {
 
 	@Test
 	public void startStopThriftServer() {
-		ChainExecutor<Object> executorToWrite = new NullReturnExecutor<>();
-		ChainExecutor<Object> executorToRead = new NullReturnExecutor<>();
+		TaskExecutor<Object> executorToWrite = new NullReturnExecutor<>();
+		TaskExecutor<Object> executorToRead = new NullReturnExecutor<>();
 		ThriftServiceExecutor thriftServiceExecutor = new ThriftServiceExecutor(executorToRead,executorToWrite);
 		ThriftServiceHandler thriftServiceHandler = new ThriftServiceWithMessageQueue(thriftServiceExecutor);
 		ThriftServer thriftServer =

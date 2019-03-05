@@ -1,11 +1,15 @@
 package org.chronotics.talaria;
 
+import org.chronotics.talaria.common.MessageQueue;
+import org.chronotics.talaria.common.MessageQueueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author SG Lee
@@ -32,13 +36,13 @@ public class ScheduledUpdates<T> {
 //		if(properties == null) {
 //			return;
 //		}
-
 //		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 //		List<String> mqKeyList = properties.getMessageQueueKeyList();
 //		mqKeyList.forEach(mqKey -> {
 //			MessageQueue<?> mq = mqMap.get(mqKey);
-//		logger.info("The size of MQ with key {} is {}", mqKey, mq.size());
-//
+//			if(mq!=null) {
+//				logger.info("The size of MQ with key {} is {}", mqKey, mq.size());
+//			}
 //		});
     }
 }

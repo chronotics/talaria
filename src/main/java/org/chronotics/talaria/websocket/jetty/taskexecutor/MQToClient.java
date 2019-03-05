@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public class MQToClient<T> extends ChainExecutor {
+public class MQToClient<T> extends TaskExecutor {
 
     private static final Logger logger =
             LoggerFactory.getLogger(MQToClient.class);
@@ -31,18 +31,18 @@ public class MQToClient<T> extends ChainExecutor {
     public final static String PROPERTY_ID = "id";
 
     private class ObserverImp<T> implements Observer {
-        ChainExecutor<T> executor = null;
-        public void setExecutor(ChainExecutor _executor) {
-            executor = _executor;
+        TaskExecutor<T> executor = null;
+        public void setExecutor(TaskExecutor executor) {
+            this.executor = executor;
         }
         @Override
-        public void update(Observable _observable, Object _object) {
-            if(_object instanceof String &&
-                    _object.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
+        public void update(Observable observable, Object object) {
+            if(object instanceof String &&
+                    object.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
                 return;
             }
             try {
-                executor.execute((T)_object);
+                executor.execute((T)object);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -110,16 +110,16 @@ public class MQToClient<T> extends ChainExecutor {
         return null;
     }
 
-    private void sendMessage(JettyServer _server, Object _value, String _id) {
+    private void sendMessage(JettyServer server, Object value, String id) {
         switch(kindOfReceiver) {
             case EACH_CLIENT:
-                _server.sendMessageToClient(_value,_id);
+                server.sendMessageToClient(value,id);
                 break;
             case ALL_CLIENTS:
-                _server.sendMessageToAllClients(_value);
+                server.sendMessageToAllClients(value);
                 break;
             case GROUP:
-                _server.sendMessageToGroup(_value,_id);
+                server.sendMessageToGroup(value,id);
                 break;
             default:
                 logger.error("unsupported receiver type");

@@ -1,11 +1,8 @@
 package org.chronotics.talaria.thrift;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.chronotics.talaria.common.ChainExecutor;
+import org.chronotics.talaria.common.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +11,16 @@ public class ThriftServiceExecutor {
     private static final Logger logger =
             LoggerFactory.getLogger(ThriftServiceExecutor.class);
 
-    protected ChainExecutor<Object> executorToRead = null;
-    protected ChainExecutor<Object> executorToWrite = null;
+    protected TaskExecutor<Object> executorToRead = null;
+    protected TaskExecutor<Object> executorToWrite = null;
 
 //	protected ExecutorService executorService = null;
 //	protected Callable<Object> executorToRead = null;
 //	protected Callable<Object> executorToWrite = null;
 
     public ThriftServiceExecutor(
-            ChainExecutor<Object> _executorToRead,
-            ChainExecutor<Object> _executorToWrite) {
+            TaskExecutor<Object> _executorToRead,
+            TaskExecutor<Object> _executorToWrite) {
 //			Callable<Object> _executorToRead,
 //			Callable<Object> _executorToWrite) {
         this.setExecutorToRead(_executorToRead);
@@ -33,11 +30,11 @@ public class ThriftServiceExecutor {
 ////					Executors.newFixedThreadPool(2 + getChildrenExecutorCount()*2);
     }
 
-    protected void setExecutorToRead(ChainExecutor<Object> _executor) {
+    protected void setExecutorToRead(TaskExecutor<Object> _executor) {
         executorToRead = _executor;
     }
 
-    protected void setExecutorToWrite(ChainExecutor<Object> _executor) {
+    protected void setExecutorToWrite(TaskExecutor<Object> _executor) {
         executorToWrite = _executor;
     }
 

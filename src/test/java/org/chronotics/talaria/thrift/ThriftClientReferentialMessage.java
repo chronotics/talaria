@@ -3,9 +3,9 @@ package org.chronotics.talaria.thrift;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.ChainExecutor;
-import org.chronotics.talaria.common.chainexecutor.BypassExecutor;
-import org.chronotics.talaria.common.chainexecutor.NullReturnExecutor;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
+import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
 import org.chronotics.talaria.thrift.thriftservicehandler.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.gen.InvalidOperationException;
 import org.chronotics.talaria.thrift.gen.ThriftMessage;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftClientProperties.class})
@@ -51,10 +52,10 @@ public class ThriftClientReferentialMessage {
 		serverProperties.setIp("localhost");
 		serverProperties.setPort("9091");
 		serverProperties.setServerType("simple");
-		ChainExecutor<Object> executorToRead =
+		TaskExecutor<Object> executorToRead =
 				new BypassExecutor<>();
 //				new NullReturnExecutor<>();
-        ChainExecutor<Object> executorToWrite =
+        TaskExecutor<Object> executorToWrite =
                 new NullReturnExecutor<>();
         ThriftServiceExecutor thriftServiceExecutor =
                 new ThriftServiceExecutor(executorToRead, executorToWrite);
@@ -169,25 +170,23 @@ public class ThriftClientReferentialMessage {
 
 		MessageQueue mq = MessageQueueMap.getInstance().get(messageQueueId);
 
+		String strTime = String.valueOf(System.currentTimeMillis()/1000L);
 		for(int i=0; i<count; i++) {
-//			ThriftMessage childMsg = new ThriftMessage();
-//			childMsg.set_sender_id("child");
-//			childMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
-//			childMsg.set_list_i32(new ArrayList<>());
-//			childMsg.get_list_i32().add(i);
-//			childMsg.set_payload("payload");
-//			childMsg.set_list_double(new ArrayList<>());
-//			childMsg.set_list_message(new ArrayList<>());
-//			List<ThriftMessage> messageList = new ArrayList<>();
-//			messageList.add(childMsg);
+			ThriftMessage childMsg = new ThriftMessage();
+			childMsg.set_sender_id("child");
+			childMsg.set_timestamp(strTime);
+			childMsg.set_list_i32(new ArrayList<>());
+			childMsg.get_list_i32().add(i);
+			childMsg.set_payload("payload");
+			List<ThriftMessage> messageList = new ArrayList<>();
+			messageList.add(childMsg);
 			ThriftMessage rootMsg = new ThriftMessage();
 			rootMsg.set_sender_id(messageQueueId);
-//			rootMsg.set_timestamp(String.valueOf(System.currentTimeMillis()/1000L));
-//			rootMsg.set_list_double(new ArrayList<>());
-//			rootMsg.set_list_message(messageList);
-//			rootMsg._list_message = new ArrayList<ThriftMessage>();
-//			rootMsg._list_message.add(childMsg);
+			rootMsg.set_timestamp(strTime);
+			rootMsg.set_list_double(new ArrayList<>());
+			rootMsg.set_list_message(messageList);
 
+			int mqSize = mq.size();
 			String result = null;
 			long startingTime = System.currentTimeMillis();
 			try {
@@ -198,21 +197,30 @@ public class ThriftClientReferentialMessage {
 				e.printStackTrace();
 			}
 			assertEquals("null",result);
+			assertEquals(mqSize+1, mq.size());
 
 			long endingTime = System.currentTimeMillis();
 			long elapsedTime = endingTime - startingTime;
 			System.out.format("elapsed Time : %d \n", elapsedTime);
 
 			ThriftMessage message = null;
+			ThriftMessage childMessage = null;
 			int value = 0;
+			String id = "";
 			try {
 				message = clientService.readThriftMessage(messageQueueId);
-				ThriftMessage childMessage = message.get_list_message().get(0);
+				childMessage = message.get_list_message().get(0);
 				value = childMessage.get_list_i32().get(0);
+				id = message.get_sender_id();
 			} catch (TException e) {
 				e.printStackTrace();
 			}
+			assertNotNull(childMessage);
+			assertEquals(strTime, message.get_timestamp());
+			assertEquals(strTime, childMessage.get_timestamp());
+			assertEquals("payload",childMessage.get_payload());
 			assertEquals(i, value);
+			assertEquals(messageQueueId,id);
 		}
 
 		client.stop();

@@ -5,11 +5,8 @@ import javax.validation.constraints.NotNull;
 
 import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.websocket.jetty.JettyWebSocketServerProperties;
-import org.chronotics.talaria.websocket.jetty.JettyWebSocketServlet;
-import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;

@@ -22,8 +22,8 @@ public class EachMQToAllSessions extends JettyListener {
         return delayTimeToRemoveObserverAndMq;
     }
 
-    public void setDelayTimeToRemoveObserverAndMq(long _delay) {
-        this.delayTimeToRemoveObserverAndMq = _delay;
+    public void setDelayTimeToRemoveObserverAndMq(long delay) {
+        this.delayTimeToRemoveObserverAndMq = delay;
     }
 
     @Override

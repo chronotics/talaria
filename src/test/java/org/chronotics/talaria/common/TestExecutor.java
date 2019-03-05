@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import org.chronotics.talaria.common.ChainExecutor.PROPAGATION_RULE;
+import org.chronotics.talaria.common.TaskExecutor.PROPAGATION_RULE;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,9 +18,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TestExecutor {
-	private static ChainExecutor<List<Integer>> finalExecutor = null;
-	private static ChainExecutor<List<Integer>> increaseExecutor = null;
-	private static ChainExecutor<List<Integer>> decreaseExecutor = null;
+	private static TaskExecutor<List<Integer>> finalExecutor = null;
+	private static TaskExecutor<List<Integer>> increaseExecutor = null;
+	private static TaskExecutor<List<Integer>> decreaseExecutor = null;
 	
 	@Rule
     public ExpectedException exceptions = ExpectedException.none();
@@ -28,7 +28,7 @@ public class TestExecutor {
 	@BeforeClass
 	public static void setUp() {
 		finalExecutor = 
-				new ChainExecutor<List<Integer>>(
+				new TaskExecutor<List<Integer>>(
 						PROPAGATION_RULE.SIMULTANEOUSLY, 
 						null) {
 			@Override
@@ -49,7 +49,7 @@ public class TestExecutor {
 		};
 		
 		increaseExecutor = 
-				new ChainExecutor<List<Integer>>(
+				new TaskExecutor<List<Integer>>(
 						PROPAGATION_RULE.SIMULTANEOUSLY,
 						null) {
 					@Override
@@ -70,7 +70,7 @@ public class TestExecutor {
 		};		
 		
 		decreaseExecutor = 
-				new ChainExecutor<List<Integer>>(
+				new TaskExecutor<List<Integer>>(
 						PROPAGATION_RULE.SIMULTANEOUSLY,
 						null) {
 					@Override
@@ -192,9 +192,9 @@ public class TestExecutor {
 			v.add(i);
 		}
 		
-		ChainExecutor<List<Integer>> executor = null;
+		TaskExecutor<List<Integer>> executor = null;
 		try {
-			executor = new ChainExecutor.Builder<List<Integer>>()
+			executor = new TaskExecutor.Builder<List<Integer>>()
 			.setExecutor(increaseExecutor,PROPAGATION_RULE.STEP_BY_STEP_REGENERATED_ARG)
 			.addExecutor(decreaseExecutor)
 			.addExecutor(finalExecutor)
@@ -228,9 +228,9 @@ public class TestExecutor {
 			v.add(i);
 		}
 		
-		ChainExecutor<List<Integer>> executor = null;
+		TaskExecutor<List<Integer>> executor = null;
 		try {
-			executor = new ChainExecutor.Builder<List<Integer>>()
+			executor = new TaskExecutor.Builder<List<Integer>>()
 			.setExecutor(increaseExecutor,PROPAGATION_RULE.STEP_BY_STEP_REGENERATED_ARG)
 			.addExecutor(decreaseExecutor)
 			.addExecutor(decreaseExecutor)

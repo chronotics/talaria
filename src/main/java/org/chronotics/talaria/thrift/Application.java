@@ -1,8 +1,8 @@
 package org.chronotics.talaria.thrift;
 
-import org.chronotics.talaria.common.ChainExecutor;
-import org.chronotics.talaria.common.chainexecutor.BypassExecutor;
-import org.chronotics.talaria.common.chainexecutor.NullReturnExecutor;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.BypassExecutor;
+import org.chronotics.talaria.common.taskexecutor.NullReturnExecutor;
 import org.chronotics.talaria.thrift.thriftservicehandler.ThriftServiceWithMessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +33,9 @@ public class Application {
 		}
 
 		// start thrift server
-		ChainExecutor<Object> executorToRead =
+		TaskExecutor<Object> executorToRead =
 				new BypassExecutor<>();
-		ChainExecutor<Object> executorToWrite =
+		TaskExecutor<Object> executorToWrite =
 				new NullReturnExecutor<>();
 		ThriftServiceExecutor thriftServiceExecutor =
 				new ThriftServiceExecutor(executorToRead, executorToWrite);

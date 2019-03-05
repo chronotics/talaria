@@ -76,16 +76,17 @@ public class ThriftServiceWithMessageQueue extends ThriftServiceHandler {
 	public String writeThriftMessage(ThriftMessage _v) throws TException {
 		String id = _v.get_sender_id();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue<String> mq = (MessageQueue<String>) mqMap.get(id);
+		MessageQueue<Object> mq = (MessageQueue<Object>) mqMap.get(id);
 		if(mq == null) {
-			mq = new MessageQueue<String>(
-					String.class,
+			mq = new MessageQueue<>(
+					Object.class,
 					MessageQueue.default_maxQueueSize,
 					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 			mqMap.put(id, mq);
 		}
-		JSONObject jsonObject = ThriftMessageToJson.convert(_v);
-		mq.addLast(jsonObject.toString());
+//		JSONObject jsonObject = ThriftMessageToJson.convert(_v);
+//		mq.addLast(jsonObject.toString());
+		mq.addLast(_v);
 
 		return writeFunc(getExecutor(), _v);
 	}

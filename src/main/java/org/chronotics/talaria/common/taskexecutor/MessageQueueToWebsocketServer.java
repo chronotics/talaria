@@ -1,6 +1,6 @@
-package org.chronotics.talaria.common.chainexecutor;
+package org.chronotics.talaria.common.taskexecutor;
 
-import org.chronotics.talaria.common.ChainExecutor;
+import org.chronotics.talaria.common.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.MessagingException;
@@ -9,13 +9,13 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MessageQueueToWebsocketServer<T> extends ChainExecutor<T> {
+public class MessageQueueToWebsocketServer<T> extends TaskExecutor<T> {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueueToWebsocketServer.class);
 	
 	public MessageQueueToWebsocketServer(
-			ChainExecutor.PROPAGATION_RULE _propagationRule,
-			ChainExecutor<T> _nextExecutor) {
+			TaskExecutor.PROPAGATION_RULE _propagationRule,
+			TaskExecutor<T> _nextExecutor) {
 		super(_propagationRule, _nextExecutor);
 		// TODO Auto-generated constructor stub
 	}

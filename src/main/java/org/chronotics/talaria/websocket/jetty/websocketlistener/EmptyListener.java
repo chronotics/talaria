@@ -6,9 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EmptyListener extends JettyListener {
-//    private static final Logger logger =
-//        LoggerFactory.getLogger(EmptyListener.class);
-
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
     }

@@ -23,9 +23,6 @@ public class JettySessionCommon {
         } else if (_value instanceof byte[]) {
             future = _session.getRemote().sendBytesByFuture(ByteBuffer.wrap((byte[])_value));
         } else {
-//            byte []bytes = SerializationUtils.serialize((Serializable) _value);
-//            future = _session.getRemote().sendBytesByFuture(ByteBuffer.wrap(bytes));
-//            logger.info("Unsupported data type, but serialized");
             // convert Object to String because Web uses String type of data
             future = _session.getRemote().sendStringByFuture(_value.toString());
             logger.info("toString() is {}", _value.toString());
