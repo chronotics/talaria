@@ -14,46 +14,44 @@ public class JettyWebSocketCreator implements WebSocketCreator {
     private JettyServer server = null;
     private Class webSocketClass = null;
 
-    protected JettyListenerAction listenerCloseAction = null;
-    protected JettyListenerAction listenerConnectAction = null;
-    protected JettyListenerAction listenerBinaryAction = null;
-    protected JettyListenerAction listenerTextAction = null;
-    protected JettyListenerAction listenerErrorAction = null;
+    private JettyListenerActionProvider connectActionProvider = null;
+    private JettyListenerActionProvider closeActionProvider = null;
+    private JettyListenerActionProvider textActionProvider = null;
+    private JettyListenerActionProvider binaryActionProvider = null;
+    private JettyListenerActionProvider errorActionProvider = null;
 
     public JettyWebSocketCreator(
             JettyServer server,
             Class webSocketClass,
-            JettyListenerAction listenerConnectAction,
-            JettyListenerAction listenerCloseAction,
-            JettyListenerAction listenerErrorAction,
-            JettyListenerAction listenerBinaryAction,
-            JettyListenerAction listenerTextAction) {
+            JettyListenerActionProvider connectActionProvider,
+            JettyListenerActionProvider closeActionProvider,
+            JettyListenerActionProvider textActionProvider,
+            JettyListenerActionProvider binaryActionProvider,
+            JettyListenerActionProvider errorActionProvider) {
         this.server = server;
         this.webSocketClass = webSocketClass;
 
-        if(listenerConnectAction!=null) {
-            this.listenerConnectAction = listenerConnectAction;
+        if(connectActionProvider!=null) {
+            this.connectActionProvider = connectActionProvider;
         }
-
-        if(listenerCloseAction!=null) {
-            this.listenerCloseAction = listenerCloseAction;
+        if(closeActionProvider!=null) {
+            this.closeActionProvider = closeActionProvider;
         }
-
-        if(listenerErrorAction!=null) {
-            this.listenerErrorAction = listenerErrorAction;
+        if(textActionProvider!=null) {
+            this.textActionProvider = textActionProvider;
         }
-
-        if(listenerBinaryAction!=null) {
-            this.listenerBinaryAction = listenerBinaryAction;
+        if(binaryActionProvider!=null) {
+            this.binaryActionProvider = binaryActionProvider;
         }
-
-        if(listenerTextAction!=null) {
-            this.listenerTextAction = listenerTextAction;
+        if(errorActionProvider!=null) {
+            this.errorActionProvider = errorActionProvider;
         }
     }
 
     @Override
-    public Object createWebSocket(ServletUpgradeRequest servletUpgradeRequest, ServletUpgradeResponse servletUpgradeResponse) {
+    public Object createWebSocket(
+            ServletUpgradeRequest servletUpgradeRequest,
+            ServletUpgradeResponse servletUpgradeResponse) {
         if(webSocketClass == null) {
             logger.error("webSocketClass is not defined");
             return null;
@@ -66,24 +64,20 @@ public class JettyWebSocketCreator implements WebSocketCreator {
                     JettyListener listener = (JettyListener) object;
                     listener.setServer(server);
 
-                    if(listenerConnectAction!=null) {
-                        listener.setConnectAction(listenerConnectAction);
+                    if(connectActionProvider!=null) {
+                        listener.setConnectActionProvider(connectActionProvider);
                     }
-
-                    if(listenerCloseAction!=null) {
-                        listener.setCloseAction(listenerCloseAction);
+                    if(closeActionProvider!=null) {
+                        listener.setCloseActionProvider(closeActionProvider);
                     }
-
-                    if(listenerErrorAction!=null) {
-                        listener.setErrorAction(listenerErrorAction);
+                    if(textActionProvider!=null) {
+                        listener.setTextActionProvider(textActionProvider);
                     }
-
-                    if(listenerBinaryAction!=null) {
-                        listener.setBinaryAction(listenerBinaryAction);
+                    if(binaryActionProvider!=null) {
+                        listener.setBinaryActionProvider(binaryActionProvider);
                     }
-
-                    if(listenerTextAction!=null) {
-                        listener.setTextAction(listenerTextAction);
+                    if(errorActionProvider!=null) {
+                        listener.setErrorActionProvider(errorActionProvider);
                     }
                 }
             }

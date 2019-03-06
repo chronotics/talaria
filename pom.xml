@@ -207,8 +207,15 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <!--<version>27.0.1-jre</version>-->
-            <scope>compile</scope>
+            <version>27.0.1-jre</version>
+            <!--<scope>compile</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.reactivex/rxjava -->
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>1.3.8</version>
         </dependency>
 
     </dependencies>

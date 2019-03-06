@@ -1,12 +1,14 @@
 package org.chronotics.talaria.common;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import rx.Observable;
+//import rx.Observer;
+//import rx.Subscription;
+//import rx.subjects.PublishSubject;
 
 /**
  * @author SG Lee
@@ -16,8 +18,9 @@ import org.slf4j.LoggerFactory;
  * You can manage the size of queue and the action when the queue is overflowed
  */
 
-public class MessageQueue<E> extends Observable {
-	
+//public class MessageQueue<E> { //extends Observable {
+public class MessageQueue<E> extends TObservable {
+
 	public final static String REMOVAL_NOTIFICATION = "rm";
 	
 	private static final Logger logger = 
@@ -102,24 +105,25 @@ public class MessageQueue<E> extends Observable {
 			queueSize++;
 		}
         notifyObservers(_e);
+//		subject.onNext(_e);
 	}
 
 	/**
 	 *
-	 * @param _c
+	 * @param collection
 	 * @return
 	 */
-	public boolean addAll(Collection<? extends E> _c) {
+	public boolean addAll(Collection<? extends E> collection) {
 		if(stopAdd) {
 			return false;
 		}
-		if(queueSize() + _c.size() >= maxQueueSize) {
+		if(queueSize() + collection.size() >= maxQueueSize) {
 			switch (overflowStrategy) {
                 case NO_INSERTION:
                     logger.info("MessageQueue is overflowed, element is not inserted");
                     return false;
                 case DELETE_FIRST:
-                    for(E e:_c) {
+                    for(E e:collection) {
                         if(queueSize() >= maxQueueSize) {
                             logger.info("MessageQueue is overflowed, first element is removed");
                             this.removeFirst();
@@ -134,22 +138,27 @@ public class MessageQueue<E> extends Observable {
 					logger.error("undefined strategy type");
 					return false;
 			}
-		} 
-		
-		boolean rt = true;
-		synchronized (this) {
-			rt = queue.addAll(_c);
-			if(rt) {
-				queueSize += _c.size();
-			}
-		}
-
-		if(rt) {
-			notifyObservers(_c);
-			return true;
 		} else {
-			return false;
+			for(E e:collection) {
+				this.addLast(e);
+			}
+			return true;
 		}
+		
+//		boolean rt = true;
+//		synchronized (this) {
+//			rt = queue.addAll(collection);
+//			if(rt) {
+//				queueSize += collection.size();
+//			}
+//		}
+//		if(rt) {
+////			notifyObservers(_c);
+//			subject.onNext(_c);
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
 	
 	public boolean isEmpty() {
@@ -184,9 +193,10 @@ public class MessageQueue<E> extends Observable {
 			}
 		}
         if (ret) {
-           	if (removalNotification == true) {
-				notifyObservers(this.REMOVAL_NOTIFICATION);
-			}
+//           	if (removalNotification == true) {
+////				notifyObservers(this.REMOVAL_NOTIFICATION);
+//				subject.onNext(this.REMOVAL_NOTIFICATION);
+//			}
             return true;
         } else {
         	throw(new NoSuchElementException());
@@ -208,9 +218,10 @@ public class MessageQueue<E> extends Observable {
 			}
 		}
         if (ret != null) {
-			if (removalNotification == true) {
-				notifyObservers(this.REMOVAL_NOTIFICATION);
-			}
+//			if (removalNotification == true) {
+////				notifyObservers(this.REMOVAL_NOTIFICATION);
+//				subject.onNext(this.REMOVAL_NOTIFICATION);
+//			}
         }
         return ret;
 	}
@@ -228,9 +239,10 @@ public class MessageQueue<E> extends Observable {
         	queueSize--;
 		}
         if (ret != null) {
-			if (removalNotification == true) {
-				notifyObservers(this.REMOVAL_NOTIFICATION);
-			}
+//			if (removalNotification == true) {
+////				notifyObservers(this.REMOVAL_NOTIFICATION);
+//				subject.onNext(this.REMOVAL_NOTIFICATION);
+//			}
         }
         return ret;
 	}
@@ -259,4 +271,36 @@ public class MessageQueue<E> extends Observable {
 		queue.clear();
 		queueSize = 0;
 	}
+
+//	private PublishSubject<E> subject = PublishSubject.create();
+//	private Map<Observer, Subscription> subscriptionMap = new HashMap<>();
+//
+//	synchronized private Observable<E> getObservable() {
+//		return subject.asObservable();
+//	}
+//
+//	synchronized public boolean subscribe(Observer observer) {
+//		Subscription subscription =
+//				this.getObservable().subscribe(observer);
+//		if(subscriptionMap.put(observer, subscription) == null) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+//
+//	synchronized public boolean unSubscribe(Observer observer) {
+//		Subscription subscription =
+//				subscriptionMap.get(observer);
+//		if(subscription == null) {
+//			return false;
+//		}
+//		subscription.unsubscribe();
+//		subscriptionMap.remove(observer);
+//		return true;
+//	}
+//
+//	synchronized public int countSubscription() {
+//		return subscriptionMap.size();
+//	}
 }

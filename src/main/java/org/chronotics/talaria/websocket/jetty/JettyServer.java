@@ -264,11 +264,16 @@ public class JettyServer {
             String listenerId,
             String listenerPathSpec,
             Class listenerClass,
-            JettyListenerAction listenerConnectAction,
-            JettyListenerAction listenerCloseAction,
-            JettyListenerAction listenerErrorAction,
-            JettyListenerAction listenerBinaryAction,
-            JettyListenerAction listenerTextAction) {
+//            JettyListenerAction listenerConnectAction,
+//            JettyListenerAction listenerCloseAction,
+//            JettyListenerAction listenerErrorAction,
+//            JettyListenerAction listenerBinaryAction,
+//            JettyListenerAction listenerTextAction) {
+            JettyListenerActionProvider connectActions,
+            JettyListenerActionProvider closeActions,
+            JettyListenerActionProvider errorActions,
+            JettyListenerActionProvider binaryActions,
+            JettyListenerActionProvider textActions) {
         synchronized (syncHandler) {
             if (!server.getState().equals("STOPPED")) {
                 logger.error("You can not add ContextHandler during server's running");
@@ -288,11 +293,16 @@ public class JettyServer {
                             new JettyWebSocketServlet(
                                     this,
                                     listenerClass,
-                                    listenerConnectAction,
-                                    listenerCloseAction,
-                                    listenerErrorAction,
-                                    listenerBinaryAction,
-                                    listenerTextAction)),
+//                                    listenerConnectAction,
+//                                    listenerCloseAction,
+//                                    listenerErrorAction,
+//                                    listenerBinaryAction,
+//                                    listenerTextAction)),
+                                    connectActions,
+                                    closeActions,
+                                    textActions,
+                                    binaryActions,
+                                    errorActions)),
                                     listenerPathSpec);
             return true;
         }

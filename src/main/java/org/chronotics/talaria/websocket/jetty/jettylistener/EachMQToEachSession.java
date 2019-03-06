@@ -1,19 +1,21 @@
-package org.chronotics.talaria.websocket.jetty.websocketlistener;
+package org.chronotics.talaria.websocket.jetty.jettylistener;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.Observer;
+//import org.chronotics.talaria.common.Observer;
+import org.chronotics.talaria.common.TObserver;
 import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.chronotics.talaria.websocket.jetty.taskexecutor.MQToClient;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observer;
 
-public class EachMQToAllSessions extends JettyListener {
+public class EachMQToEachSession extends JettyListener {
     private static final Logger logger =
-        LoggerFactory.getLogger(EachMQToAllSessions.class);
+        LoggerFactory.getLogger(EachMQToEachSession.class);
 
-    private Observer observer = null;
+//    private Observer observer = null;
 
     public long delayTimeToRemoveObserverAndMq = 1000;
     public static long delayForIteration = 100;
@@ -22,16 +24,20 @@ public class EachMQToAllSessions extends JettyListener {
         return delayTimeToRemoveObserverAndMq;
     }
 
-    public void setDelayTimeToRemoveObserverAndMq(long delay) {
-        this.delayTimeToRemoveObserverAndMq = delay;
+    public void setDelayTimeToRemoveObserverAndMq(long _delay) {
+        this.delayTimeToRemoveObserverAndMq = _delay;
     }
 
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
+//        logger.info(getClass().getName() +
+//                " received a message of {} {} {} ", bytes, i, i1);
     }
 
     @Override
     public void onWebSocketText(String s) {
+//        logger.info(getClass().getName() +
+//                " received a message of {}", s);
     }
 
     @Override
@@ -65,7 +71,8 @@ public class EachMQToAllSessions extends JettyListener {
             // clear MQ by force
             mq.clear();
             // remove observer
-            mq.removeObserver(this.observer);
+            mq.removeObserver(this.getObserver());
+//            mq.unSubscribe(this.getObserver());
             // remove MessageQueue from QueMap
             mqMap.remove(id);
         }
@@ -77,8 +84,6 @@ public class EachMQToAllSessions extends JettyListener {
     public void onWebSocketConnect(Session session) {
         super.onWebSocketConnect(session);
 
-        // id is dynamic and it depends on a parameter of API
-        // http://url/?id=***
         String id = getId();
         assert(id != null && !id.equals(""));
 
@@ -97,16 +102,20 @@ public class EachMQToAllSessions extends JettyListener {
 
         // observer must be unique
         assert(mq.countObservers()==0);
+//        assert(mq.countSubscription() == 0);
 
         // add observer
         MQToClient taskExecutor =
                 new MQToClient(
-                        MQToClient.KIND_OF_RECIEVER.ALL_CLIENTS,
+                        MQToClient.KIND_OF_RECIEVER.EACH_CLIENT,
                         true);
         taskExecutor.putProperty(MQToClient.PROPERTY_ID, id);
         taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
-        this.observer = taskExecutor.getObserver();
-        mq.addObserver(this.observer);
+//        Observer observer = taskExecutor.getObserver();
+        TObserver observer = taskExecutor.getObserver();
+        this.setObserver(observer);
+        mq.addObserver(observer);
+//        mq.subscribe(observer);
 
         logger.info(getClass().getName()+"::onWebSocketConnect");
     }

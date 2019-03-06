@@ -2,8 +2,8 @@ package org.chronotics.talaria.websocket;
 
 import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
 import org.chronotics.talaria.websocket.jetty.JettyWebSocketServlet;
-import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
+import org.chronotics.talaria.websocket.jetty.clienthandler.ClientHandlerExample;
+import org.chronotics.talaria.websocket.jetty.jettylistener.EmptyListener;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

@@ -2,9 +2,9 @@ package org.chronotics.talaria.websocket;
 
 import org.chronotics.talaria.websocket.jetty.JettyClient;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.websocket.ClientHandlerExample;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EachMQToAllSessions;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
+import org.chronotics.talaria.websocket.jetty.clienthandler.ClientHandlerExample;
+import org.chronotics.talaria.websocket.jetty.jettylistener.EachMQToAllSessions;
+import org.chronotics.talaria.websocket.jetty.jettylistener.EmptyListener;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

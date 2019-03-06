@@ -1,9 +1,7 @@
-package org.chronotics.talaria.websocket.jetty.websocketlistener;
+package org.chronotics.talaria.websocket.jetty.jettylistener;
 
 import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.eclipse.jetty.websocket.api.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EmptyListener extends JettyListener {
     @Override

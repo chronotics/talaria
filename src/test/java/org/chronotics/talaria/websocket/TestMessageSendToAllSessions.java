@@ -2,7 +2,7 @@ package org.chronotics.talaria.websocket;
 
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.GroupMQToSessionGroup;
+import org.chronotics.talaria.websocket.jetty.jettylistener.GroupMQToSessionGroup;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package org.chronotics.talaria.websocket;
 
 import org.chronotics.talaria.websocket.jetty.JettyServer;
-import org.chronotics.talaria.websocket.jetty.websocketlistener.EmptyListener;
+import org.chronotics.talaria.websocket.jetty.jettylistener.EmptyListener;
 import org.chronotics.talaria.websocket.jsr356.Jsr356ClientExample;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

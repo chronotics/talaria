@@ -1,10 +1,13 @@
 package org.chronotics.talaria.websocket.jetty;
 
 import com.google.common.primitives.Ints;
+import org.chronotics.talaria.common.TObserver;
 import org.chronotics.talaria.common.TaskExecutor;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketListener;
+//import rx.Observer;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -16,24 +19,42 @@ import java.util.List;
  * Written by SGlee
  */
 
-public class JettyListener implements WebSocketListener {
+public abstract class JettyListener implements WebSocketListener {
 
     public static String KEY_ID = "id";
     public static String KEY_GROUPID = "groupId";
 
-    protected TaskExecutor<String> stringExecutor = null;
-    protected TaskExecutor<byte []> bytesExecutor = null;
+//    private Observer observer = null;
+    private TObserver observer = null;
 
-    protected JettyListenerAction closeAction = null;
-    protected JettyListenerAction connectAction = null;
-    protected JettyListenerAction binaryAction = null;
-    protected JettyListenerAction textAction = null;
-    protected JettyListenerAction errorAction = null;
+//    protected TaskExecutor<String> stringExecutor = null;
+//    protected TaskExecutor<byte []> bytesExecutor = null;
+
+    private JettyListenerActionProvider connectActionProvider = null;
+    private JettyListenerActionProvider closeActionProvider = null;
+    private JettyListenerActionProvider textActionProvider = null;
+    private JettyListenerActionProvider binaryActionProvider = null;
+    private JettyListenerActionProvider errorActionProvider = null;
 
     protected JettyServer server = null;
     protected Session session = null;
     private String id = null;
     private String groupId = null;
+
+    @Nullable
+//    public Observer getObserver() {
+//        return observer;
+//    }
+    public TObserver getObserver() {
+        return observer;
+    }
+
+//    public void setObserver(Observer observer) {
+//        this.observer = observer;
+//    }
+    public void setObserver(TObserver observer) {
+        this.observer = observer;
+    }
 
     public JettyServer getServer() {
         return server;
@@ -88,8 +109,10 @@ public class JettyListener implements WebSocketListener {
             }
         }
 
-        if(connectAction!=null) {
-            connectAction.execute(this, session);
+        if(connectActionProvider!=null) {
+            connectActionProvider.executeActions(
+                    this,
+                    session);
         }
     }
 
@@ -108,22 +131,27 @@ public class JettyListener implements WebSocketListener {
         }
         this.session = null;
 
-        if(closeAction!=null) {
-            closeAction.execute(this, session, String.valueOf(i));
+        if(closeActionProvider!=null) {
+            closeActionProvider.executeActions(
+                    this,
+                    session,
+                    String.valueOf(i));
         }
     }
 
     @Override
     public void onWebSocketError(Throwable var1) {
-        if(errorAction!=null) {
-            errorAction.execute(this, var1);
+        if(errorActionProvider!=null) {
+            errorActionProvider.executeActions(
+                    this,
+                    var1);
         }
     }
 
     @Override
     public void onWebSocketBinary(byte[] bytes, int i, int i1) {
-        if(binaryAction!=null) {
-            binaryAction.execute(
+        if(binaryActionProvider!=null) {
+            binaryActionProvider.executeActions(
                     this,
                     bytes,
                     Ints.toByteArray(i),
@@ -133,65 +161,67 @@ public class JettyListener implements WebSocketListener {
 
     @Override
     public void onWebSocketText(String s) {
-        if(textAction!=null) {
-            textAction.execute(this, s);
+        if(textActionProvider!=null) {
+            textActionProvider.executeActions(
+                    this,
+                    s);
         }
     }
 
-    protected void setStringExecutor(TaskExecutor<String> executor) {
-        stringExecutor = executor;
+//    protected void setStringExecutor(TaskExecutor<String> executor) {
+//        stringExecutor = executor;
+//    }
+//
+//    protected TaskExecutor<String> getStringExecutor() {
+//        return stringExecutor;
+//    }
+//
+//    protected void setBytesExecutor(TaskExecutor<byte []> executor) {
+//        bytesExecutor = executor;
+//    }
+//
+//    protected TaskExecutor<byte []> getBytesExecutor() {
+//        return bytesExecutor;
+//    }
+
+    public JettyListenerActionProvider getConnectActionProvider() {
+        return connectActionProvider;
     }
 
-    protected TaskExecutor<String> getStringExecutor() {
-        return stringExecutor;
+    public void setConnectActionProvider(JettyListenerActionProvider connectActionProvider) {
+        this.connectActionProvider = connectActionProvider;
     }
 
-    protected void setBytesExecutor(TaskExecutor<byte []> executor) {
-        bytesExecutor = executor;
+    public JettyListenerActionProvider getCloseActionProvider() {
+        return closeActionProvider;
     }
 
-    protected TaskExecutor<byte []> getBytesExecutor() {
-        return bytesExecutor;
+    public void setCloseActionProvider(JettyListenerActionProvider closeActionProvider) {
+        this.closeActionProvider = closeActionProvider;
     }
 
-    public JettyListenerAction getCloseAction() {
-        return closeAction;
+    public JettyListenerActionProvider getTextActionProvider() {
+        return textActionProvider;
     }
 
-    public void setCloseAction(JettyListenerAction closeAction) {
-        this.closeAction = closeAction;
+    public void setTextActionProvider(JettyListenerActionProvider textActionProvider) {
+        this.textActionProvider = textActionProvider;
     }
 
-    public JettyListenerAction getConnectAction() {
-        return connectAction;
+    public JettyListenerActionProvider getBinaryActionProvider() {
+        return binaryActionProvider;
     }
 
-    public void setConnectAction(JettyListenerAction connectAction) {
-        this.connectAction = connectAction;
+    public void setBinaryActionProvider(JettyListenerActionProvider binaryActionProvider) {
+        this.binaryActionProvider = binaryActionProvider;
     }
 
-    public JettyListenerAction getBinaryAction() {
-        return binaryAction;
+    public JettyListenerActionProvider getErrorActionProvider() {
+        return errorActionProvider;
     }
 
-    public void setBinaryAction(JettyListenerAction binaryAction) {
-        this.binaryAction = binaryAction;
-    }
-
-    public JettyListenerAction getTextAction() {
-        return textAction;
-    }
-
-    public void setTextAction(JettyListenerAction textAction) {
-        this.textAction = textAction;
-    }
-
-    public JettyListenerAction getErrorAction() {
-        return errorAction;
-    }
-
-    public void setErrorAction(JettyListenerAction errorAction) {
-        this.errorAction = errorAction;
+    public void setErrorActionProvider(JettyListenerActionProvider errorActionProvider) {
+        this.errorActionProvider = errorActionProvider;
     }
 
 }

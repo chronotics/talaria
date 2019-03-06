@@ -25,7 +25,7 @@ public class JettySessionCommon {
         } else {
             // convert Object to String because Web uses String type of data
             future = _session.getRemote().sendStringByFuture(_value.toString());
-            logger.info("toString() is {}", _value.toString());
+//            logger.info("toString() is {}", _value.toString());
         }
 
         return future;

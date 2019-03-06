@@ -7,20 +7,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This Observable class is thread safe
+ * This Observable_ class is thread safe
+ * RxJava is tried for substitution of this class,
+ * but I couldn't find the way to deal with multi-thread test
  * Written by SGLee
  */
-public abstract class Observable {
+public abstract class TObservable<T> {
 
     private static final Logger logger =
-            LoggerFactory.getLogger(Observable.class);
+            LoggerFactory.getLogger(TObservable.class);
 
     private Object syncObj = new Object();
-    protected Set<Observer> observers = null;
+    protected Set<TObserver> observers = null;
 
-    public void addObserver(Observer _observer) {
-        assert(_observer!=null);
-        if(_observer == null) {
+    public void addObserver(TObserver observer) {
+        assert(observer!=null);
+        if(observer == null) {
             logger.error("The observer you want to add is null");
             return;
         }
@@ -28,13 +30,13 @@ public abstract class Observable {
             if(observers == null) {
                 observers = new HashSet<>(1);
             }
-            observers.add(_observer);
+            observers.add(observer);
         }
     }
 
-    public void removeObserver(Observer _observer) {
-        assert(_observer!=null);
-        if(_observer == null) {
+    public void removeObserver(TObserver observer) {
+        assert(observer!=null);
+        if(observer == null) {
             logger.error("The observer you want to remove is null");
             return;
         }
@@ -43,7 +45,7 @@ public abstract class Observable {
                 logger.debug("There are no observers to remove");
                 return;
             }
-            observers.remove(_observer);
+            observers.remove(observer);
         }
     }
 
@@ -57,8 +59,8 @@ public abstract class Observable {
         }
     }
 
-    public void notifyObservers(Object _object) {
-        Set<Observer> copiedObservers;
+    public void notifyObservers(T object) {
+        Set<TObserver> copiedObservers;
         synchronized (syncObj) {
             if(observers == null) {
 //                logger.debug("There are no observers");
@@ -66,8 +68,8 @@ public abstract class Observable {
             }
             copiedObservers = new HashSet<>(observers);
         }
-        for(Observer observer: copiedObservers) {
-            observer.update(this, _object);
+        for(TObserver observer: copiedObservers) {
+            observer.update(this, object);
         }
     }
 

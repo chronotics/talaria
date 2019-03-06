@@ -1,4 +1,4 @@
-package org.chronotics.talaria.websocket.jetty.websocket;
+package org.chronotics.talaria.websocket.jetty.clienthandler;
 
 import org.chronotics.talaria.websocket.jetty.AbstractClientHandler;
 import org.eclipse.jetty.websocket.api.Session;

@@ -1,13 +1,15 @@
-package org.chronotics.talaria.websocket.jetty.websocketlistener;
+package org.chronotics.talaria.websocket.jetty.jettylistener;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.Observer;
+//import org.chronotics.talaria.common.Observer;
+import org.chronotics.talaria.common.TObserver;
 import org.chronotics.talaria.websocket.jetty.JettyListener;
 import org.chronotics.talaria.websocket.jetty.taskexecutor.MQToClient;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observer;
 
 import java.util.Arrays;
 
@@ -15,7 +17,7 @@ public class SessionToSessionGroupThroughMQ extends JettyListener {
     private static final Logger logger =
             LoggerFactory.getLogger(SessionToSessionGroupThroughMQ.class);
 
-    private Observer observer = null;
+//    private Observer observer = null;
 
     public long delayTimeToRemoveObserverAndMq = 1000;
     public static long delayForIteration = 100;
@@ -83,7 +85,8 @@ public class SessionToSessionGroupThroughMQ extends JettyListener {
             // clear MQ by force
             mq.clear();
             // remove observer
-            mq.removeObserver(this.observer);
+            mq.removeObserver(this.getObserver());
+//            mq.unSubscribe(this.getObserver());
             // remove MessageQueue from QueMap
             mqMap.remove(id);
         }
@@ -118,6 +121,7 @@ public class SessionToSessionGroupThroughMQ extends JettyListener {
         // observer can be added by the other member of a group
         // The below code is for the first time insertion
         if(mq.countObservers() == 0) {
+//        if(mq.countSubscription() == 0) {
             // add observer
             MQToClient taskExecutor =
                     new MQToClient(
@@ -125,8 +129,11 @@ public class SessionToSessionGroupThroughMQ extends JettyListener {
                             true);
             taskExecutor.putProperty(MQToClient.PROPERTY_ID, id);
             taskExecutor.putProperty(MQToClient.PROPERTY_JETTYSERVER, getServer());
-            this.observer = taskExecutor.getObserver();
-            mq.addObserver(this.observer);
+//            Observer observer = taskExecutor.getObserver();
+            TObserver observer = taskExecutor.getObserver();
+            this.setObserver(observer);
+            mq.addObserver(observer);
+//            mq.subscribe(observer);
         }
 
         logger.info(getClass().getName()+"::onWebSocketConnect");

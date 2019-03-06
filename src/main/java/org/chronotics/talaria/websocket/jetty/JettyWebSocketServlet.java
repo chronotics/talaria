@@ -27,41 +27,37 @@ public class JettyWebSocketServlet extends WebSocketServlet {
     private Class listnerClass = null;
     private JettyServer server = null;
 
-    protected JettyListenerAction listenerCloseAction = null;
-    protected JettyListenerAction listenerConnectAction = null;
-    protected JettyListenerAction listenerBinaryAction = null;
-    protected JettyListenerAction listenerTextAction = null;
-    protected JettyListenerAction listenerErrorAction = null;
+    private JettyListenerActionProvider connectActionProvider = null;
+    private JettyListenerActionProvider closeActionProvider = null;
+    private JettyListenerActionProvider textActionProvider = null;
+    private JettyListenerActionProvider binaryActionProvider = null;
+    private JettyListenerActionProvider errorActionProvider = null;
 
     public JettyWebSocketServlet(
             JettyServer server,
             Class listenerClass,
-            JettyListenerAction listenerConnectAction,
-            JettyListenerAction listenerCloseAction,
-            JettyListenerAction listenerErrorAction,
-            JettyListenerAction listenerBinaryAction,
-            JettyListenerAction listenerTextAction) {
+            JettyListenerActionProvider connectActionProvider,
+            JettyListenerActionProvider closeActionProvider,
+            JettyListenerActionProvider textActionProvider,
+            JettyListenerActionProvider binaryActionProvider,
+            JettyListenerActionProvider errorActionProvider) {
         this.server = server;
         this.listnerClass = listenerClass;
 
-        if(listenerConnectAction!=null) {
-            this.listenerConnectAction = listenerConnectAction;
+        if(connectActionProvider!=null) {
+            this.connectActionProvider = connectActionProvider;
         }
-
-        if(listenerCloseAction!=null) {
-            this.listenerCloseAction = listenerCloseAction;
+        if(closeActionProvider!=null) {
+            this.closeActionProvider = closeActionProvider;
         }
-
-        if(listenerErrorAction!=null) {
-            this.listenerErrorAction = listenerErrorAction;
+        if(textActionProvider!=null) {
+            this.textActionProvider = textActionProvider;
         }
-
-        if(listenerBinaryAction!=null) {
-            this.listenerBinaryAction = listenerBinaryAction;
+        if(binaryActionProvider!=null) {
+            this.binaryActionProvider = binaryActionProvider;
         }
-
-        if(listenerTextAction!=null) {
-            this.listenerTextAction = listenerTextAction;
+        if(errorActionProvider!=null) {
+            this.errorActionProvider = errorActionProvider;
         }
     }
 
@@ -73,11 +69,11 @@ public class JettyWebSocketServlet extends WebSocketServlet {
                 new JettyWebSocketCreator(
                         server,
                         listnerClass,
-                        listenerConnectAction,
-                        listenerCloseAction,
-                        listenerErrorAction,
-                        listenerBinaryAction,
-                        listenerTextAction
+                        connectActionProvider,
+                        closeActionProvider,
+                        textActionProvider,
+                        binaryActionProvider,
+                        errorActionProvider
                         ));
     }
 }

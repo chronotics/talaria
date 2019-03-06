@@ -4,6 +4,7 @@ import org.chronotics.talaria.common.*;
 import org.chronotics.talaria.websocket.jetty.JettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import rx.Observer;
 
 import java.util.Collection;
 
@@ -30,13 +31,14 @@ public class MQToClient<T> extends TaskExecutor {
     public final static String PROPERTY_JETTYSERVER = "jettyServer";
     public final static String PROPERTY_ID = "id";
 
-    private class ObserverImp<T> implements Observer {
+//    private class ObserverImp<T> implements Observer<T> {
+    private class ObserverImp<T> implements TObserver<T> {
         TaskExecutor<T> executor = null;
         public void setExecutor(TaskExecutor executor) {
             this.executor = executor;
         }
         @Override
-        public void update(Observable observable, Object object) {
+        public void update(TObservable<T> observable, T object) {
             if(object instanceof String &&
                     object.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
                 return;
@@ -47,20 +49,43 @@ public class MQToClient<T> extends TaskExecutor {
                 e.printStackTrace();
             }
         }
+
+//        @Override
+//        public void onCompleted() {
+//
+//        }
+//
+//        @Override
+//        public void onError(Throwable throwable) {
+//
+//        }
+//
+//        @Override
+//        public void onNext(T t) {
+////            if(t instanceof String &&
+////                    t.equals(MessageQueue.REMOVAL_NOTIFICATION)) {
+////                return;
+////            }
+//            try {
+//                executor.execute(t);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private ObserverImp observer = null;
 
     public ObserverImp<T> getObserver() {
-        return observer;
+        return this.observer;
     }
 
-    public MQToClient(KIND_OF_RECIEVER _kindOfReceiver,
-                      boolean _isMQElementRemoval) {
-        observer = new ObserverImp<T>();
-        observer.setExecutor(this);
-        kindOfReceiver = _kindOfReceiver;
-        isMQElementRemoval = _isMQElementRemoval;
+    public MQToClient(KIND_OF_RECIEVER kindOfReceiver,
+                      boolean isMQElementRemoval) {
+        this.observer = new ObserverImp<T>();
+        this.observer.setExecutor(this);
+        this.kindOfReceiver = kindOfReceiver;
+        this.isMQElementRemoval = isMQElementRemoval;
     }
 
     @Override
