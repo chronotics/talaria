@@ -19,7 +19,7 @@ import java.util.List;
  * Written by SGlee
  */
 
-public abstract class JettyListener implements WebSocketListener {
+public class JettyListener implements WebSocketListener {
 
     public static String KEY_ID = "id";
     public static String KEY_GROUPID = "groupId";
