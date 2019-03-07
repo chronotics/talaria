@@ -1,6 +1,7 @@
 package org.chronotics.talaria.common;
 
 import java.util.*;
+//import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import org.slf4j.Logger;
@@ -272,8 +273,10 @@ public class MessageQueue<E> extends TObservable {
 		queueSize = 0;
 	}
 
-//	private PublishSubject<E> subject = PublishSubject.create();
-//	private Map<Observer, Subscription> subscriptionMap = new HashMap<>();
+//	private PublishSubject<E> subject =
+//			PublishSubject.create();
+//	private Map<Observer, Subscription> subscriptionMap =
+//			new ConcurrentHashMap<>();
 //
 //	synchronized private Observable<E> getObservable() {
 //		return subject.asObservable();

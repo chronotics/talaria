@@ -8,8 +8,8 @@ import java.util.Set;
 
 /**
  * This Observable_ class is thread safe
- * RxJava is tried for substitution of this class,
- * but I couldn't find the way to deal with multi-thread test
+ * RxJava was tried for substitution of this class,
+ * thread issue is not solved yet.
  * Written by SGLee
  */
 public abstract class TObservable<T> {

@@ -35,7 +35,7 @@ public class ThriftClientTest {
 
 	private static ThriftServer thriftServer = null;
 
-	private String messageQueueId = "thrift";
+	private static String messageQueueId = "thrift";
 
     private char[] v10k = new char[5000]; // char: 2byte X 5,000 = 10,000 byte
 	private char[] v100k = new char[50000]; // char: 2byte X 50,000 = 100,000 byte
@@ -81,6 +81,7 @@ public class ThriftClientTest {
 	@AfterClass
 	public static void teardown() {
 		thriftServer.stop();
+		MessageQueueMap.getInstance().remove(messageQueueId);
 	}
 
 

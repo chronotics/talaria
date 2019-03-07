@@ -38,7 +38,7 @@ public class ThriftClientReferentialMessage {
 
 	private static ThriftServer thriftServer = null;
 
-	private String messageQueueId = "d0";
+	private static String messageQueueId = "d0";
 
 	private static int count = 100;
 
@@ -68,6 +68,7 @@ public class ThriftClientReferentialMessage {
 	@AfterClass
 	public static void teardown() {
 		thriftServer.stop();
+		MessageQueueMap.getInstance().remove(messageQueueId);
 	}
 
 

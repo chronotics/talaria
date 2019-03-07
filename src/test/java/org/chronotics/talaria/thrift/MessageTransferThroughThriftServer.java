@@ -61,6 +61,9 @@ public class MessageTransferThroughThriftServer {
 	@AfterClass
 	public static void teardown() {
 		thriftServer.stop();
+		for(int i=0; i<keySize; i++) {
+			MessageQueueMap.getInstance().remove(keyList.get(i));
+		}
 	}
 	
 	@Test
