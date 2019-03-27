@@ -20,7 +20,8 @@ public class ThriftServerTest {
 	@Test 
 	public void getSeverProperties() {
 		System.out.println(properties.getIp());
-		assertEquals("localhost", properties.getIp());
+//		assertEquals("localhost", properties.getIp());
+		assertEquals("192.168.0.13", properties.getIp());
 		assertEquals("9091", properties.getPort());
 	}
 	
